@@ -1,8 +1,8 @@
 ---
 name: "[TASK] Server"
-about: "[TASK] Server / 파일이름 / 기능"
-title: ''
-labels: ''
+about: Describe template purpose
+title: "[TASK] Server / 파일이름 / 기능"
+labels: E:3h, server
 assignees: ''
 
 ---

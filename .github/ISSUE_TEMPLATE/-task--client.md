@@ -1,8 +1,8 @@
 ---
 name: "[TASK] Client"
-about: "[TASK] Client / 파일이름 / 기능"
-title: ''
-labels: ''
+about: Describe template purpose
+title: "[TASK] Client / 파일이름 / 기능"
+labels: client, E:3h
 assignees: ''
 
 ---
