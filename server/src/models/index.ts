@@ -1,8 +1,8 @@
-import fs from "fs";
+import * as fs from "fs";
 import db from "../db/index";
 
-const schema = fs.readFileSync("./db/ShareBox.sql").toString();
-const seed = fs.readFileSync("./db/seed.sql").toString();
+const schema = fs.readFileSync("./studylog.sql").toString();
+const seed = fs.readFileSync("./seed.sql").toString();
 
 db.query(`DROP DATABASE IF EXISTS ${process.env.DATABASE_NAME}`);
 db.query(`CREATE DATABASE ${process.env.DATABASE_NAME}`);
