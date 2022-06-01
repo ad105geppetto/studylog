@@ -93,31 +93,31 @@ VALUES
 INSERT INTO
     `todos` (`userId`, `todo`, `progress`, `done`, `content`)
 VALUES
-    ("kimcoding", false, false, true, "자바스크립트 챕처 1 공부"),
-    ("leecoding", false, false, true, "MySQL 챕처 1 공부"),
-    ("cheacoding", false, false, true, "타입스크립트 챕처 1 공부"),
-    ("choecoding", false, false, true, "리엑트 챕처 1 공부"),
-    ("joecoding", false, false, true, "리덕스 챕처 1 공부"),
-    ("kimcoding", true, false, false, "자바스크립트 챕처 2 공부"),
-    ("leecoding", false, true, false, "MySQL 챕처 4 공부"),
-    ("leecoding", true, false, false, "Socket.IO 챕처 1 공부"),
-    ("cheacoding", false, true, false, "타입스크립트 챕처 3 공부"),
-    ("cheacoding", true, false, false, "Socket.IO 챕처 4 공부"),
-    ("choecoding", false, true, false, "Socket.IO 챕처 2 공부"),
-    ("choecoding", true, false, false, "리엑트 챕처 11 공부"),
-    ("joecoding", false, true, false, "리덕스 챕처 8 공부"),
-    ("joecoding", true, false, false, "자바스크립트 챕처 11 공부");
+    (1, false, false, true, "자바스크립트 챕처 1 공부"),
+    (4, false, false, true, "MySQL 챕처 1 공부"),
+    (2, false, false, true, "타입스크립트 챕처 1 공부"),
+    (3, false, false, true, "리엑트 챕처 1 공부"),
+    (5, false, false, true, "리덕스 챕처 1 공부"),
+    (1, true, false, false, "자바스크립트 챕처 2 공부"),
+    (4, false, true, false, "MySQL 챕처 4 공부"),
+    (4, true, false, false, "Socket.IO 챕처 1 공부"),
+    (2, false, true, false, "타입스크립트 챕처 3 공부"),
+    (2, true, false, false, "Socket.IO 챕처 4 공부"),
+    (3, false, true, false, "Socket.IO 챕처 2 공부"),
+    (3, true, false, false, "리엑트 챕처 11 공부"),
+    (5, false, true, false, "리덕스 챕처 8 공부"),
+    (5, true, false, false, "자바스크립트 챕처 11 공부");
 
 
  INSERT INTO `chats` (`userId`, `roomId`, `message`)
  VALUES
- ("kimcoding", 1, "안녕하세요!"),
- ("leecoding", 1, "안녕하세요!!!"),
- ("kimcoding", 1, "코딩 공부 잘되어가시나요?"),
- ("leecoding", 1, "아니요.."),
- ("cheacoding", 2, "안녕하세요!!"),
- ("choecoding", 2, "안녕하세요!"),
- ("joecoding", 2, "안녕하세요!!!"),
- ("cheacoding", 2, "오늘 어디부터였죠?"),
- ("choecoding", 2, "어.. 리덕스해야할거에요"),
- ("joecoding", 2, "맞아요!!");
+ (1, 1, "안녕하세요!"),
+ (4, 1, "안녕하세요!!!"),
+ (1, 1, "코딩 공부 잘되어가시나요?"),
+ (4, 1, "아니요.."),
+ (2, 2, "안녕하세요!!"),
+ (3, 2, "안녕하세요!"),
+ (5, 2, "안녕하세요!!!"),
+ (2, 2, "오늘 어디부터였죠?"),
+ (3, 2, "어.. 리덕스해야할거에요"),
+ (5, 2, "맞아요!!");
