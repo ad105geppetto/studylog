@@ -18,8 +18,7 @@ export default {
           const payload = {
             id: result[0].id,
             userId: result[0].userId,
-            email: result[0].email,
-            profile: result[0].profile,
+            email: result[0].email
           };
 
           const accessToken = jwt.sign(payload, process.env.ACCESS_SECRET, { expiresIn: "10s" })
@@ -27,14 +26,7 @@ export default {
 
           res
             .status(200)
-            .cookie("refreshToken", refreshToken, {
-              domain: "localhost",
-              path: "/",
-              sameSite: "none",
-              httpOnly: true,
-              secure: true,
-            })
-            .json({ accessToken: accessToken, userInfo: payload, message: "ok" })
+            .json({ accessToken: accessToken, refreshToken: refreshToken, userInfo: payload, message: "ok" })
         }
       }
     })
