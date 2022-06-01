@@ -15,7 +15,7 @@ router.use("/findPwdMailing", findPwdMailingRouter);
 router.use("/check", checkRouter);
 router.use("/userid", userIdRouter);
 router.use("/userpwd", userpwdRouter);
-router.use("/userpwd/auth", oauthRouter);
+router.use("/Oauth", oauthRouter);
 router.use("/roomlist", roomlistRouter);
 
 export default router
