@@ -11,7 +11,7 @@ const router = express.Router();
 
 router.use("/login", loginRouter);
 router.use("/signup", signupRouter);
-router.use("/findPwdMailing", findPwdMailingRouter);
+router.use("/userpwd/auth", findPwdMailingRouter);
 router.use("/check", checkRouter);
 router.use("/userid", userIdRouter);
 router.use("/userpwd", userpwdRouter);
