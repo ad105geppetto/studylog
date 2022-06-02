@@ -1,43 +1,118 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios, { AxiosError, AxiosResponse } from "axios";
 import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { logIn } from "../action/index";
+
+const SERVER = process.env.REACT_APP_SERVER;
+const OAUTH_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID;
+const OAUTH_URL = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${OAUTH_ID}&redirect_uri=http://localhost:3000&response_type=code&scope=openid`;
 
 const Login = () => {
-  const SERVER = process.env.REACT_APP_SERVER;
-  const OAUTH_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID;
-  const OAUTH_SECRET = process.env.REACT_APP_GOOGLE_CLIENT_SECRET;
-  const OAUTH_URL =
-    "https://accounts.google.com/o/oauth2/v2/auth?client_id=631273485611-t8h8qol18tpug6pupv0tb4nsq4mfl5js.apps.googleusercontent.com&redirect_uri=http://localhost:3000&response_type=code&scope=openid";
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-  const oauthpath = () => {
+  const [userInfo, setUserInfo] = useState({
+    id: "",
+    pwd: "",
+  });
+  const [errMsg, setErrMsg] = useState("");
+  // const [isLogin, setIsLogin] = useState(false);
+  // const [accessToken, setAccessToken] = useState("");
+
+  // ----------------------------- 로그인 정보 입력---------------------------
+  const onUserInfo = (key: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
+    setUserInfo({ ...userInfo, [key]: e.target.value });
+  };
+  // ---------------------------------------------------------------------------
+
+  // ------------------- 로그인 요청 -----------------------------
+  const onClickLoginBtn = () => {
+    axios
+      .post(
+        `${SERVER}/login`,
+        { userID: userInfo.id, password: userInfo.pwd }
+        // { type: "application/json" }
+      )
+      .then((res: AxiosResponse) => {
+        const { accessToken, refreshToken, userInfo } = res.data;
+        const { id, userId, email, profile } = userInfo;
+        dispatch(logIn(accessToken, refreshToken, id, userId, email, profile));
+        navigate("/");
+      })
+      .catch((err: AxiosError) => console.log("LOGIN ERROR", err));
+  };
+  // ------------------------------------------------------------
+
+  // ----------------------------- 구글 OAUTH 요청 -----------------------
+  const oauthPath = () => {
     window.location.assign(OAUTH_URL);
+    //  버튼 클릭시 Oauth 정보가 담긴 url로 이동시킴
   };
 
+  const url = new URL(window.location.href);
+  //  현재 윈도우에 띄워져 있는 URL 긁어오기
+  const authCode = url.searchParams.get("code");
+  //  URL 파라미터중 code 부분만 챙겨오기
+
+  const sendAuthCode = (authCode: string | null) => {
+    axios
+      .post(`${SERVER}/Oauth`, { authCode })
+      .then((res) => {})
+      .catch((err) => {});
+  };
+
+  useEffect(() => {
+    sendAuthCode(authCode);
+  }, [authCode]);
+
+  // ---------------------------------------------------------------------------
+  //  ------------------------ 페이지 전환 -----------------------------------
+  const onNavigate = (url: string) => (e: React.MouseEvent<HTMLButtonElement>) => {
+    navigate(url);
+  };
+
+  //  ------------------------------------------------------------------------------
   return (
     <div>
-      <div></div>
+      <div>로그인</div>
       <form
         onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
           e.preventDefault();
         }}
       >
         <div>
-          <div></div>
-          <input />
-        </div>{" "}
-        <div>
-          <div></div>
-          <input />
+          <div>아이디</div>
+          <input
+            type="text"
+            onChange={onUserInfo("id")}
+            placeholder="아이디를 입력해주세요"
+            required
+          />
         </div>
         <div>
-          <button>1</button>
-          <button>2</button>
+          <div>비밀번호</div>
+          <input
+            type="password"
+            onChange={onUserInfo("pwd")}
+            placeholder="비밀번호를 입력해주세요"
+            required
+          />
         </div>
         <div>
-          <button>3</button>
+          <button onClick={onClickLoginBtn}>로그인</button>
+          <button type="button" onClick={onNavigate("/signup")}>
+            회원가입
+          </button>
         </div>
         <div>
-          <button>4</button>
+          <button type="button" onClick={onNavigate("/idinquiry")}>
+            아이디/비밀번호 찾기
+          </button>
+        </div>
+        <div>
+          <button onClick={oauthPath}> GOOGLE 계정 로그인 </button>
         </div>
       </form>
     </div>
