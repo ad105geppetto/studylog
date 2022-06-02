@@ -1,3 +1,8 @@
+CREATE TABLE `auth` (
+  `id` int PRIMARY KEY AUTO_INCREMENT,
+  `token` varchar(255) NOT NULL
+);
+
 CREATE TABLE `users` (
   `id` int PRIMARY KEY AUTO_INCREMENT,
   `userId` varchar(255) NOT NULL,
