@@ -122,6 +122,6 @@ VALUES
  (3, 2, "어.. 리덕스해야할거에요"),
  (5, 2, "맞아요!!");
 
- INSERT INTO `auth` (`certNum`)
+ INSERT INTO `auth` (`certNum`, `email`, `verification`)
  VALUES
- ("123");
+ ("123", "admin@naver.com", 1);
