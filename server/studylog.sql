@@ -1,6 +1,9 @@
 CREATE TABLE `auth` (
   `id` int PRIMARY KEY AUTO_INCREMENT,
-  `token` varchar(255) NOT NULL
+  `certNum` varchar(255) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `verification` Boolean NOT NULL DEFAULT FALSE,
+  `createdAt` timestamp NOT NULL DEFAULT (now())
 );
 
 CREATE TABLE `users` (
