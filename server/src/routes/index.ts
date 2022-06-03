@@ -5,6 +5,10 @@ import logoutRouter from "./Logout";
 import dropoutRouter from "./Dropout";
 
 ////////////////////////////////////////////////////
+
+import userinfoRouter from "./Userinfo";
+
+////////////////////////////////////////////////////
 const router = express.Router();
 
 router.use("/login", loginRouter);
@@ -12,5 +16,8 @@ router.use("/login", loginRouter);
 router.use("/logout", logoutRouter);
 ///////////////////////////////////////////////////
 router.use("/dropout", dropoutRouter);
+///////////////////////////////////////////////////
+
+router.use("/userinfo", userinfoRouter);
 
 export default router;
