@@ -1,4 +1,5 @@
 import express from "express"
+import cookieParser from "cookie-parser";
 import indexRouter from "./routes";
 import cors from "cors"
 const port = 4000;
@@ -11,6 +12,7 @@ app.use(cors({
 }))
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(cookieParser());
 
 app.use("/", indexRouter);
 
