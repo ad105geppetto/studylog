@@ -1,11 +1,34 @@
 import db from "../db/index";
 
 export default {
-  post: () => {
-    //회원가입
-    //auth 테이블 돌면서 verification 1인경우에만 회원가입되도록 해야됨
+  post: (callback: Function) => {
+    db.query(`SELECT * FROM users`, (error, result) => {
+      if (error) {
+        return callback(error);
+      } else {
+        return callback(null, result);
+      }
+    });
   },
-
+  check: (email, callback: Function) => {
+    db.query(`SELECT * FROM auth ORDER BY createdAt DESC`, (error, result) => {
+      if (error) {
+        return callback(error);
+      } else {
+        const firstEmail = email === result[0].email ? result[0] : null
+        return callback(null, [firstEmail]);
+      }
+    });
+  },
+  create: (userId, email, password, callback: Function) => {
+    db.query(`INSERT INTO users (userId, email, password) VALUES ("${userId}", "${email}", "${password}")`, (error, result) => {
+      if (error) {
+        return callback(error);
+      } else {
+        return callback(null, result);
+      }
+    });
+  },
   save: (email: string, certNum: string, callback: Function) => {
     const queryString = `INSERT INTO auth (email, certNum ) VALUES ("${email}","${certNum}")`;
     db.query(queryString, (error, result) => {

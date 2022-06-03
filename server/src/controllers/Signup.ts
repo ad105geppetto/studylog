@@ -1,16 +1,45 @@
-import { Request, Response, NextFunction } from "express";
-import nodemailer from "nodemailer";
-const models = require("../models/Signup");
+import { Request, Response } from "express"
+import models from "../models/Signup";
+import nodemailer from "nodemailer"
 
 export default {
-  post: (req: Request, res: Response, next: NextFunction) => {
-    // verification의 최신값만 찾아서
-    // verification의 값이 1이면 이메일 인증한 것
-    // verification의 값이 0이면 이메일 인증 안한 것
-    // res.send({message:"이메일 인증을 해주세요."})
+  post: (req: Request, res: Response) => {
+    models.post((error, result) => {
+      if (error) {
+        res.status(500).json({ message: "Internal Sever Error" });
+      } else {
+        const { userId, email, password } = req.body;
+        models.check(email, (error, result) => {
+          if (error) {
+            res.status(500).json({ message: "Internal Sever Error" });
+          } else {
+            console.log(result)
+            if (result.length === 0) {
+              res.status(400).json({ message: "이메일 인증을 다시 해주세요." });
+            } else {
+              if (result[0].verification === 0) {
+                res.status(400).json({ message: "보내신 이메일에서 인증 버튼을 클릭 해주세요." });
+              } else {
+                const created = result.filter((user) => user.userId === userId);
+                if (created.length === 0) {
+                  models.create(userId, email, password, (error, result) => {
+                    if (error) {
+                      res.status(500).json({ message: "Internal Sever Error" });
+                    } else {
+                      res.status(201).send({ message: "회원가입이 완료되었습니다." });
+                    }
+                  });
+                } else {
+                  res.status(409).send({ message: "아이디, 비밀번호, 이메일을 확인해주세요." });
+                }
+              }
+            }
+          }
+        })
+      }
+    })
   },
-
-  mail: (req: Request, res: Response, next: NextFunction) => {
+  mail: (req: Request, res: Response) => {
     //받아온 이메일
     let { email } = req.body;
 
@@ -64,7 +93,7 @@ export default {
     });
   },
 
-  auth: (req: Request, res: Response, next: NextFunction) => {
+  auth: (req: Request, res: Response) => {
     console.log(req.query);
     let { email, certNum } = req.query;
 
@@ -78,4 +107,4 @@ export default {
       }
     });
   },
-};
+}

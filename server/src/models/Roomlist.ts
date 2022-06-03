@@ -1,9 +1,8 @@
-import db from "../db";
+import db from "../db/index"
 
 export default {
-  post: (userId, password, callback) => {
-    const queryString = `SELECT * FROM users WHERE userId = "${userId}" AND password = "${password}"`
-
+  get: (callback: Function) => {
+    const queryString = `SELECT * FROM rooms`
     db.query(queryString, (error, result) => {
       if (error) {
         return callback(error, null)
