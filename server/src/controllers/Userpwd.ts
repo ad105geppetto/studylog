@@ -9,7 +9,7 @@ export default {
       } else {
         if (result.length === 0) {
           res.status(400).json({
-            message: "userId나 인증번호를 입력해주세요."
+            message: "잘못된 ID 이거나 인증번호입니다. 다시 입력해주세요."
           })
         } else {
           res.status(200).json({

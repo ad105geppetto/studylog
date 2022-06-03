@@ -30,7 +30,7 @@ VALUES
     ),
     (
         "leecoding",
-        "leecoding@google.com",
+        "dhrjdn@naver.com",
         "1234",
         "/img/사진3.jpg"
     ),
