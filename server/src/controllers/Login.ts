@@ -26,7 +26,14 @@ export default {
 
           res
             .status(200)
-            .json({ accessToken: accessToken, refreshToken: refreshToken, userInfo: payload, message: "ok" })
+            .cookie('refreshToken', refreshToken, {
+              domain: 'localhost',
+              path: '/',
+              sameSite: 'none',
+              httpOnly: true,
+              secure: true,
+            })
+            .json({ accessToken: accessToken, userInfo: payload, message: "ok" })
         }
       }
     })
