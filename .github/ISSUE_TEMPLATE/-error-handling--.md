@@ -1,7 +1,7 @@
 ---
-name: "[Error Handling] 이름 - 2022.06.01"
+name: "[Error Handling] "
 about: Suggest an idea for this project
-title: ''
+title: "[Error Handling] 이름 - 2022.06.01"
 labels: ''
 assignees: ''
 
