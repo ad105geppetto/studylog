@@ -2,9 +2,9 @@ export const initialState = {
   userInfo: {
     id: "",
     userId: "",
+    email: "",
     profile: "기본 로고 경로",
     accessToken: "",
-    refreshToken: "",
   },
 };
 

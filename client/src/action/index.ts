@@ -8,12 +8,12 @@
 
 export const LOG_IN = "LOG_IN";
 export const logIn = (
-  id: number,
+  id: string,
   userId: string,
   email: string,
   profile: string,
   accessToken: string,
-  refreshToken: string
+  refreshToken?: string
 ) => {
   return {
     type: LOG_IN,
@@ -23,7 +23,6 @@ export const logIn = (
       email,
       profile,
       accessToken,
-      refreshToken,
     },
   };
 };

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios, { AxiosError, AxiosResponse } from "axios";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
+import store from "store/store";
 import { useDispatch, useSelector } from "react-redux";
 import { logIn } from "../action/index";
 
@@ -18,8 +19,6 @@ const Login = () => {
     pwd: "",
   });
   const [errMsg, setErrMsg] = useState("");
-  // const [isLogin, setIsLogin] = useState(false);
-  // const [accessToken, setAccessToken] = useState("");
 
   // ----------------------------- 로그인 정보 입력---------------------------
   const onUserInfo = (key: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -36,43 +35,43 @@ const Login = () => {
         // { type: "application/json" }
       )
       .then((res: AxiosResponse) => {
-        const { accessToken, refreshToken, userInfo } = res.data;
+        const { accessToken, userInfo } = res.data;
         const { id, userId, email, profile } = userInfo;
-        dispatch(logIn(accessToken, refreshToken, id, userId, email, profile));
+        dispatch(logIn(accessToken, id, userId, email, profile));
         navigate("/");
       })
       .catch((err: AxiosError) => console.log("LOGIN ERROR", err));
   };
   // ------------------------------------------------------------
 
+  const dummyLogin = () => {
+    const data = {
+      userInfo: {
+        id: "3",
+        userId: "dummy_userId",
+        email: "kimdummy@dummy.com",
+        profile: "../../public/logo192.png",
+      },
+      accessToken: "dummy_accessToken",
+    };
+
+    const { accessToken, userInfo } = data;
+    const { id, userId, email, profile } = userInfo;
+
+    dispatch(logIn(id, userId, email, profile, accessToken));
+    console.log(store.getState());
+  };
+
   // ----------------------------- 구글 OAUTH 요청 -----------------------
   const oauthPath = () => {
     window.location.assign(OAUTH_URL);
     //  버튼 클릭시 Oauth 정보가 담긴 url로 이동시킴
   };
-
-  const url = new URL(window.location.href);
-  //  현재 윈도우에 띄워져 있는 URL 긁어오기
-  const authCode = url.searchParams.get("code");
-  //  URL 파라미터중 code 부분만 챙겨오기
-
-  const sendAuthCode = (authCode: string | null) => {
-    axios
-      .post(`${SERVER}/Oauth`, { authCode })
-      .then((res) => {})
-      .catch((err) => {});
-  };
-
-  useEffect(() => {
-    sendAuthCode(authCode);
-  }, [authCode]);
-
   // ---------------------------------------------------------------------------
   //  ------------------------ 페이지 전환 -----------------------------------
   const onNavigate = (url: string) => (e: React.MouseEvent<HTMLButtonElement>) => {
     navigate(url);
   };
-
   //  ------------------------------------------------------------------------------
   return (
     <div>
@@ -101,7 +100,7 @@ const Login = () => {
           />
         </div>
         <div>
-          <button onClick={onClickLoginBtn}>로그인</button>
+          <button onClick={dummyLogin}>로그인</button>
           <button type="button" onClick={onNavigate("/signup")}>
             회원가입
           </button>

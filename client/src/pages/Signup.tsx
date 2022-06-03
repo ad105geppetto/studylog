@@ -1,16 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios, { AxiosError, AxiosResponse } from "axios";
 import styled from "styled-components";
 
 const SERVER = process.env.REACT_APP_SERVER;
-const OAUTH_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID;
-const OAUTH_SECRET = process.env.REACT_APP_GOOGLE_CLIENT_SECRET;
-const OAUTH_URL =
-  "https://accounts.google.com/o/oauth2/v2/auth?client_id=631273485611-t8h8qol18tpug6pupv0tb4nsq4mfl5js.apps.googleusercontent.com&redirect_uri=http://localhost:3000&response_type=code&scope=openid";
 
-// `https://accounts.google.com/o/oauth2/v2/auth?client_id=${OAUTH_ID}&redirect_uri=http://localhost:3000&response_type=code&scope=openid`;
-
-const Signup = () => {
+export const Signup = () => {
   const [userInfo, setUserInfo] = useState({
     id: "",
     pwd: "",
@@ -32,6 +26,10 @@ const Signup = () => {
     email: false,
   }); // 유효성 체크
 
+  useEffect(() => {
+    setErrMsg(errMsg);
+  }, [errMsg]);
+
   // -------------  userInfo 데이터 세팅 및 유효성 체크---------------------
   const onUserInfo = (key: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
     setUserInfo({ ...userInfo, [key]: e.target.value });
@@ -39,9 +37,9 @@ const Signup = () => {
 
     switch (key) {
       case "id":
-        const idRegex = /^[a-z]+[a-z0-9]{1,10}$/;
+        const idRegex = /^[a-z0-9]{0,10}$/;
         if (!idRegex.test(value)) {
-          setErrMsg({ ...errMsg, idMsg: "올바르지 못 한 아이디 입니다" });
+          setErrMsg({ ...errMsg, idMsg: "올바르지 못 한 아이디 입니다." });
         } else if (value.length < 3 || value.length > 10) {
           setErrMsg({ ...errMsg, idMsg: "아이디는 3글자 이상 10글자 미만 입니다. " });
         } else {
@@ -50,7 +48,10 @@ const Signup = () => {
 
         break;
       case "pwd":
-        if (value.length < 5 || value.length > 15) {
+        if (value.includes(" ")) {
+          setErrMsg({ ...errMsg, pwdMsg: "공백은 사용 할 수 없습니다" });
+          setValidCheck({ ...validCheck, pwd: false });
+        } else if (value.length < 5 || value.length > 15) {
           setErrMsg({ ...errMsg, pwdMsg: "비밀번호는 5글자 이상 15글자 미만 입니다." });
           setValidCheck({ ...validCheck, pwd: false });
         } else {
@@ -130,7 +131,7 @@ const Signup = () => {
       .then((res: AxiosResponse) => {
         switch (res.status) {
           case 200:
-            setErrMsg({ ...errMsg, emailMsg: "올바르지 못 한 이메일 형식입니다." });
+            setErrMsg({ ...errMsg, emailMsg: "인증 완료 되었습니다." });
             setValidCheck({ ...validCheck, email: true });
             break;
 
@@ -157,7 +158,7 @@ const Signup = () => {
           e.preventDefault();
         }}
       >
-        <h1> 회원가입요 </h1>
+        <h1> 회원가입 </h1>
         <div>
           <input
             type="text"
@@ -197,7 +198,9 @@ const Signup = () => {
             onChange={onUserInfo("email")}
             required
           />
-          <button onClick={onVerifyEmail}>인증</button>
+          <button type="button" onClick={onVerifyEmail}>
+            인증
+          </button>
           <div>{errMsg.emailMsg}</div>
         </div>
         <div>
