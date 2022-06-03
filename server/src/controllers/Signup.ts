@@ -12,6 +12,7 @@ export default {
           if (error) {
             res.status(500).json({ message: "Internal Sever Error" });
           } else {
+            console.log(result)
             if (result.length === 0) {
               res.status(400).json({ message: "이메일 인증을 다시 해주세요." });
             } else {

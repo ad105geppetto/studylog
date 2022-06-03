@@ -11,11 +11,12 @@ export default {
     });
   },
   check: (email, callback: Function) => {
-    con.query(`SELECT * FROM auth WHERE email = "${email}"`, (error, result) => {
+    con.query(`SELECT * FROM auth ORDER BY createdAt DESC`, (error, result) => {
       if (error) {
         return callback(error);
       } else {
-        return callback(null, result);
+        const firstEmail = email === result[0].email ? result[0] : null
+        return callback(null, [firstEmail]);
       }
     });
   },
