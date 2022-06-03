@@ -1,12 +1,13 @@
-import express from "express"
-import loginRouter from "./Login"
-import signupRouter from "./Signup"
-import findPwdMailingRouter from "./FindPwdMailing"
-import checkRouter from "./Check"
-import userIdRouter from "./UserId"
-import userpwdRouter from "./Userpwd"
-import oauthRouter from "./Oauth"
-import roomlistRouter from "./Roomlist"
+import express from "express";
+import loginRouter from "./Login";
+import signupRouter from "./Signup";
+import findPwdMailingRouter from "./FindPwdMailing";
+import checkRouter from "./Check";
+import userIdRouter from "./UserId";
+import userpwdRouter from "./Userpwd";
+import oauthRouter from "./Oauth";
+import roomlistRouter from "./Roomlist";
+
 const router = express.Router();
 
 router.use("/login", loginRouter);
@@ -18,4 +19,4 @@ router.use("/userpwd", userpwdRouter);
 router.use("/Oauth", oauthRouter);
 router.use("/roomlist", roomlistRouter);
 
-export default router
+export default router;
