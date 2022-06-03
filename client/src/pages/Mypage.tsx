@@ -40,14 +40,14 @@ const Mypage = () => {
   }, [userInfo]);
 
   // const onUploadImage = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   const file = e.target.files;
+  //   const file: any = e.target.files;
   //   setImageFile(file);
   //   console.log(imageFile);
   //   //  이미지 상태에 파일값 저장
 
   //   const reader = new FileReader();
   //   reader.readAsDataURL(file[0]);
-  //   reader.onload = function (e: FileReader.Event) {
+  //   reader.onload = function (e: any) {
   //     setPreview(e.target.result);
   //     // 파일 리드를 통해 프리뷰에 미리보기 구현
   //   };
