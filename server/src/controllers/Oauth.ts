@@ -1,8 +1,10 @@
 import axios from "axios"
+import googleOauth from "./tokenFunction/GoogleOauth";
+import models from "../models/Oauth"
 require("dotenv").config();
 
-const clientID = process.env.GITHUB_CLIENT_ID;
-const clientSecret = process.env.GITHUB_CLIENT_SECRET;
+const clientID = process.env.GOOGLE_CLIENT_ID;
+const clientSecret = process.env.GOOGLE_CLIENT_SECRET;
 
 export default {
   post: (req, res) => {
@@ -17,7 +19,47 @@ export default {
       })
       .then((response) => {
         const accessToken = response.data.access_token;
-        res.status(200).json({ accessToken: accessToken, response: response.data, message: "ok" });
+        googleOauth.verify(accessToken)
+          .then(data => {
+            const email = data.data.email
+            const profile = data.data.picture
+            let refreshToken = response.data.refresh_token;
+            if (refreshToken === undefined) {
+              // refreshToken 데이터베이스에서 가져오기
+              models.get(email, profile, (error, result) => {
+                if (error) {
+                  res.status(500).json({ message: "Internal Sever Error" })
+                } else {
+                  res.status(200)
+                    .cookie('refreshToken', result[0].refreshToken, {
+                      domain: 'localhost',
+                      path: '/',
+                      sameSite: 'none',
+                      httpOnly: true,
+                      secure: true,
+                    })
+                    .json({ accessToken: accessToken, message: "ok" })
+                }
+              })
+            } else {
+              // 그대로 쓰기
+              models.post(email, profile, refreshToken, (error, result) => {
+                if (error) {
+                  res.status(500).json({ message: "Internal Sever Error" })
+                } else {
+                  res.status(200)
+                    .cookie('refreshToken', refreshToken, {
+                      domain: 'localhost',
+                      path: '/',
+                      sameSite: 'none',
+                      httpOnly: true,
+                      secure: true,
+                    })
+                    .json({ accessToken: accessToken, message: "ok" });
+                }
+              })
+            }
+          })
       })
       .catch((e) => {
         res.status(404);
