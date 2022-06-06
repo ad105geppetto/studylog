@@ -13,6 +13,9 @@ const Landing = () => {
       <button type="button" onClick={() => navigate("/mypage")}>
         마이페이지
       </button>
+      <button type="button" onClick={() => navigate("/todos")}>
+        Todos
+      </button>
     </div>
   );
 };

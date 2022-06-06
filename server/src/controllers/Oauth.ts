@@ -1,4 +1,4 @@
-import axios from "axios"
+import axios from "axios";
 require("dotenv").config();
 
 const clientID = process.env.GITHUB_CLIENT_ID;
@@ -6,6 +6,7 @@ const clientSecret = process.env.GITHUB_CLIENT_SECRET;
 
 export default {
   post: (req, res) => {
+    console.log(req.body);
     axios({
       method: "post",
       url: `https://oauth2.googleapis.com/token`,
@@ -18,7 +19,7 @@ export default {
         client_id: clientID,
         client_secret: clientSecret,
         redirect_uri: "http//localhost:3000",
-        grant_type: "authorization_code"
+        grant_type: "authorization_code",
       },
     })
       .then((response) => {
@@ -28,6 +29,7 @@ export default {
       })
       .catch((e) => {
         res.status(404);
-      })
-  }
-}
+      });
+    res.send(req.body.authorizationCode);
+  },
+};

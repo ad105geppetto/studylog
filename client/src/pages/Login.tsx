@@ -8,7 +8,7 @@ import { logIn } from "../action/index";
 
 const SERVER = process.env.REACT_APP_SERVER;
 const OAUTH_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID;
-const OAUTH_URL = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${OAUTH_ID}&redirect_uri=http://localhost:3000&response_type=code&scope=openid`;
+const OAUTH_URL = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${OAUTH_ID}&redirect_uri=http://localhost:3000&response_type=code&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile%20openid&access_type=offline&`;
 
 const Login = () => {
   const dispatch = useDispatch();
@@ -28,39 +28,53 @@ const Login = () => {
 
   // ------------------- 로그인 요청 -----------------------------
   const onClickLoginBtn = () => {
+    console.log(userInfo);
+
     axios
       .post(
         `${SERVER}/login`,
-        { userID: userInfo.id, password: userInfo.pwd }
+        { userId: userInfo.id, password: userInfo.pwd }
         // { type: "application/json" }
       )
       .then((res: AxiosResponse) => {
-        const { accessToken, userInfo } = res.data;
-        const { id, userId, email, profile } = userInfo;
+        console.log(res);
+        const accessToken = res.data.accessToken;
+        const id = res.data.userInfo.id;
+        const userId = res.data.userInfo.userId;
+        const email = res.data.userInfo.email;
+        const profile = res.data.userInfo.profile;
+
         dispatch(logIn(accessToken, id, userId, email, profile));
-        navigate("/");
+
+        // navigate("/");
       })
-      .catch((err: AxiosError) => console.log("LOGIN ERROR", err));
+      .catch((err: AxiosError) => {
+        console.log(err);
+      });
   };
+
+  const userInfofo = useSelector((state: any) => state.userInfoReducer.userInfo);
+  console.log(userInfofo);
+
   // ------------------------------------------------------------
 
-  const dummyLogin = () => {
-    const data = {
-      userInfo: {
-        id: "3",
-        userId: "dummy_userId",
-        email: "kimdummy@dummy.com",
-        profile: "../../public/logo192.png",
-      },
-      accessToken: "dummy_accessToken",
-    };
+  // const dummyLogin = () => {
+  //   const data = {
+  //     userInfo: {
+  //       id: "3",
+  //       userId: "dummy_userId",
+  //       email: "kimdummy@dummy.com",
+  //       profile: "../../public/logo192.png",
+  //     },
+  //     accessToken: "dummy_accessToken",
+  //   };
 
-    const { accessToken, userInfo } = data;
-    const { id, userId, email, profile } = userInfo;
+  //   const { accessToken, userInfo } = data;
+  //   const { id, userId, email, profile } = userInfo;
 
-    dispatch(logIn(id, userId, email, profile, accessToken));
-    console.log(store.getState());
-  };
+  //   dispatch(logIn(id, userId, email, profile, accessToken));
+  //   console.log(store.getState());
+  // };
 
   // ----------------------------- 구글 OAUTH 요청 -----------------------
   const oauthPath = () => {
@@ -100,7 +114,7 @@ const Login = () => {
           />
         </div>
         <div>
-          <button onClick={dummyLogin}>로그인</button>
+          <button onClick={onClickLoginBtn}>로그인</button>
           <button type="button" onClick={onNavigate("/signup")}>
             회원가입
           </button>

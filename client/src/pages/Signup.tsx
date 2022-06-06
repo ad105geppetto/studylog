@@ -23,7 +23,6 @@ export const Signup = () => {
     id: false,
     pwd: false,
     pwdCheck: false,
-    email: false,
   }); // 유효성 체크
 
   useEffect(() => {
@@ -79,16 +78,16 @@ export const Signup = () => {
         break;
     }
     console.log(userInfo);
-    console.log(errMsg);
-    console.log(validCheck);
   };
   // ----------------------------------------------------------------------------
 
   // ------------------------- 아이디 중복 체크 검사 -------------------------
   const onCheckUserId = () => {
     axios
-      .post(`${SERVER}/check`, { userID: userInfo.id })
+      .post(`${SERVER}/check`, { userId: userInfo.id })
       .then((res: AxiosResponse) => {
+        console.log(res);
+        console.log(userInfo.id);
         switch (res.status) {
           case 200:
             setErrMsg({ ...errMsg, idMsg: "사용 가능한 아이디 입니다." });
@@ -127,27 +126,24 @@ export const Signup = () => {
   //  ------------------------------ 인증메일 전송 ----------------------------
   const onVerifyEmail = () => {
     axios
-      .post(`${SERVER}/signup/auth`, { email: userInfo.email })
+      .post(`${SERVER}/signup/mail`, { email: userInfo.email })
       .then((res: AxiosResponse) => {
-        switch (res.status) {
-          case 200:
-            setErrMsg({ ...errMsg, emailMsg: "인증 완료 되었습니다." });
-            setValidCheck({ ...validCheck, email: true });
-            break;
-
-          case 400:
-            setErrMsg({ ...errMsg, emailMsg: "올바르지 못 한 이메일 형식입니다." });
-            setValidCheck({ ...validCheck, email: false });
-            break;
-
-          default:
-            setErrMsg({ ...errMsg, emailMsg: "올바르지 못 한 이메일 형식입니다." });
-            setValidCheck({ ...validCheck, email: false });
-        }
+        // switch (res.status) {
+        //   case 200:
+        //     setErrMsg({ ...errMsg, emailMsg: "인증 완료 되었습니다." });
+        //     break;
+        //   case 409:
+        //     console.log("409번 응답");
+        //     setErrMsg({ ...errMsg, emailMsg: "올바르지 못 한 이메일 형식입니다." });
+        //     break;
+        //   default:
+        //     setErrMsg({ ...errMsg, emailMsg: "올바르지 못 한 이메일 형식입니다." });
+        // }
       })
       .catch((err: AxiosError) => {
-        console.log(err);
+        console.log("에러메세지", err);
       });
+    console.log(userInfo);
   };
   //  -----------------------------------------------------------------------
 
@@ -205,11 +201,7 @@ export const Signup = () => {
         </div>
         <div>
           <button
-            disabled={
-              validCheck.email && validCheck.id && validCheck.pwd && validCheck.pwdCheck
-                ? false
-                : true
-            }
+            disabled={validCheck.id && validCheck.pwd && validCheck.pwdCheck ? false : true}
             onClick={onSingup}
           >
             가입

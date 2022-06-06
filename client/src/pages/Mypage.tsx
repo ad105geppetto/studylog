@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { logIn } from "../action/index";
 import { useNavigate } from "react-router-dom";
+import Dark_logo from "../../public/Dark_logo.png";
 
 axios.defaults.withCredentials = true;
 const SERVER = process.env.REACT_APP_SERVER;
@@ -19,11 +20,15 @@ const Mypage = () => {
     emailMsg: "",
   });
 
+  const userInfo = useSelector((state: any) => state.userInfoReducer.userInfo);
+  // 로그인시 저장 된 userInfo 가지고 오기
+
   const [modifiedUserInfo, setModifiedUserInfo] = useState({
     pwd: "",
     pwdCheck: "",
-    email: "",
-    profile: "", // 따로 만들어야하나?
+    email: userInfo.email,
+    profile: null, // 프로필의 초기값은 무엇일까? 우리는 기본 이미지가 되겠지?
+    // 동일한 이미지를 서버에서는 링크로 가질것이고, 나는 클라에서 따로 가지고 보여줘야하나?
   });
 
   const [validCheck, setValidCheck] = useState({
@@ -32,26 +37,28 @@ const Mypage = () => {
     email: false,
   });
 
-  const userInfo = useSelector((state: any) => state.userInfoReducer.userInfo);
-  // 로그인시 저장 된 userInfo 가지고 오기
-
   useEffect(() => {
     console.log(userInfo);
   }, [userInfo]);
 
-  // const onUploadImage = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   const file: any = e.target.files;
-  //   setImageFile(file);
-  //   console.log(imageFile);
-  //   //  이미지 상태에 파일값 저장
+  // ------------------------- 이미지 업로드 ----------------------
 
-  //   const reader = new FileReader();
-  //   reader.readAsDataURL(file[0]);
-  //   reader.onload = function (e: any) {
-  //     setPreview(e.target.result);
-  //     // 파일 리드를 통해 프리뷰에 미리보기 구현
-  //   };
-  // };
+  const onUploadImage = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file: any = e.target.files;
+    setImageFile(file);
+    console.log(imageFile);
+    //  이미지 상태에 파일값 저장
+
+    const reader = new FileReader();
+    reader.readAsDataURL(file[0]);
+    reader.onload = function (e: any) {
+      setPreview(e.target.result);
+      console.log(preview);
+      // 파일 리드를 통해 프리뷰에 미리보기 구현
+    };
+  };
+
+  // ----------------------------------------------------
 
   // ----------------------------- 유저 정보 수정 -----------------------
   const onModifyUserInfo = (key: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -141,11 +148,11 @@ const Mypage = () => {
             alert("정상적으로 변경 완료 되었습니다.");
             dispatch(
               logIn(
+                res.data.accessToken,
                 res.data.userInfo.id,
                 res.data.userInfo.userId,
                 res.data.userInfo.email,
-                res.data.userInfo.profile,
-                res.data.accessToken
+                res.data.userInfo.profile
               )
             );
             break;
@@ -171,10 +178,10 @@ const Mypage = () => {
           아이디 :<input type="text" value={userInfo.userId} disabled />
         </div>
         <div>
-          <img alt="프로필 사진" src={userInfo.profile} />
+          <img alt="프로필 사진" src={preview} />
         </div>
         <div>
-          <input type="file" accept="image/*" />
+          <input type="file" accept="image/*" onChange={onUploadImage} />
         </div>
         비밀번호 : <input type="password" onChange={onModifyUserInfo("pwd")} />
         <div> {errMsg.pwdMsg} </div>
