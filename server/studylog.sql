@@ -1,17 +1,16 @@
-CREATE TABLE `auth` (
-  `id` int PRIMARY KEY AUTO_INCREMENT,
-  `certNum` varchar(255) NOT NULL,
-  `email` varchar(255) NOT NULL,
-  `verification` Boolean NOT NULL DEFAULT FALSE,
-  `createdAt` timestamp NOT NULL DEFAULT (now())
-);
-
 CREATE TABLE `users` (
   `id` int PRIMARY KEY AUTO_INCREMENT,
   `userId` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
-  `password` varchar(255) NOT NULL,
+  `password` varchar(255),
   `profile` varchar(255),
+  `createdAt` timestamp NOT NULL DEFAULT (now()),
+  `updatedAt` timestamp NOT NULL DEFAULT (now())
+);
+
+CREATE TABLE `token` (
+  `id` int PRIMARY KEY AUTO_INCREMENT,
+  `refreshToken` varchar(255),
   `createdAt` timestamp NOT NULL DEFAULT (now()),
   `updatedAt` timestamp NOT NULL DEFAULT (now())
 );
@@ -42,9 +41,7 @@ CREATE TABLE `logs` (
 CREATE TABLE `todos` (
   `id` int PRIMARY KEY AUTO_INCREMENT,
   `userId` int NOT NULL,
-  `todo` boolean NOT NULL,
-  `progress` boolean NOT NULL,
-  `done` boolean NOT NULL,
+  `type` varchar(255) NOT NULL,
   `content` varchar(255),
   `createdAt` timestamp NOT NULL DEFAULT (now()),
   `updatedAt` timestamp NOT NULL DEFAULT (now())
@@ -59,6 +56,14 @@ CREATE TABLE `chats` (
   `updatedAt` timestamp NOT NULL DEFAULT (now())
 );
 
+CREATE TABLE `auth` (
+  `id` int PRIMARY KEY AUTO_INCREMENT,
+  `certNum` varchar(255) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `verification` Boolean NOT NULL DEFAULT false,
+  `createdAt` timestamp NOT NULL DEFAULT (now())
+);
+
 ALTER TABLE `chats` ADD FOREIGN KEY (`userId`) REFERENCES `users` (`id`);
 
 ALTER TABLE `chats` ADD FOREIGN KEY (`roomId`) REFERENCES `rooms` (`id`);
@@ -66,3 +71,5 @@ ALTER TABLE `chats` ADD FOREIGN KEY (`roomId`) REFERENCES `rooms` (`id`);
 ALTER TABLE `todos` ADD FOREIGN KEY (`userId`) REFERENCES `users` (`id`);
 
 ALTER TABLE `logs` ADD FOREIGN KEY (`id`) REFERENCES `users` (`id`);
+
+ALTER TABLE `token` ADD FOREIGN KEY (`id`) REFERENCES `users` (`id`);

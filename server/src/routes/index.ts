@@ -7,6 +7,7 @@ import userIdRouter from "./UserId";
 import userpwdRouter from "./Userpwd";
 import oauthRouter from "./Oauth";
 import roomlistRouter from "./Roomlist";
+import searchRouter from "./Search";
 import logoutRouter from "./Logout";
 import dropoutRouter from "./Dropout";
 import userinfoRouter from "./Userinfo";
@@ -24,5 +25,6 @@ router.use("/userid", userIdRouter);
 router.use("/userpwd", userpwdRouter);
 router.use("/Oauth", oauthRouter);
 router.use("/roomlist", roomlistRouter);
+router.use("/search", searchRouter);
 
 export default router;
