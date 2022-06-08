@@ -7,9 +7,12 @@ import userIdRouter from "./UserId";
 import userpwdRouter from "./Userpwd";
 import oauthRouter from "./Oauth";
 import roomlistRouter from "./Roomlist";
+import searchRouter from "./Search";
 import logoutRouter from "./Logout";
 import dropoutRouter from "./Dropout";
 import userinfoRouter from "./Userinfo";
+import staticsRouter from "./Statics";
+import todoRouter from "./Todo";
 
 const router = express.Router();
 
@@ -24,5 +27,8 @@ router.use("/userid", userIdRouter);
 router.use("/userpwd", userpwdRouter);
 router.use("/Oauth", oauthRouter);
 router.use("/roomlist", roomlistRouter);
+router.use("/statics", staticsRouter);
+router.use("/todo", todoRouter);
+router.use("/search", searchRouter);
 
 export default router;
