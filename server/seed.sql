@@ -91,22 +91,22 @@ VALUES
     (3, 2, 3, 4, 5, 6, 7, 335);
 
 INSERT INTO
-    `todos` (`userId`, `todo`, `progress`, `done`, `content`)
+    `todos` (`userId`, `type`, `content`)
 VALUES
-    (1, false, false, true, "자바스크립트 챕처 1 공부"),
-    (4, false, false, true, "MySQL 챕처 1 공부"),
-    (2, false, false, true, "타입스크립트 챕처 1 공부"),
-    (3, false, false, true, "리엑트 챕처 1 공부"),
-    (5, false, false, true, "리덕스 챕처 1 공부"),
-    (1, true, false, false, "자바스크립트 챕처 2 공부"),
-    (4, false, true, false, "MySQL 챕처 4 공부"),
-    (4, true, false, false, "Socket.IO 챕처 1 공부"),
-    (2, false, true, false, "타입스크립트 챕처 3 공부"),
-    (2, true, false, false, "Socket.IO 챕처 4 공부"),
-    (3, false, true, false, "Socket.IO 챕처 2 공부"),
-    (3, true, false, false, "리엑트 챕처 11 공부"),
-    (5, false, true, false, "리덕스 챕처 8 공부"),
-    (5, true, false, false, "자바스크립트 챕처 11 공부");
+    (1, "todo", "자바스크립트 챕처 1 공부"),
+    (4, "progress", "MySQL 챕처 1 공부"),
+    (2, "done", "타입스크립트 챕처 1 공부"),
+    (3, "todo", "리엑트 챕처 1 공부"),
+    (5, "progress", "리덕스 챕처 1 공부"),
+    (1, "done", "자바스크립트 챕처 2 공부"),
+    (4, "todo", "MySQL 챕처 4 공부"),
+    (4, "progress", "Socket.IO 챕처 1 공부"),
+    (2, "done", "타입스크립트 챕처 3 공부"),
+    (2, "todo", "Socket.IO 챕처 4 공부"),
+    (3, "progress", "Socket.IO 챕처 2 공부"),
+    (3, "done", "리엑트 챕처 11 공부"),
+    (5, "todo", "리덕스 챕처 8 공부"),
+    (5, "progress", "자바스크립트 챕처 11 공부");
 
 
  INSERT INTO `chats` (`userId`, `roomId`, `message`)
