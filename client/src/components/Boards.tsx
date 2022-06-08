@@ -1,8 +1,11 @@
 import { DragDropContext, Draggable, Droppable, DropResult } from "react-beautiful-dnd";
-import { useState } from "react";
+import React, { useState } from "react";
 import Cardboard from "./Cardboard";
 import Cards from "./Card";
 import styled from "styled-components";
+import axios, { AxiosError, AxiosResponse } from "axios";
+
+const SERVER = process.env.REACT_APP_SERVER;
 
 const Wrapper = styled.div`
   background-color: white;
@@ -22,16 +25,94 @@ const BackBoard = styled.div`
   gap: 30px;
 `;
 
-interface ToDos {
-  [key: string]: string[];
+const Form = styled.form`
+  width: 100%;
+  input {
+    width: 100%;
+  }
+`;
+
+interface ToDosInterface {
+  id: number;
+  text: any;
 }
 
-const Boards = () => {
+interface ToDos {
+  [key: string]: any;
+}
+
+const Boards = (userInfo: any) => {
+  const [text, setText] = useState<string | null>("");
+
+  const onAddText = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setText(e.target.value);
+  };
+
   const [toDos, setToDos] = useState<ToDos>({
-    Todo: ["a", "b", "c"],
-    Progress: ["1", "4", "5"],
-    Done: ["잠", "밥"],
+    Todo: [{ id: 1, text: "dummyData" }],
+    Progress: [],
+    Done: [],
   });
+
+  const onLoadToDos = () => {
+    axios
+      .get(`${SERVER}/todo`, { headers: { authorization: `Bearer ${userInfo.accessToken}` } })
+      .then((res: AxiosResponse) => {
+        setToDos((toDos) => {
+          return {
+            ...toDos,
+            [res.data.type]: [...toDos[res.data.type]],
+          };
+        });
+      })
+      .catch((err: AxiosError) => console.log(err));
+  };
+
+  const onAddToDos = (key: string) => (e: React.MouseEvent<HTMLButtonElement>) => {
+    const newToDo = {
+      id: Math.random(),
+      text: text,
+    };
+
+    setToDos((toDos) => {
+      return {
+        ...toDos,
+        [key]: [...toDos[key], newToDo],
+      };
+    });
+    setText("");
+
+    console.log(toDos);
+
+    axios
+      .post(
+        `${SERVER}/todo`,
+        { content: text, type: key },
+        { headers: { authorization: `Bearer ${userInfo.accessToken}` } }
+      )
+      .then((res: AxiosResponse) => console.log(res))
+      .catch((err: AxiosError) => console.log(err));
+  };
+
+  const onModifyToDos = (key: string) => (e: any) => {
+    const filteredToDos = toDos[key].filter((todo: any) => todo.id !== e.currentTarget.value);
+    console.log(e.currentTarget.value);
+
+    setToDos((toDos) => {
+      return {
+        ...toDos,
+        [key]: [...toDos[key], filteredToDos],
+      };
+    });
+  };
+
+  /*
+ 버튼의 value와 toDoText의 id가 같다면 삭제 또는 수정이 가능 할 수 있을것. 
+ 그러기 위해서는  기존의 모든 값들을 가지고 오고 
+
+
+
+  */
 
   const onDragEnd = (info: DropResult) => {
     console.log(info);
@@ -42,16 +123,20 @@ const Boards = () => {
     if (destination.droppableId === source.droppableId) {
       // 같은 카드보드 내부에서의 이동
       const sourceToDos = [...toDos[source.droppableId]];
+      const sourceObj = sourceToDos[source.index];
+      console.log(sourceObj);
       sourceToDos.splice(source.index, 1);
-      sourceToDos.splice(destination.index, 0, draggableId);
+      sourceToDos.splice(destination.index, 0, sourceObj);
       setToDos({ ...toDos, [source.droppableId]: sourceToDos });
     }
     if (destination.droppableId !== source.droppableId) {
       // 다른 카드 보드간의 이동
       const sourceToDos = [...toDos[source.droppableId]];
+      const sourceObj = sourceToDos[source.index];
       const targetToDos = [...toDos[destination.droppableId]];
+
       sourceToDos.splice(source.index, 1);
-      targetToDos.splice(destination.index, 0, draggableId);
+      targetToDos.splice(destination.index, 0, sourceObj);
       setToDos({
         ...toDos,
         [source.droppableId]: sourceToDos,
@@ -67,23 +152,31 @@ const Boards = () => {
 
   */
 
+  // const onValid =
+  //   ({ toDo }: FormInterface) =>
+  //   (e: React.ChangeEvent<HTMLFormElement>) => {
+  //     const newTodo = {
+  //       id: Math.random(),
+  //       text: e.target.value,
+  //       type: "",
+  //     };
+  //   };
+
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <Wrapper>
         <BackBoard>
           {Object.keys(toDos).map((boardId) => (
-            <Cardboard boardId={boardId} key={boardId} toDos={toDos[boardId]} />
+            <Cardboard
+              onAddText={onAddText}
+              onAddToDos={onAddToDos}
+              boardId={boardId}
+              key={boardId}
+              toDos={toDos[boardId]}
+              text={text}
+              onModifyToDos={onModifyToDos}
+            />
           ))}
-          {/* <Droppable droppableId="todos">
-            {(provided) => (
-              <Board ref={provided.innerRef} {...provided.droppableProps}>
-                {toDos.map((toDo, index) => (
-                  <Cards key={toDo} toDo={toDo} index={index} />
-                ))}
-                {provided.placeholder}
-              </Board>
-            )}
-          </Droppable> */}
         </BackBoard>
       </Wrapper>
     </DragDropContext>

@@ -64,8 +64,8 @@ export default {
     ////////////////////
 
     let transporter = nodemailer.createTransport({
-      service: "gmail", // 메일 보내는 곳
-      host: "smtp.gmail.com",
+      service: "naver", // 메일 보내는 곳
+      host: "smtp.naver.com",
       secure: false,
       auth: {
         user: process.env.MAIL, // 보내는 메일의 주소

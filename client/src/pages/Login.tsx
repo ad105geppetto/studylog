@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios, { AxiosError, AxiosResponse } from "axios";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
-import store from "store/store";
+import { store } from "store/store";
 import { useDispatch, useSelector } from "react-redux";
 import { logIn } from "../action/index";
 
@@ -46,7 +46,7 @@ const Login = () => {
 
         dispatch(logIn(accessToken, id, userId, email, profile));
 
-        // navigate("/");
+        navigate("/");
       })
       .catch((err: AxiosError) => {
         console.log(err);
@@ -55,26 +55,6 @@ const Login = () => {
 
   const userInfofo = useSelector((state: any) => state.userInfoReducer.userInfo);
   console.log(userInfofo);
-
-  // ------------------------------------------------------------
-
-  // const dummyLogin = () => {
-  //   const data = {
-  //     userInfo: {
-  //       id: "3",
-  //       userId: "dummy_userId",
-  //       email: "kimdummy@dummy.com",
-  //       profile: "../../public/logo192.png",
-  //     },
-  //     accessToken: "dummy_accessToken",
-  //   };
-
-  //   const { accessToken, userInfo } = data;
-  //   const { id, userId, email, profile } = userInfo;
-
-  //   dispatch(logIn(id, userId, email, profile, accessToken));
-  //   console.log(store.getState());
-  // };
 
   // ----------------------------- 구글 OAUTH 요청 -----------------------
   const oauthPath = () => {

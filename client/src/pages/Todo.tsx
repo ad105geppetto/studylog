@@ -1,10 +1,14 @@
 import Chart from "components/Chart";
-import Board from "components/Board";
+import Boards from "components/Boards";
+import { useSelector } from "react-redux";
 
-import Nav from "components/Nav";
 import React, { useState } from "react";
+// 로그인시 저장 된 userInfo 가지고 오기
 
 const Todo = () => {
+  const SERVER = process.env.REACT_APP_SERVER;
+  const userInfo = useSelector((state: any) => state.userInfoReducer.userInfo);
+
   const [rendering, setRendering] = useState("");
 
   const onRenderTodo = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -26,7 +30,9 @@ const Todo = () => {
           공부시간
         </button>
       </div>
-      <div>{rendering === "Board" ? <Chart /> : <Board />}</div>
+      <div>
+        {rendering === "Board" ? <Boards userInfo={userInfo} /> : <Chart userInfo={userInfo} />}
+      </div>
     </div>
   );
 };

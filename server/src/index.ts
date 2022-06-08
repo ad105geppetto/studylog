@@ -1,21 +1,62 @@
-import express from "express"
+import express from "express";
 import cookieParser from "cookie-parser";
 import indexRouter from "./routes";
-import cors from "cors"
+import cors from "cors";
+import http from "http";
+import { Server } from "socket.io";
+
 const port = 4000;
 const app = express();
 
-app.use(cors({
-  origin: ["http://localhost:3000"],
-  credentials: true,
-  methods: ["GET", "POST", "OPTIONS", "PUT", "PATCH", "DELETE"],
-}))
+app.use(
+  cors({
+    origin: ["http://localhost:3000"],
+    credentials: true,
+    methods: ["GET", "POST", "OPTIONS", "PUT", "PATCH", "DELETE"],
+  })
+);
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cookieParser());
-
 app.use("/", indexRouter);
 
-app.listen(port, () => {
+const httpServer = http.createServer(app);
+const io = new Server(httpServer, {
+  cors: {
+    origin: "http://localhost:3000",
+    credentials: true,
+  },
+});
+
+// socket.io
+io.on("connection", (socket) => {
+  socket["nickname"];
+  socket.onAny((event) => {
+    console.log(`SOCKET EVENT : ${event}`);
+  });
+
+  socket.on("room", (roomName, userId) => {
+    socket.join(roomName);
+    socket.to(roomName).emit("welcome", userId);
+  });
+
+  socket.on("message", (roomName, message, userId, guest) => {
+    socket.to(roomName).emit("chat", message, userId, guest);
+    console.log(message);
+  });
+
+  socket.on("disconnect", () => {});
+});
+
+// 방제목이 룸네임으로 하면 되고
+// 채팅기능
+// 방생성:
+// 닉네임: userId, 게스트일경우
+// 디스커넥팅:
+// 디스커넥트:
+// 방나가기 (채팅나가기 + webRTC종료)
+// webRTC같이하기
+
+httpServer.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });

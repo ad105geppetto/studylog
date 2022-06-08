@@ -1,7 +1,10 @@
 import { Droppable } from "react-beautiful-dnd";
+
 import Cards from "./Card";
 import styled from "styled-components";
 import { useState } from "react";
+import todosReducer from "reducers/todosReducer";
+import { setConstantValue } from "typescript";
 
 const Board = styled.div`
   background-color: #c2f7bd;
@@ -12,14 +15,17 @@ const Board = styled.div`
   flex-direction: column;
 `;
 
+const Form = styled.form`
+  width: 100%;
+  input {
+    width: 100%;
+  }
+`;
+
 const Title = styled.h1`
   text-align: center;
 `;
 
-interface AreaInterface {
-  isDraggingOver: boolean;
-  isDraggingFrom: boolean;
-}
 const Area = styled.div<AreaInterface>`
   flex-grow: 1;
   margin: 10px;
@@ -29,31 +35,52 @@ const Area = styled.div<AreaInterface>`
     props.isDraggingOver ? "coral" : props.isDraggingFrom ? "orange" : "pink"};
   transition: background-color 0.2s ease-in-out;
 `;
+
+interface ToDosInterface {
+  id: number;
+  text: string;
+}
+interface FormInterface {
+  toDo: string;
+}
+interface AreaInterface {
+  isDraggingOver: boolean;
+  isDraggingFrom: boolean;
+}
 interface CardBoardProps {
-  toDos: string[];
+  toDos: ToDosInterface[];
   boardId: string;
+  onAddText: any;
+  onAddToDos: any;
+  text: any;
+  onModifyToDos: any;
 }
 
-const Cardboard = ({ toDos, boardId }: CardBoardProps) => {
-  const [writeMode, setWriteMode] = useState(true);
-
+const Cardboard = ({
+  toDos,
+  boardId,
+  onAddToDos,
+  onAddText,
+  text,
+  onModifyToDos,
+}: CardBoardProps) => {
+  const [writeMode, setWriteMode] = useState(false);
   const onWriteMode = (e: React.MouseEvent<HTMLButtonElement>) => {
     setWriteMode((writing) => !writing);
   };
 
+  const onValid = ({ toDo }: FormInterface) => {};
+
   return (
     <Board>
-      <Title>{boardId}</Title>
-      <button onClick={onWriteMode}> 추가 </button>
+      <Title>{boardId}</Title> <button onClick={onWriteMode}> 추가하기 </button>
       {writeMode ? (
-        <form>
-          <div>
-            <textarea />
-          </div>
-          <div>
-            <button type="button">확인</button>
-            <button onClick={onWriteMode}>취소</button>
-          </div>
+        <form onSubmit={(e: React.FormEvent<HTMLFormElement>) => e.preventDefault()}>
+          <input onChange={onAddText} value={text} type="text" />
+          <button type="submit" onClick={onAddToDos(boardId)}>
+            확인
+          </button>
+          <button onClick={onWriteMode}> 취소 </button>
         </form>
       ) : (
         <div></div>
@@ -67,7 +94,13 @@ const Cardboard = ({ toDos, boardId }: CardBoardProps) => {
             {...provided.droppableProps}
           >
             {toDos.map((toDo, index) => (
-              <Cards key={toDo} toDo={toDo} index={index} />
+              <Cards
+                key={toDo.id}
+                toDoId={toDo.id}
+                toDoText={toDo.text}
+                index={index}
+                onModifyToDos={onModifyToDos}
+              />
             ))}
             {provided.placeholder}
           </Area>

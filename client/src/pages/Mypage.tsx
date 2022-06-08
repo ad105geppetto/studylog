@@ -27,14 +27,12 @@ const Mypage = () => {
     pwd: "",
     pwdCheck: "",
     email: userInfo.email,
-    profile: null, // 프로필의 초기값은 무엇일까? 우리는 기본 이미지가 되겠지?
-    // 동일한 이미지를 서버에서는 링크로 가질것이고, 나는 클라에서 따로 가지고 보여줘야하나?
+    profile: userInfo.profile, // 프로필의 초기값은 무엇일까? 기본 이미지가 되겠지?
   });
 
   const [validCheck, setValidCheck] = useState({
     pwd: false,
     pwdCheck: false,
-    email: false,
   });
 
   useEffect(() => {
@@ -110,17 +108,14 @@ const Mypage = () => {
         switch (res.status) {
           case 200:
             setErrMsg({ ...errMsg, emailMsg: "인증 완료 되었습니다." });
-            setValidCheck({ ...validCheck, email: true });
             break;
 
           case 400:
             setErrMsg({ ...errMsg, emailMsg: "올바르지 못 한 이메일 형식입니다." });
-            setValidCheck({ ...validCheck, email: false });
             break;
 
           default:
             setErrMsg({ ...errMsg, emailMsg: "올바르지 못 한 이메일 형식입니다." });
-            setValidCheck({ ...validCheck, email: false });
         }
       })
       .catch((err: AxiosError) => {
@@ -164,7 +159,6 @@ const Mypage = () => {
 
   const testClick = () => {
     setValidCheck({
-      email: true,
       pwd: true,
       pwdCheck: true,
     });
@@ -198,11 +192,7 @@ const Mypage = () => {
           <button
             type="submit"
             onClick={onModify}
-            disabled={
-              validCheck.email === true && validCheck.pwd === true && validCheck.pwdCheck === true
-                ? false
-                : true
-            }
+            disabled={validCheck.pwd === true && validCheck.pwdCheck === true ? false : true}
           >
             회원정보 수정
           </button>
@@ -220,3 +210,36 @@ const Mypage = () => {
 };
 
 export default Mypage;
+
+/*
+
+    const data = {
+      title: post.title,
+      image: post.image,
+    };
+
+    const formData = new FormData();
+    formData.append("image", imageFile[0]);
+    formData.append("data", new Blob([JSON.stringify(data)], { type: "application/json" }));
+
+//////////
+axios
+      .put(
+        `http://localhost:4000/records/${id}`,
+        {
+          title: 상태값,
+          content: 상태값,
+          image: 상태값
+        },
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+          withCredentials: true,
+        }
+      )
+      .then((res) => console.log(res))
+      .catch((err) => console.log(err.response));
+
+
+*/

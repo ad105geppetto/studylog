@@ -8,9 +8,9 @@ export const initialState = {
   },
 
   toDos: {
-    id: "",
-    content: "",
-    type: "",
+    Todo: [],
+    Progress: [],
+    Done: [],
   },
 };
 

@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import styled from "styled-components";
 
 const Card = styled.div<{ isDragging: boolean }>`
+  display: flex;
   background-color: ${(props) => (props.isDragging ? "lightgrey" : "white")};
   border: 5px solid pink;
   border-radius: 10px;
@@ -12,14 +13,21 @@ const Card = styled.div<{ isDragging: boolean }>`
 `;
 
 interface CardInterface {
-  toDo: string;
+  toDoId: number;
+  toDoText: string;
   index: number;
+  onModifyToDos: any;
 }
 
-const Cards = ({ toDo, index }: CardInterface) => {
-  console.log(toDo);
+const Cards = ({ toDoId, toDoText, index, onModifyToDos }: CardInterface) => {
+  const onModify = (e: React.MouseEvent<HTMLButtonElement>) => {
+    console.log(e.currentTarget.value);
+    onModifyToDos(toDoId);
+    console.log(onModifyToDos);
+  };
+
   return (
-    <Draggable draggableId={toDo} key={toDo} index={index}>
+    <Draggable draggableId={toDoId.toString()} index={index}>
       {(provided, snapshot) => (
         <Card
           isDragging={snapshot.isDragging}
@@ -27,7 +35,13 @@ const Cards = ({ toDo, index }: CardInterface) => {
           {...provided.dragHandleProps}
           {...provided.draggableProps}
         >
-          {toDo}
+          {toDoText}
+          <button value={toDoId} onClick={onModify}>
+            수정
+          </button>
+          <button value={toDoId} onClick={onModify}>
+            삭제
+          </button>
         </Card>
       )}
     </Draggable>

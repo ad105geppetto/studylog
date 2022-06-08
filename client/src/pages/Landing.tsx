@@ -16,6 +16,21 @@ const Landing = () => {
       <button type="button" onClick={() => navigate("/todos")}>
         Todos
       </button>
+      <button type="button" onClick={() => navigate("/room/id")}>
+        room
+      </button>
+      <button type="button" onClick={() => navigate("/creatingroom")}>
+        creatingroom
+      </button>
+      <button type="button" onClick={() => navigate("/roomlist")}>
+        roomlist
+      </button>
+      <button type="button" onClick={() => navigate("/idInquiry")}>
+        idInquiry
+      </button>
+      <button type="button" onClick={() => navigate("/pwInquiry")}>
+        pwInquiry
+      </button>
     </div>
   );
 };

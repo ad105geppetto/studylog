@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
 import axios, { AxiosError, AxiosResponse } from "axios";
 import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
 
 const SERVER = process.env.REACT_APP_SERVER;
 
 export const Signup = () => {
+  const navigate = useNavigate();
   const [userInfo, setUserInfo] = useState({
     id: "",
     pwd: "",
@@ -23,6 +25,7 @@ export const Signup = () => {
     id: false,
     pwd: false,
     pwdCheck: false,
+    email: false,
   }); // 유효성 체크
 
   useEffect(() => {
@@ -74,6 +77,7 @@ export const Signup = () => {
           setErrMsg({ ...errMsg, emailMsg: "올바르지 못 한 이메일 형식입니다." });
         } else {
           setErrMsg({ ...errMsg, emailMsg: "" });
+          setValidCheck({ ...validCheck, email: true });
         }
         break;
     }
@@ -110,16 +114,25 @@ export const Signup = () => {
   const onSingup = () => {
     axios
       .post(`${SERVER}/signup`, {
-        userID: userInfo.id,
+        userId: userInfo.id,
         password: userInfo.pwd,
         email: userInfo.email,
       })
       .then((res: AxiosResponse) => {
-        console.log(res);
+        navigate("/");
         // 메인페이지로 리다이렉트
       })
-      .catch((err: AxiosError) => {
-        console.log(err);
+      .catch((err: any) => {
+        // if (!err.response) {return
+        // } else if(err.response?.data.message === '보내신 이메일에서 인증 버튼을 클릭 해주세요.' )
+        console.log("에러메세지", err);
+
+        if (err.response.data.message === "보내신 이메일에서 인증 버튼을 클릭 해주세요.") {
+          setErrMsg({
+            ...errMsg,
+            emailMsg: "요청하신 메일에서 인증 버튼을 눌러주세요.",
+          });
+        }
       });
   };
   //  -----------------------------------------------------------------------
@@ -128,6 +141,7 @@ export const Signup = () => {
     axios
       .post(`${SERVER}/signup/mail`, { email: userInfo.email })
       .then((res: AxiosResponse) => {
+        console.log(res);
         // switch (res.status) {
         //   case 200:
         //     setErrMsg({ ...errMsg, emailMsg: "인증 완료 되었습니다." });
@@ -201,7 +215,11 @@ export const Signup = () => {
         </div>
         <div>
           <button
-            disabled={validCheck.id && validCheck.pwd && validCheck.pwdCheck ? false : true}
+            disabled={
+              validCheck.email && validCheck.id && validCheck.pwd && validCheck.pwdCheck
+                ? false
+                : true
+            }
             onClick={onSingup}
           >
             가입
