@@ -1,6 +1,6 @@
 import { Signup } from "pages/Signup";
 import Login from "pages/Login";
-import Pwinquiry from "pages/Pwinquiry";
+import Pwinquiry from "./components/Pwinquiry";
 import Landing from "pages/Landing";
 import Mypage from "pages/Mypage";
 import Room from "pages/Room";
@@ -12,7 +12,7 @@ import { useStore } from "react-redux";
 import { BrowserRouter, Route, Routes, useNavigate, useParams } from "react-router-dom";
 import Boards from "components/Boards";
 import Roomlist from "pages/Roomlist";
-import Idinquiry from "pages/Idinquiry";
+import Idinquiry from "./components/Idinquiry";
 
 function App() {
   const SERVER = process.env.REACT_APP_SERVER;
