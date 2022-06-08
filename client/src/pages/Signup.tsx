@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
 import axios, { AxiosError, AxiosResponse } from "axios";
 import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
 
 const SERVER = process.env.REACT_APP_SERVER;
 
 export const Signup = () => {
+  const navigate = useNavigate();
   const [userInfo, setUserInfo] = useState({
     id: "",
     pwd: "",
@@ -75,20 +77,21 @@ export const Signup = () => {
           setErrMsg({ ...errMsg, emailMsg: "올바르지 못 한 이메일 형식입니다." });
         } else {
           setErrMsg({ ...errMsg, emailMsg: "" });
+          setValidCheck({ ...validCheck, email: true });
         }
         break;
     }
     console.log(userInfo);
-    console.log(errMsg);
-    console.log(validCheck);
   };
   // ----------------------------------------------------------------------------
 
   // ------------------------- 아이디 중복 체크 검사 -------------------------
   const onCheckUserId = () => {
     axios
-      .post(`${SERVER}/check`, { userID: userInfo.id })
+      .post(`${SERVER}/check`, { userId: userInfo.id })
       .then((res: AxiosResponse) => {
+        console.log(res);
+        console.log(userInfo.id);
         switch (res.status) {
           case 200:
             setErrMsg({ ...errMsg, idMsg: "사용 가능한 아이디 입니다." });
@@ -111,43 +114,50 @@ export const Signup = () => {
   const onSingup = () => {
     axios
       .post(`${SERVER}/signup`, {
-        userID: userInfo.id,
+        userId: userInfo.id,
         password: userInfo.pwd,
         email: userInfo.email,
       })
       .then((res: AxiosResponse) => {
-        console.log(res);
+        navigate("/");
         // 메인페이지로 리다이렉트
       })
-      .catch((err: AxiosError) => {
-        console.log(err);
+      .catch((err: any) => {
+        // if (!err.response) {return
+        // } else if(err.response?.data.message === '보내신 이메일에서 인증 버튼을 클릭 해주세요.' )
+        console.log("에러메세지", err);
+
+        if (err.response.data.message === "보내신 이메일에서 인증 버튼을 클릭 해주세요.") {
+          setErrMsg({
+            ...errMsg,
+            emailMsg: "요청하신 메일에서 인증 버튼을 눌러주세요.",
+          });
+        }
       });
   };
   //  -----------------------------------------------------------------------
   //  ------------------------------ 인증메일 전송 ----------------------------
   const onVerifyEmail = () => {
     axios
-      .post(`${SERVER}/signup/auth`, { email: userInfo.email })
+      .post(`${SERVER}/signup/mail`, { email: userInfo.email })
       .then((res: AxiosResponse) => {
-        switch (res.status) {
-          case 200:
-            setErrMsg({ ...errMsg, emailMsg: "인증 완료 되었습니다." });
-            setValidCheck({ ...validCheck, email: true });
-            break;
-
-          case 400:
-            setErrMsg({ ...errMsg, emailMsg: "올바르지 못 한 이메일 형식입니다." });
-            setValidCheck({ ...validCheck, email: false });
-            break;
-
-          default:
-            setErrMsg({ ...errMsg, emailMsg: "올바르지 못 한 이메일 형식입니다." });
-            setValidCheck({ ...validCheck, email: false });
-        }
+        console.log(res);
+        // switch (res.status) {
+        //   case 200:
+        //     setErrMsg({ ...errMsg, emailMsg: "인증 완료 되었습니다." });
+        //     break;
+        //   case 409:
+        //     console.log("409번 응답");
+        //     setErrMsg({ ...errMsg, emailMsg: "올바르지 못 한 이메일 형식입니다." });
+        //     break;
+        //   default:
+        //     setErrMsg({ ...errMsg, emailMsg: "올바르지 못 한 이메일 형식입니다." });
+        // }
       })
       .catch((err: AxiosError) => {
-        console.log(err);
+        console.log("에러메세지", err);
       });
+    console.log(userInfo);
   };
   //  -----------------------------------------------------------------------
 

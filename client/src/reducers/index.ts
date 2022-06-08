@@ -1,6 +1,15 @@
 import { combineReducers } from "redux";
 import userInfoReducer from "./userInfoReducer";
+import todosReducer from "./todosReducer";
+// ---
+import { persistReducer } from "redux-persist";
+import storage from "redux-persist/lib/storage";
 
-const rootReducer = combineReducers({ userInfoReducer });
+const persistConfig = {
+  key: "root",
+  storage: storage,
+};
 
-export default rootReducer;
+const rootReducer = combineReducers({ userInfoReducer, todosReducer });
+
+export default persistReducer(persistConfig, rootReducer);
