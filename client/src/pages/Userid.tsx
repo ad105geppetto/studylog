@@ -6,9 +6,7 @@ const Userid = () => {
   const navigate = useNavigate();
 
   const onNavigate = (url: string) => {
-    console.log("들어옴");
     return (e: React.MouseEvent<HTMLButtonElement>) => {
-      console.log("navi로 들어옴");
       navigate(url);
     };
   };
@@ -18,7 +16,7 @@ const Userid = () => {
   // };
 
   return (
-    <div className="">
+    <div>
       <div>
         <nav></nav>
 
@@ -35,10 +33,17 @@ const Userid = () => {
       </div>
 
       <div>
+        <span>
+          <button>아이디 찾기</button>
+        </span>
+        <span>
+          <button>비밀번호 찾기</button>
+        </span>
+      </div>
+
+      <div>
         <span>비밀번호</span>
-        <div>
-          <input></input>
-        </div>
+        <span></span>
       </div>
     </div>
   );

@@ -1,25 +1,24 @@
-// import React, { useState } from "react";
-// import axios from "axios";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+
+import axios, { AxiosError, AxiosResponse } from "axios";
+
+const SERVER = process.env.REACT_APP_SERVER;
 
 const Password = () => {
   const navigate = useNavigate();
 
   const onNavigate = (url: string) => {
-    console.log("들어옴");
     return (e: React.MouseEvent<HTMLButtonElement>) => {
-      console.log("navi로 들어옴");
       navigate(url);
     };
   };
 
-  // const handleInputValue = (key: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   setuserInfo({ ...userInfo, [key]: e.target.value });
-  // };
+  // const onClickFindId = async () => {
 
   return (
-    <div className="">
-      <div>
+    <div>
+      {/* <div>
         <nav></nav>
 
         <span>
@@ -32,7 +31,7 @@ const Password = () => {
             회원가입
           </button>
         </span>
-      </div>
+      </div> */}
 
       <div>
         <span>비밀번호</span>

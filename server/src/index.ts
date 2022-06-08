@@ -1,11 +1,21 @@
-import * as express from "express";
+import express from "express"
+import cookieParser from "cookie-parser";
+import indexRouter from "./routes";
+import cors from "cors"
+const port = 4000;
 const app = express();
-const port = 4000
 
-app.get('/', (req, res) => {
-  res.send('Hello World!')
-})
+app.use(cors({
+  origin: ["http://localhost:3000"],
+  credentials: true,
+  methods: ["GET", "POST", "OPTIONS", "PUT", "PATCH", "DELETE"],
+}))
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+app.use(cookieParser());
+
+app.use("/", indexRouter);
 
 app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`)
-})
+  console.log(`Example app listening on port ${port}`);
+});
