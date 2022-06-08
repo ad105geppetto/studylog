@@ -10,6 +10,7 @@ import roomlistRouter from "./Roomlist";
 import logoutRouter from "./Logout";
 import dropoutRouter from "./Dropout";
 import userinfoRouter from "./Userinfo";
+import staticsRouter from "./Statics";
 
 const router = express.Router();
 
@@ -24,5 +25,6 @@ router.use("/userid", userIdRouter);
 router.use("/userpwd", userpwdRouter);
 router.use("/Oauth", oauthRouter);
 router.use("/roomlist", roomlistRouter);
+router.use("/statics", staticsRouter);
 
 export default router;
