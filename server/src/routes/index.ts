@@ -11,6 +11,7 @@ import logoutRouter from "./Logout";
 import dropoutRouter from "./Dropout";
 import userinfoRouter from "./Userinfo";
 import staticsRouter from "./Statics";
+import todoRouter from "./Todo";
 
 const router = express.Router();
 
@@ -26,5 +27,5 @@ router.use("/userpwd", userpwdRouter);
 router.use("/Oauth", oauthRouter);
 router.use("/roomlist", roomlistRouter);
 router.use("/statics", staticsRouter);
-
+router.use("/todo", todoRouter);
 export default router;
