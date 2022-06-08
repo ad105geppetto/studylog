@@ -1,41 +1,60 @@
 import { Signup } from "pages/Signup";
 import Login from "pages/Login";
-import Idinquiry from "components/Idinquiry";
-import Pwinquiry from "components/Pwinquiry";
-import Change from "pages/Change";
-import axios from "axios";
-import { useEffect } from "react";
+import Pwinquiry from "./components/Pwinquiry";
+import Landing from "pages/Landing";
+import Mypage from "pages/Mypage";
+import Room from "pages/Room";
+import axios, { AxiosError, AxiosResponse } from "axios";
+import React, { useEffect, useState } from "react";
+import Todo from "pages/Todo";
+import Creatingroom from "./pages/Creatingroom";
+import { useStore } from "react-redux";
+import { BrowserRouter, Route, Routes, useNavigate, useParams } from "react-router-dom";
+import Boards from "components/Boards";
+import Roomlist from "pages/Roomlist";
+import Idinquiry from "./components/Idinquiry";
 
 function App() {
   const SERVER = process.env.REACT_APP_SERVER;
-  // const OAUTH_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID;
-  // const OAUTH_URL = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${OAUTH_ID}&redirect_uri=http://localhost:3000&response_type=code&scope=openid`;
+  let { userId } = useParams();
+  const url = new URL(window.location.href);
+  const authCode = url.searchParams.get("code");
 
   // --------------------------- OAUTH 로그인---------------------
-  const sendAuthCode = (authCode: string | null) => {
+  const sendAuthCode = (authCode: any) => {
     axios
-      .post(`${SERVER}/Oauth`, { authorizationCodr: authCode })
-      .then((res) => {})
-      .catch((err) => {});
+      .post(`${SERVER}/Oauth`, { authorizationCode: authCode })
+      .then((res: AxiosResponse) => {
+        console.log(res);
+      })
+      .catch((err: AxiosError) => {
+        console.log("err:", err);
+      });
   };
 
-  // useEffect(() => {
-  //   const url = new URL(window.location.href);
-  //   const authCode = url.searchParams.get("code");
-  //   console.log(url);
-  //   console.log(authCode);
-  //   sendAuthCode(authCode);
-  // }, []);
+  useEffect(() => {
+    sendAuthCode(authCode);
+  }, []);
+  // outh 서버로 전송이 안댐 , 뭔가 틀렸을텐데 뭘까
   // ----------------------------------------
 
   return (
-    <div className="App">
-      {/* <Signup /> */}
-      {/* <Login /> */}
-      {/* <Idinquiry /> */}
-      {/* <Pwinquiry /> */}
-      <Change />
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Landing />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/mypage" element={<Mypage />} />
+        <Route path="/todos" element={<Todo />} />
+        <Route path="/room">
+          <Route path=":roomId" element={<Room />} />
+        </Route>
+        <Route path="/creatingroom" element={<Creatingroom />} />
+        <Route path="/roomlist" element={<Roomlist />} />
+        <Route path="/idInquiry" element={<Idinquiry />} />
+        <Route path="/pwInquiry" element={<Pwinquiry />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
