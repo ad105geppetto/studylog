@@ -30,13 +30,11 @@ const io = new Server(httpServer, {
 
 // socket.io
 io.on("connection", (socket) => {
-  socket["nickname"];
-  socket.onAny((event) => {
-    console.log(`SOCKET EVENT : ${event}`);
-  });
-
   socket.on("room", (roomName, userId) => {
     socket.join(roomName);
+
+    console.log("룸네임님!!", roomName);
+    console.log(socket);
     socket.to(roomName).emit("welcome", userId);
   });
 

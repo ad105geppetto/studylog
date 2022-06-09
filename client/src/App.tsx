@@ -8,15 +8,17 @@ import axios, { AxiosError, AxiosResponse } from "axios";
 import React, { useEffect, useState } from "react";
 import Todo from "pages/Todo";
 import Creatingroom from "./pages/Creatingroom";
-import { useStore } from "react-redux";
+import { useSelector } from "react-redux";
 import { BrowserRouter, Route, Routes, useNavigate, useParams } from "react-router-dom";
 import Boards from "components/Boards";
 import Roomlist from "pages/Roomlist";
 import Idinquiry from "pages/Idinquiry";
 
+import { io } from "socket.io-client";
+
 function App() {
+  const userInfo = useSelector((state: any) => state.userInfoReducer.userInfo);
   const SERVER = process.env.REACT_APP_SERVER;
-  let { userId } = useParams();
   const url = new URL(window.location.href);
   const authCode = url.searchParams.get("code");
 
@@ -38,6 +40,10 @@ function App() {
   // outh 서버로 전송이 안댐 , 뭔가 틀렸을텐데 뭘까
   // ----------------------------------------
 
+  const socket = io("http://localhost:4000", {
+    withCredentials: true,
+  });
+
   return (
     <BrowserRouter>
       <Routes>
@@ -47,9 +53,12 @@ function App() {
         <Route path="/mypage" element={<Mypage />} />
         <Route path="/todos" element={<Todo />} />
         <Route path="/room">
-          <Route path=":roomId" element={<Room />} />
+          <Route path=":roomId" element={<Room userInfo={userInfo} socket={socket} />} />
         </Route>
-        <Route path="/creatingroom" element={<Creatingroom />} />
+        <Route
+          path="/creatingroom"
+          element={<Creatingroom userInfo={userInfo} socket={socket} />}
+        />
         <Route path="/roomlist" element={<Roomlist />} />
         <Route path="/idInquiry" element={<Idinquiry />} />
         <Route path="/pwInquiry" element={<Pwinquiry />} />

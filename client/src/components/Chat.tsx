@@ -17,20 +17,18 @@ const Wrapper = styled.div`
   }
 `;
 
-interface userInfoInterface {
+interface ChatInterface {
   userInfo: any;
+  socket: any;
 }
 // const socket = io("http://localhost:4000", {
 //   withCredentials: true,
 // });
 
-const Chat = ({ userInfo }: userInfoInterface) => {
+const Chat = ({ userInfo, socket }: ChatInterface) => {
   const { roomId } = useParams();
   const guestNum = (Math.random() * 10000000).toString().slice(0, 4);
   const annoy = `Annoy${guestNum}`;
-  const socket = io("http://localhost:4000", {
-    withCredentials: true,
-  });
   const [text, setText] = useState("");
   const [guest, setGuest] = useState("");
   const [nickName, setNickName] = useState("");
@@ -38,14 +36,19 @@ const Chat = ({ userInfo }: userInfoInterface) => {
 
   useEffect(() => {
     setGuest(annoy);
-    socket.emit("room", roomId, nickName);
-    socket.on("welcome", (name) => {
-      const ul = document.getElementById("chatlist");
-      const li = document.createElement("li");
-      li.textContent = `${name ? name : guest} 님 환영합니다. `;
-      ul?.appendChild(li);
-    });
+
+    // socket.on("welcome", (name: any) => {
+    //   const ul = document.getElementById("chatlist");
+    //   const li = document.createElement("li");
+    //   li.textContent = `${name ? name : guest} 님 환영합니다. `;
+    //   ul?.appendChild(li);
+    // });
+    console.log(roomId);
   }, []);
+
+  const onGetInRoom = (e: React.MouseEvent<HTMLButtonElement>) => {
+    socket.emit("room", roomId, nickName);
+  };
 
   const onChangeMessage = (e: React.ChangeEvent<HTMLInputElement>) => {
     setText(e.target.value);
@@ -53,41 +56,35 @@ const Chat = ({ userInfo }: userInfoInterface) => {
 
   useEffect(() => {
     // 서버에서 message 이벤트가 올 경우에 대해서 `on`
-    socket.on("chat", (message, name, guest) => {
+    socket.on("chat", (message: any, name: any, guest: any) => {
       const ul = document.getElementById("chatlist");
       const li = document.createElement("li");
       li.textContent = `${name ? name : guest}: ${message}`;
       ul?.appendChild(li);
+      console.log("message : ", message);
       // setChatLog([...chatLog, message]);
     });
     return () => {
       socket.disconnect();
     };
-  }, [socket]);
-
-  socket.emit("setNickname", nickName);
-
-  // useEffect(() => {
-  //   // 서버에서 message 이벤트가 올 경우에 대해서 `on`
-  //
-  // }, []);
-
-  // useEffect(() => {
-
-  // },[chatLog])
+  }, []);
 
   const clickHandler = () => {
+    if (!text) {
+      return;
+    }
     const ul = document.getElementById("chatlist");
     const li = document.createElement("li");
     li.textContent = `${userInfo.userId ? userInfo.userId : guest}: ${text}`;
     ul?.appendChild(li);
-    socket.emit("message", roomId, text, userInfo.userId, guest);
-    console.log(text);
+    socket.emit("message", "1번방", text, userInfo.userId, guest);
+    console.log("text:", text);
     setText("");
   };
 
   return (
     <Wrapper id="chat">
+      <button onClick={onGetInRoom}>입장!!</button>
       <ul id="chatlist"></ul>
       <form onSubmit={(e: React.FormEvent<HTMLFormElement>) => e.preventDefault()}>
         <div className="input">
