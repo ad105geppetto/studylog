@@ -21,7 +21,7 @@ export default {
             email: result[0].email
           };
 
-          const accessToken = jwt.sign(payload, process.env.ACCESS_SECRET, { expiresIn: "10s" })
+          const accessToken = jwt.sign(payload, process.env.ACCESS_SECRET, { expiresIn: "1h" })
           const refreshToken = jwt.sign(payload, process.env.REFRESH_SECRET, { expiresIn: "24h" })
 
           res
