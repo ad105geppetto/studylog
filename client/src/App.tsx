@@ -13,7 +13,11 @@ import { BrowserRouter, Route, Routes, useNavigate, useParams } from "react-rout
 import Boards from "components/Boards";
 import Roomlist from "pages/Roomlist";
 import Idinquiry from "./components/Idinquiry";
+import { io } from "socket.io-client";
 
+const socket = io("http://localhost:4000", {
+  withCredentials: true,
+});
 function App() {
   const SERVER = process.env.REACT_APP_SERVER;
   let { userId } = useParams();
@@ -41,16 +45,16 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Landing />} />
+        <Route path="/" element={<Landing socket={socket} />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />
         <Route path="/mypage" element={<Mypage />} />
         <Route path="/todos" element={<Todo />} />
         <Route path="/room">
-          <Route path=":roomId" element={<Room />} />
+          <Route path=":roomId" element={<Room socket={socket} />} />
         </Route>
-        <Route path="/creatingroom" element={<Creatingroom />} />
-        <Route path="/roomlist" element={<Roomlist />} />
+        <Route path="/creatingroom" element={<Creatingroom socket={socket} />} />
+        <Route path="/roomlist" element={<Roomlist socket={socket} />} />
         <Route path="/idInquiry" element={<Idinquiry />} />
         <Route path="/pwInquiry" element={<Pwinquiry />} />
       </Routes>
