@@ -16,6 +16,7 @@ export default {
       if (error) {
         res.status(500).send({ message: "서버에러" });
       } else {
+        res.clearCookie("refreshToken");
         res.status(200).send({
           accessToken: null,
           refreshToken: null,

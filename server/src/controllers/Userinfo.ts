@@ -84,6 +84,8 @@ export default {
           const accessToken = jwt.sign(payload, process.env.ACCESS_SECRET, { expiresIn: "1d" });
           const refreshToken = jwt.sign(payload, process.env.REFRESH_SECRET, { expiresIn: "2d" });
 
+          res.cookie("refreshToken", refreshToken);
+
           res.status(200).send({
             accessToken: accessToken,
             refreshToken: refreshToken,
