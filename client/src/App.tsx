@@ -18,7 +18,13 @@ import { io } from "socket.io-client";
 const socket = io("http://localhost:4000", {
   withCredentials: true,
 });
+
 function App() {
+  const guestNum = (Math.random() * 10000000).toString().slice(0, 4);
+  const geust = `Annoy${guestNum}`;
+  const [annoy, setAnnoy] = useState(geust);
+  console.log(annoy);
+  const [roomId, setRoomId] = useState("");
   const SERVER = process.env.REACT_APP_SERVER;
   let { userId } = useParams();
   const url = new URL(window.location.href);
@@ -51,10 +57,16 @@ function App() {
         <Route path="/mypage" element={<Mypage />} />
         <Route path="/todos" element={<Todo />} />
         <Route path="/room">
-          <Route path=":roomId" element={<Room socket={socket} />} />
+          <Route path=":roomId" element={<Room socket={socket} annoy={annoy} roomId={roomId} />} />
         </Route>
-        <Route path="/creatingroom" element={<Creatingroom socket={socket} />} />
-        <Route path="/roomlist" element={<Roomlist socket={socket} />} />
+        <Route
+          path="/creatingroom"
+          element={<Creatingroom socket={socket} setRoomId={setRoomId} />}
+        />
+        <Route
+          path="/roomlist"
+          element={<Roomlist socket={socket} annoy={annoy} roomId={roomId} setRoomId={setRoomId} />}
+        />
         <Route path="/idInquiry" element={<Idinquiry />} />
         <Route path="/pwInquiry" element={<Pwinquiry />} />
       </Routes>
