@@ -29,17 +29,40 @@ const io = new Server(httpServer, {
 });
 
 // socket.io
+function publicRooms() {
+  const {
+    sockets: {
+      adapter: { sids, rooms },
+    },
+  } = io;
+  // 위의 코드는 아래의 코드와 동등하다.
+  // const sids = wsServerio.sockets.adapter.sids;
+  // const rooms = wsServerio.sockets.adapter.rooms;
+  const publicRooms = [];
+  rooms.forEach((_, key) => {
+    if (sids.get(key) === undefined) {
+      publicRooms.push(key);
+    }
+  });
+  return publicRooms;
+}
+
 io.on("connection", (socket) => {
   socket.on("room", (roomName, userId) => {
     socket.join(roomName);
-
-    console.log("룸네임님!!", roomName);
-    console.log(socket);
+    console.log(roomName);
+    console.log(io.sockets.adapter.rooms);
+    console.log(io.sockets.adapter.sids);
     socket.to(roomName).emit("welcome", userId);
   });
 
   socket.on("message", (roomName, message, userId, guest) => {
+    console.log("=======메세지==========");
+    console.log(io.sockets.adapter.rooms);
+    console.log(io.sockets.adapter.sids);
+    console.log(socket.rooms);
     socket.to(roomName).emit("chat", message, userId, guest);
+    // 룸네임이 문제다.
     console.log(message);
   });
 

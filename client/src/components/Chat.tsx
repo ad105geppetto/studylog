@@ -21,9 +21,6 @@ interface ChatInterface {
   userInfo: any;
   socket: any;
 }
-// const socket = io("http://localhost:4000", {
-//   withCredentials: true,
-// });
 
 const Chat = ({ userInfo, socket }: ChatInterface) => {
   const { roomId } = useParams();
@@ -37,12 +34,12 @@ const Chat = ({ userInfo, socket }: ChatInterface) => {
   useEffect(() => {
     setGuest(annoy);
 
-    // socket.on("welcome", (name: any) => {
-    //   const ul = document.getElementById("chatlist");
-    //   const li = document.createElement("li");
-    //   li.textContent = `${name ? name : guest} 님 환영합니다. `;
-    //   ul?.appendChild(li);
-    // });
+    socket.on("welcome", (name: any) => {
+      const ul = document.getElementById("chatlist");
+      const li = document.createElement("li");
+      li.textContent = `${name ? name : guest} 님 환영합니다. `;
+      ul?.appendChild(li);
+    });
     console.log(roomId);
   }, []);
 
@@ -77,7 +74,7 @@ const Chat = ({ userInfo, socket }: ChatInterface) => {
     const li = document.createElement("li");
     li.textContent = `${userInfo.userId ? userInfo.userId : guest}: ${text}`;
     ul?.appendChild(li);
-    socket.emit("message", "1번방", text, userInfo.userId, guest);
+    socket.emit("message", roomId, text, userInfo.userId, guest);
     console.log("text:", text);
     setText("");
   };

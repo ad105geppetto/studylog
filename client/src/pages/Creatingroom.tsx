@@ -1,27 +1,55 @@
 import { useNavigate } from "react-router-dom";
-
+// import { io } from "socket.io-client";
 import { useState } from "react";
-import Chat from "components/Chat";
+import { useSelector } from "react-redux";
+import axios from "axios";
 
-interface Creatingroom {
+interface socketInterface {
   socket: any;
-  userInfo: any;
 }
 
-const Creatingroom = ({ socket, userInfo }: Creatingroom) => {
+const Creatingroom = ({ socket }: socketInterface) => {
   const [nickName, setNickName] = useState("");
   const navigate = useNavigate();
-  const roomId = "14";
+  const userInfo = useSelector((state: any) => state.userInfoReducer.userInfo);
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
+  // const roomId = "14";
 
-  const onGetInRoom = (e: React.MouseEvent<HTMLButtonElement>) => {
-    socket.emit("room", roomId, nickName);
-    navigate(`/room/${roomId}`);
+  // const socket = io("http://localhost:4000", {
+  //   withCredentials: true,
+  // });
+  const titleHandler = (e: any) => {
+    setTitle(e.target.value);
+  };
+
+  const contentHandler = (e: any) => {
+    setContent(e.target.value);
+  };
+
+  const createRoomHandler = () => {
+    axios
+      .post(
+        `${process.env.REACT_APP_SERVER}/room`,
+        { title: title, content: content },
+        {
+          headers: { authorization: `Bearer ${userInfo.accessToken}` },
+        }
+      )
+      .then((res) => {
+        socket.emit("room", res.data.id, userInfo.userId);
+        navigate(`/room/${res.data.id}`);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   return (
     <div>
-      <button onClick={onGetInRoom}> 생성 </button>
-      <Chat userInfo={userInfo} socket={socket} />
+      <input type="text" onChange={titleHandler}></input>
+      <input type="text" onChange={contentHandler}></input>
+      <button onClick={createRoomHandler}> 생성 </button>
     </div>
   );
 };

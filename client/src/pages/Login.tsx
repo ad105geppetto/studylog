@@ -52,10 +52,6 @@ const Login = () => {
         console.log(err);
       });
   };
-
-  const userInfofo = useSelector((state: any) => state.userInfoReducer.userInfo);
-  console.log(userInfofo);
-
   // ----------------------------- 구글 OAUTH 요청 -----------------------
   const oauthPath = () => {
     window.location.assign(OAUTH_URL);

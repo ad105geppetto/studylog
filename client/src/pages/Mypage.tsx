@@ -55,8 +55,7 @@ const Mypage = () => {
       // 파일 리드를 통해 프리뷰에 미리보기 구현
     };
   };
-
-  // ----------------------------------------------------
+  const roomId = "14";
 
   // ----------------------------- 유저 정보 수정 -----------------------
   const onModifyUserInfo = (key: string) => (e: React.ChangeEvent<HTMLInputElement>) => {

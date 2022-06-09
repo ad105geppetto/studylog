@@ -36,7 +36,7 @@ VALUES
     ),
     (
         "joecoding",
-        "joecoding@naver.com",
+        "hdhj1026@naver.net",
         "1234",
         "/img/사진4.jpg"
     );

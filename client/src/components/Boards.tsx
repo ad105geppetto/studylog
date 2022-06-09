@@ -1,5 +1,5 @@
 import { DragDropContext, Draggable, Droppable, DropResult } from "react-beautiful-dnd";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Cardboard from "./Cardboard";
 import Cards from "./Card";
 import styled from "styled-components";
@@ -58,6 +58,7 @@ const Boards = (userInfo: any) => {
     axios
       .get(`${SERVER}/todo`, { headers: { authorization: `Bearer ${userInfo.accessToken}` } })
       .then((res: AxiosResponse) => {
+        console.log("todos response :", res);
         setToDos((toDos) => {
           return {
             ...toDos,
@@ -65,8 +66,12 @@ const Boards = (userInfo: any) => {
           };
         });
       })
-      .catch((err: AxiosError) => console.log(err));
+      .catch((err: AxiosError) => console.log("TODOS ERROR :", err));
   };
+
+  useEffect(() => {
+    onLoadToDos();
+  }, []);
 
   const onAddToDos = (key: string) => (e: React.MouseEvent<HTMLButtonElement>) => {
     const newToDo = {

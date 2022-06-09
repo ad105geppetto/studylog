@@ -1,6 +1,6 @@
 import { Signup } from "pages/Signup";
 import Login from "pages/Login";
-import Pwinquiry from "pages/Pwinquiry";
+import Pwinquiry from "./components/Pwinquiry";
 import Landing from "pages/Landing";
 import Mypage from "pages/Mypage";
 import Room from "pages/Room";
@@ -12,10 +12,12 @@ import { useSelector } from "react-redux";
 import { BrowserRouter, Route, Routes, useNavigate, useParams } from "react-router-dom";
 import Boards from "components/Boards";
 import Roomlist from "pages/Roomlist";
-import Idinquiry from "pages/Idinquiry";
-
+import Idinquiry from "./components/Idinquiry";
 import { io } from "socket.io-client";
 
+const socket = io("http://localhost:4000", {
+  withCredentials: true,
+});
 function App() {
   const userInfo = useSelector((state: any) => state.userInfoReducer.userInfo);
   const SERVER = process.env.REACT_APP_SERVER;
@@ -47,7 +49,7 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Landing />} />
+        <Route path="/" element={<Landing socket={socket} />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />
         <Route path="/mypage" element={<Mypage />} />
@@ -55,11 +57,8 @@ function App() {
         <Route path="/room">
           <Route path=":roomId" element={<Room userInfo={userInfo} socket={socket} />} />
         </Route>
-        <Route
-          path="/creatingroom"
-          element={<Creatingroom userInfo={userInfo} socket={socket} />}
-        />
-        <Route path="/roomlist" element={<Roomlist />} />
+        <Route path="/creatingroom" element={<Creatingroom socket={socket} />} />
+        <Route path="/roomlist" element={<Roomlist socket={socket} />} />
         <Route path="/idInquiry" element={<Idinquiry />} />
         <Route path="/pwInquiry" element={<Pwinquiry />} />
       </Routes>
