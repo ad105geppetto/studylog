@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import { io } from "socket.io-client";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 const Wrapper = styled.div`
   border: 5px solid salmon;
@@ -20,31 +19,20 @@ const Wrapper = styled.div`
 interface userInfoInterface {
   userInfo: any;
   socket: any;
+  annoy: any;
+  roomId: any;
 }
-// const socket = io("http://localhost:4000", {
-//   withCredentials: true,
-// });
 
-const Chat = ({ userInfo, socket }: userInfoInterface) => {
-  const { roomId } = useParams();
-  // const guestNum = (Math.random() * 10000000).toString().slice(0, 4);
-  // const annoy = `Annoy${guestNum}`;
-  // const socket = io("http://localhost:4000", {
-  //   withCredentials: true,
-  // });
+const Chat = ({ userInfo, socket, annoy, roomId }: userInfoInterface) => {
   const [text, setText] = useState("");
-  const [guest, setGuest] = useState("");
-  const [nickName, setNickName] = useState("");
-  // const [chatLog, setChatLog] = useState<any>([]);
+  const navigator = useNavigate();
 
   useEffect(() => {
-    // setGuest(annoy);
-    // socket.emit("room", roomId, nickName);
     socket.on("welcome", (name: any) => {
       console.log(socket.rooms);
       const ul = document.getElementById("chatlist");
       const li = document.createElement("li");
-      li.textContent = `${name ? name : guest} 님이 입장했습니다. `;
+      li.textContent = `${name} 님이 입장했습니다. `;
       ul?.appendChild(li);
     });
   }, []);
@@ -62,28 +50,32 @@ const Chat = ({ userInfo, socket }: userInfoInterface) => {
       ul?.appendChild(li);
       // setChatLog([...chatLog, message]);
     });
+
+    socket.on("bye", (left: any) => {
+      const ul = document.getElementById("chatlist");
+      const li = document.createElement("li");
+      li.textContent = `${left}`;
+      ul?.appendChild(li);
+    });
     return () => {
       socket.disconnect();
     };
   }, [socket]);
 
-  // useEffect(() => {
-  //   // 서버에서 message 이벤트가 올 경우에 대해서 `on`
-  //
-  // }, []);
-
-  // useEffect(() => {
-
-  // },[chatLog])
-
   const clickHandler = () => {
     const ul = document.getElementById("chatlist");
     const li = document.createElement("li");
-    li.textContent = `${userInfo.userId ? userInfo.userId : guest}: ${text}`;
+    li.textContent = `${userInfo.userId ? userInfo.userId : annoy}: ${text}`;
     ul?.appendChild(li);
-    socket.emit("message", 15, text, userInfo.userId, guest);
-    console.log(text);
+    socket.emit("message", roomId, text, userInfo.userId, annoy);
+    console.log(annoy);
     setText("");
+  };
+
+  const leaveHandler = () => {
+    console.log("dddd");
+    socket.disconnect();
+    navigator("/");
   };
 
   return (
@@ -99,6 +91,9 @@ const Chat = ({ userInfo, socket }: userInfoInterface) => {
           />
           <button type="submit" onClick={clickHandler}>
             보내기
+          </button>
+          <button type="submit" onClick={leaveHandler}>
+            나가기
           </button>
         </div>
       </form>

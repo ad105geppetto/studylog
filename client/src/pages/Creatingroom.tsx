@@ -6,9 +6,10 @@ import axios from "axios";
 
 interface socketInterface {
   socket: any;
+  setRoomId: any;
 }
 
-const Creatingroom = ({ socket }: socketInterface) => {
+const Creatingroom = ({ socket, setRoomId }: socketInterface) => {
   const [nickName, setNickName] = useState("");
   const navigate = useNavigate();
   const userInfo = useSelector((state: any) => state.userInfoReducer.userInfo);
@@ -37,6 +38,7 @@ const Creatingroom = ({ socket }: socketInterface) => {
         }
       )
       .then((res) => {
+        setRoomId(res.data.id);
         socket.emit("room", res.data.id, userInfo.userId);
         navigate(`/room/${res.data.id}`);
       })
