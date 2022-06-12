@@ -2,7 +2,6 @@ import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { resolveModuleNameFromCache } from "typescript";
 
 interface socketInterface {
   socket: any;
@@ -31,7 +30,7 @@ const Roomlist = ({ socket, annoy, roomId, setRoomId }: socketInterface) => {
 
   const enterRoomHandler = (room: any) => {
     setRoomId(room.id);
-    socket.emit("room", room.id, userInfo.userId ? userInfo.userId : annoy);
+    socket.emit("enterRoom", room.id, userInfo.userId ? userInfo.userId : annoy);
     navigate(`/room/${room.id}`);
   };
 
