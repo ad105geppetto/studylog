@@ -5,11 +5,15 @@ import { useDispatch } from "react-redux";
 import { logIn } from "../action/index";
 import { useNavigate } from "react-router-dom";
 import Dark_logo from "../../public/Dark_logo.png";
+import Modal from "../components/Modal";
+import { dropout } from "../action/index";
 
 axios.defaults.withCredentials = true;
 const SERVER = process.env.REACT_APP_SERVER;
 
 const Mypage = () => {
+  const [modal, setModal] = useState(false);
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [preview, setPreview] = useState("");
@@ -36,7 +40,7 @@ const Mypage = () => {
   });
 
   useEffect(() => {
-    console.log(userInfo);
+    // console.log(userInfo);
   }, [userInfo]);
 
   // ------------------------- 이미지 업로드 ----------------------
@@ -165,6 +169,26 @@ const Mypage = () => {
     console.log(validCheck);
   };
 
+  const onModalOff = () => {
+    setModal((value) => !value);
+  };
+
+  //  -------회원탈퇴 버튼 함수-------
+  const onDropOutlBtn = () => {
+    axios
+      .delete(`${SERVER}/dropout`, {
+        headers: { authorization: `Bearer ${userInfo.accessToken}` },
+      })
+      .then((res: AxiosResponse) => {
+        console.log(res.data);
+        const accessToken = res.data.accessToken;
+        dispatch(dropout(accessToken));
+      })
+      .catch((err: AxiosError) => console.log(err));
+    onModalOff();
+  };
+  // ----------------------------------------------------------------
+
   return (
     <div>
       <form onSubmit={(e: React.FormEvent<HTMLFormElement>) => e.preventDefault()}>
@@ -196,7 +220,40 @@ const Mypage = () => {
           >
             회원정보 수정
           </button>
-          <button type="button"> 회원 탈퇴 </button>
+
+          <div className="im-container">
+            <div className="im-wrapper">
+              <button
+                onClick={() => {
+                  setModal(true);
+                }}
+              >
+                회원탈퇴
+              </button>
+            </div>
+            {modal && (
+              <Modal
+                modal={modal}
+                setModal={setModal}
+                width="250"
+                height="200"
+                // element={<div>회원탈퇴 하시겠습니까?</div>}
+                element={
+                  <div>
+                    회원탈퇴를 하시겠습니까?
+                    <br />
+                    <button type="button" onClick={onDropOutlBtn}>
+                      확인
+                    </button>
+                    <button type="button" onClick={onModalOff}>
+                      취소
+                    </button>
+                  </div>
+                }
+              />
+            )}
+          </div>
+          {/* <button type="button"> 회원 탈퇴 </button> */}
           {/* 탈퇴 클릭시 모달창 떠야되고 모달창 내부에서 axios 요청 갑니다.  */}
         </div>
         <div>

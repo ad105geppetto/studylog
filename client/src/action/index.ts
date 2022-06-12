@@ -1,4 +1,7 @@
 export const LOG_IN = "LOG_IN";
+export const DROP_OUT = "DROP_OUT";
+export const LOG_OUT = "LOG_OUT";
+
 export const logIn = (
   accessToken: string,
   id: string,
@@ -63,3 +66,20 @@ export const createToDo = (id: any, content: any) => {
 //     기존의 배열을 불러와서 새로운 객체를 만들어주고
 
 // */
+export const dropout = (accessToken: string) => {
+  return {
+    type: DROP_OUT,
+    payload: {
+      accessToken,
+    },
+  };
+};
+
+export const logout = (accessToken: string) => {
+  return {
+    type: LOG_OUT,
+    payload: {
+      accessToken,
+    },
+  };
+};
