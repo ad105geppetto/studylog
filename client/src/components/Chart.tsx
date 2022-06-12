@@ -1,6 +1,5 @@
 import { LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip } from "recharts";
 import { BarChart, Legend, Bar } from "recharts";
-import { ComposedChart, Area, ResponsiveContainer } from "recharts";
 import { useEffect, useState } from "react";
 import axios, { AxiosError, AxiosResponse } from "axios";
 
@@ -31,7 +30,7 @@ const Chart = ({ userInfo }: Chartinterface) => {
 
   const onLoadingData = () => {
     axios
-      .get(`{SERVER}/statics`, { headers: { authorization: `Bearer ${userInfo.accessToken}` } })
+      .get(`${SERVER}/statics`, { headers: { authorization: `Bearer ${userInfo.accessToken}` } })
       .then((res: AxiosResponse) => {
         setData([]);
       })
@@ -47,20 +46,18 @@ const Chart = ({ userInfo }: Chartinterface) => {
       <div> 나의 공부 시간 </div>
 
       {isLineGraph ? (
-        <ResponsiveContainer width="100%" height="100%">
-          <ComposedChart
-            width={600}
-            height={300}
-            data={dummyData}
-            margin={{ top: 5, right: 20, bottom: 5, left: 0 }}
-          >
-            <Line type="monotone" dataKey="시간" stroke="#8884d8" />
-            <CartesianGrid stroke="#ccc" strokeDasharray="5 5" />
-            <XAxis dataKey="name" />
-            <YAxis />
-            <Tooltip />
-          </ComposedChart>
-        </ResponsiveContainer>
+        <LineChart
+          width={600}
+          height={300}
+          data={dummyData}
+          margin={{ top: 5, right: 20, bottom: 5, left: 0 }}
+        >
+          <Line type="monotone" dataKey="시간" stroke="#8884d8" />
+          <CartesianGrid stroke="#ccc" strokeDasharray="5 5" />
+          <XAxis dataKey="name" />
+          <YAxis />
+          <Tooltip />
+        </LineChart>
       ) : (
         <BarChart width={600} height={300} data={dummyData}>
           <CartesianGrid strokeDasharray="3 3" />

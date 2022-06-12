@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import { io } from "socket.io-client";
 import { useParams } from "react-router-dom";
 
 const Wrapper = styled.div`
@@ -20,6 +19,8 @@ const Wrapper = styled.div`
 interface ChatInterface {
   userInfo: any;
   socket: any;
+  annoy: any;
+  roomId: any;
 }
 
 const Chat = ({ userInfo, socket }: ChatInterface) => {

@@ -57,7 +57,7 @@ io.on("connection", (socket) => {
   });
 
   socket.on("message", (roomName, message, userId, guest) => {
-    console.log("=======메세지==========");
+    console.log("=======메세지========");
     console.log(io.sockets.adapter.rooms);
     console.log(io.sockets.adapter.sids);
     console.log(socket.rooms);
@@ -66,7 +66,9 @@ io.on("connection", (socket) => {
     console.log(message);
   });
 
-  socket.on("disconnect", () => {});
+  socket.on("disconnecting", () => {
+    socket.rooms.forEach((room) => socket.to(room).emit("bye", "나갔습니다."));
+  });
 });
 
 // 방제목이 룸네임으로 하면 되고

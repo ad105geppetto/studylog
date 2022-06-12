@@ -12,6 +12,8 @@ export const initialState = {
     Progress: [],
     Done: [],
   },
+
+  wirteMod: false,
 };
 
 /*
