@@ -1,17 +1,24 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
+import Modal from "components/Modal";
 import axios, { AxiosError, AxiosResponse } from "axios";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
-import { logIn } from "../action/index";
 import { useNavigate } from "react-router-dom";
-import Dark_logo from "../../public/Dark_logo.png";
+import { dropout } from "../action/index";
 
 axios.defaults.withCredentials = true;
 const SERVER = process.env.REACT_APP_SERVER;
 
 const Mypage = () => {
+  const userInfo = useSelector((state: any) => state.userInfoReducer.userInfo);
+  // 로그인시 저장 된 userInfo 가지고 오기
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const [modal, setModal] = useState(false);
+
+  const [drop, setDrop] = useState("");
   const [preview, setPreview] = useState("");
   const [imageFile, setImageFile] = useState();
   const [errMsg, setErrMsg] = useState({
@@ -19,9 +26,6 @@ const Mypage = () => {
     pwdCheckMsg: "",
     emailMsg: "",
   });
-
-  const userInfo = useSelector((state: any) => state.userInfoReducer.userInfo);
-  // 로그인시 저장 된 userInfo 가지고 오기
 
   const [modifiedUserInfo, setModifiedUserInfo] = useState({
     pwd: "",
@@ -33,30 +37,30 @@ const Mypage = () => {
   const [validCheck, setValidCheck] = useState({
     pwd: false,
     pwdCheck: false,
+    email: false,
   });
-
-  useEffect(() => {
-    console.log(userInfo);
-  }, [userInfo]);
 
   // ------------------------- 이미지 업로드 ----------------------
 
   const onUploadImage = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file: any = e.target.files;
-    setImageFile(file);
-    console.log(imageFile);
-    //  이미지 상태에 파일값 저장
+    if (file.length === 0) {
+      return;
+      //  input 이벤트는 실행 됐으나, 실제 파일이 업로드가 되지 않은 경우  그대로 종료
+    } else {
+      // 그 외의 경우에는 필요한 기능들이 작동하도록 작성
 
-    const reader = new FileReader();
-    reader.readAsDataURL(file[0]);
-    reader.onload = function (e: any) {
-      setPreview(e.target.result);
-      console.log(preview);
-      // 파일 리드를 통해 프리뷰에 미리보기 구현
-    };
+      setModifiedUserInfo({ ...modifiedUserInfo, ["profile"]: file });
+      setImageFile(file);
+
+      const reader = new FileReader();
+      reader.readAsDataURL(file[0]);
+      reader.onload = function (e: any) {
+        setPreview(e.target.result);
+        // 파일 리드를 통해 프리뷰에 미리보기 구현
+      };
+    }
   };
-
-  // ----------------------------------------------------
 
   // ----------------------------- 유저 정보 수정 -----------------------
   const onModifyUserInfo = (key: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -95,75 +99,106 @@ const Mypage = () => {
         }
         break;
     }
-    console.log(modifiedUserInfo);
     console.log(validCheck);
-    console.log(userInfo);
   };
 
   //  ------------------------------ 인증메일 전송 ----------------------------
   const onVerifyEmail = () => {
-    axios
-      .post(`${SERVER}/signup/auth`, { email: userInfo.email })
-      .then((res: AxiosResponse) => {
-        switch (res.status) {
-          case 200:
-            setErrMsg({ ...errMsg, emailMsg: "인증 완료 되었습니다." });
-            break;
-
-          case 400:
-            setErrMsg({ ...errMsg, emailMsg: "올바르지 못 한 이메일 형식입니다." });
-            break;
-
-          default:
-            setErrMsg({ ...errMsg, emailMsg: "올바르지 못 한 이메일 형식입니다." });
-        }
-      })
-      .catch((err: AxiosError) => {
-        console.log(err);
-      });
+    console.log("기존메일 : ", userInfo.email);
+    console.log("변경메일 : ", modifiedUserInfo.email);
+    if (userInfo.email === modifiedUserInfo.email) {
+      setValidCheck({ ...validCheck, email: true });
+      return;
+    } else {
+      axios
+        .post(`${SERVER}/signup/mail`, { email: modifiedUserInfo.email })
+        .then((res: AxiosResponse) => {
+          console.log(res);
+        })
+        .catch((err: AxiosError) => {
+          console.log("에러메세지", err);
+        });
+    }
   };
 
-  //  -----------------------------------------------------------------------
+  const onModalOff = () => {
+    setModal((value) => !value);
+  }; //  -----------------------------------------------------------------------
 
-  // ------------------------------------ 회원정보 수정 --------------------
+  // ---------------------------------- 정보 수정 요청 전송  --------------------
   const onModify = () => {
     const { email, pwd, profile } = modifiedUserInfo;
+    console.log(profile);
+    console.log(modifiedUserInfo);
+
+    let formData = new FormData();
+
+    if (profile) {
+      formData.append("email", email);
+      formData.append("password", pwd);
+      formData.append("profile", profile[0], profile[0].name);
+    } else {
+      formData.append("email", email);
+      formData.append("password", pwd);
+    }
+
+    // formData Key 확인하기
+    // for (let key of formData.keys()) {
+    //   console.log(`formData Key 값 : ${key}`);
+    // }
+
+    // // formdata value 확인하기
+    // for (let value of formData.values()) {
+    //   console.log("formData value : ", value);
+    // }
 
     axios
-      .patch(
-        `${SERVER}/userinfo`,
-        { email: email, password: pwd, profile: profile },
-        {
-          headers: { authorization: `Bearer ${userInfo.accessToken}` },
-        }
-      )
+      .patch(`${SERVER}/userinfo`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          authorization: `Bearer ${userInfo.accessToken}`,
+        },
+      })
       .then((res: AxiosResponse) => {
+        console.log(res);
         switch (res.status) {
           case 200:
             alert("정상적으로 변경 완료 되었습니다.");
-            dispatch(
-              logIn(
-                res.data.accessToken,
-                res.data.userInfo.id,
-                res.data.userInfo.userId,
-                res.data.userInfo.email,
-                res.data.userInfo.profile
-              )
-            );
+            // dispatch(
+            //   logIn(
+            //     res.data.accessToken,
+            //     res.data.userInfo.id,
+            //     res.data.userInfo.userId,
+            //     res.data.userInfo.email,
+            //     res.data.userInfo.profile
+            //   )
+            // );
             break;
         }
+        navigate("/");
       })
       .catch((err: AxiosError) => console.log(err));
   };
   // ---------------------------------------------------------------------------
 
-  const testClick = () => {
-    setValidCheck({
-      pwd: true,
-      pwdCheck: true,
-    });
-    console.log(validCheck);
+  const dropOut = () => {
+    setDrop("drop");
   };
+  //  -------회원탈퇴 버튼 함수-------
+  const onDropOutlBtn = () => {
+    axios
+      .delete(`${SERVER}/dropout`, {
+        headers: { authorization: `Bearer ${userInfo.accessToken}` },
+      })
+      .then((res: AxiosResponse) => {
+        console.log(res.data);
+        const accessToken = res.data.accessToken;
+        dispatch(dropout(accessToken));
+      })
+      .catch((err: AxiosError) => console.log(err));
+    onModalOff();
+  };
+  // ----------------------------------------------------------------
 
   return (
     <div>
@@ -175,7 +210,7 @@ const Mypage = () => {
           <img alt="프로필 사진" src={preview} />
         </div>
         <div>
-          <input type="file" accept="image/*" onChange={onUploadImage} />
+          <input type="file" accept=".jpg, .png" onChange={onUploadImage} />
         </div>
         비밀번호 : <input type="password" onChange={onModifyUserInfo("pwd")} />
         <div> {errMsg.pwdMsg} </div>
@@ -196,13 +231,39 @@ const Mypage = () => {
           >
             회원정보 수정
           </button>
-          <button type="button"> 회원 탈퇴 </button>
-          {/* 탈퇴 클릭시 모달창 떠야되고 모달창 내부에서 axios 요청 갑니다.  */}
-        </div>
-        <div>
-          <button type="button" onClick={testClick}>
-            테스트버튼
-          </button>
+
+          <div className="im-container">
+            <div className="im-wrapper">
+              <button
+                onClick={() => {
+                  setModal(true);
+                }}
+              >
+                회원탈퇴
+              </button>
+            </div>
+            {modal && (
+              <Modal
+                modal={modal}
+                setModal={setModal}
+                width="250"
+                height="200"
+                // element={<div>회원탈퇴 하시겠습니까?</div>}
+                element={
+                  <div>
+                    회원탈퇴를 하시겠습니까?
+                    <br />
+                    <button type="button" onClick={onDropOutlBtn}>
+                      확인
+                    </button>
+                    <button type="button" onClick={onModalOff}>
+                      취소
+                    </button>
+                  </div>
+                }
+              />
+            )}
+          </div>
         </div>
       </form>
     </div>

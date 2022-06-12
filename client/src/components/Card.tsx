@@ -1,9 +1,11 @@
-import { DragDropContext, Draggable, Droppable, DropResult } from "react-beautiful-dnd";
-import React, { useState } from "react";
+import { Draggable } from "react-beautiful-dnd";
+import React from "react";
 import styled from "styled-components";
+// import { MdDeleteForever } from "react-icons/md";
 
 const Card = styled.div<{ isDragging: boolean }>`
   display: flex;
+  justify-content: space-between;
   background-color: ${(props) => (props.isDragging ? "lightgrey" : "white")};
   border: 5px solid pink;
   border-radius: 10px;
@@ -12,20 +14,38 @@ const Card = styled.div<{ isDragging: boolean }>`
   padding: 5px;
 `;
 
+const Button = styled.button`
+  box-shadow: inset 0px 1px 0px 0px #cf866c;
+  background: linear-gradient(to bottom, #d0451b 5%, #bc3315 100%);
+  background-color: #d0451b;
+  border-radius: 15px;
+  border: 1px solid #942911;
+  display: inline-block;
+  cursor: pointer;
+  color: #ffffff;
+  font-size: 15px;
+  padding: 5px 7px;
+  text-shadow: 0px 2px 0px #854629;
+
+  &&:hover {
+    background: linear-gradient(to bottom, #bc3315 5%, #d0451b 100%);
+    background-color: #bc3315;
+  }
+  &::active {
+    position: relative;
+    top: 1px;
+  }
+`;
+
 interface CardInterface {
   toDoId: number;
   toDoText: string;
   index: number;
-  onModifyToDos: any;
+  boardId: any;
+  onDeleteToDos: any;
 }
 
-const Cards = ({ toDoId, toDoText, index, onModifyToDos }: CardInterface) => {
-  const onModify = (e: React.MouseEvent<HTMLButtonElement>) => {
-    console.log(e.currentTarget.value);
-    onModifyToDos(toDoId);
-    console.log(onModifyToDos);
-  };
-
+const Cards = ({ boardId, toDoId, toDoText, index, onDeleteToDos }: CardInterface) => {
   return (
     <Draggable draggableId={toDoId.toString()} index={index}>
       {(provided, snapshot) => (
@@ -36,12 +56,7 @@ const Cards = ({ toDoId, toDoText, index, onModifyToDos }: CardInterface) => {
           {...provided.draggableProps}
         >
           {toDoText}
-          <button value={toDoId} onClick={onModify}>
-            수정
-          </button>
-          <button value={toDoId} onClick={onModify}>
-            삭제
-          </button>
+          <Button onClick={onDeleteToDos(boardId, toDoId)}>{/* <MdDeleteForever /> */}</Button>
         </Card>
       )}
     </Draggable>

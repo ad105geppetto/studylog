@@ -2,14 +2,13 @@ import Chart from "components/Chart";
 import Boards from "components/Boards";
 import { useSelector } from "react-redux";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 // 로그인시 저장 된 userInfo 가지고 오기
 
 const Todo = () => {
-  const SERVER = process.env.REACT_APP_SERVER;
   const userInfo = useSelector((state: any) => state.userInfoReducer.userInfo);
 
-  const [rendering, setRendering] = useState("");
+  const [rendering, setRendering] = useState("Board");
 
   const onRenderTodo = (e: React.MouseEvent<HTMLButtonElement>) => {
     setRendering((rendering) => "Board");
@@ -18,6 +17,10 @@ const Todo = () => {
   const onRenderChart = (e: React.MouseEvent<HTMLButtonElement>) => {
     setRendering((rendering) => "Chart");
   };
+
+  useEffect(() => {
+    console.log(userInfo);
+  }, []);
 
   return (
     <div>

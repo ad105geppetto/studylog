@@ -29,7 +29,7 @@ export default {
               if (error) {
                 res.status(500).json({ message: "Internal Sever Error" });
               } else {
-                console.log("최초 로그인 아님")
+                console.log("최초 로그인 아님");
                 res
                   .status(200)
                   .cookie("refreshToken", result[0].refreshToken, {

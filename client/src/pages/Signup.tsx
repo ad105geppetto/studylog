@@ -1,7 +1,46 @@
 import React, { useState, useEffect } from "react";
 import axios, { AxiosError, AxiosResponse } from "axios";
+import Subtitle from "components/Subtitle";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
+// import { Wrapper, Input } from "styles/Userpage_style";
+
+const GridLayout = styled.div`
+  display: grid;
+  grid-template-columns: repeat(12, 140px);
+  grid-template-rows: repeat(10, 100px);
+  grid-column-gap: 20px;
+  grid-template-areas:
+    "Logo . . . . . . . . . . ."
+    "Logo . . . Title Title Title Title . . . . "
+    ". . . . . . . . . . . ."
+    ". . . Content Content Content Content Content Content . . ."
+    ". . . Content Content Content Content Content Content . . ."
+    ". . . Content Content Content Content Content Content . . ."
+    ". . . Content Content Content Content Content Content . . ."
+    ". . . Content Content Content Content Content Content . . ."
+    ". . . Content Content Content Content Content Content . . .";
+  /*
+    ". . . Content Content Content Content . . ."
+    ". . . Content Content Content Content . . ."
+    ". . . Content Content Content Content . . ."
+    ". . . Content Content Content Content . . ."; */
+`;
+
+const Logo = styled.img`
+  height: 20vh;
+  width: 10vw;
+`;
+
+const Form = styled.form`
+  grid-area: Content;
+  background-color: blue;
+`;
+
+const Input = styled.input`
+  grid-area: Input;
+  background-color: white;
+`;
 
 const SERVER = process.env.REACT_APP_SERVER;
 
@@ -13,21 +52,18 @@ export const Signup = () => {
     pwdCheck: "",
     email: "",
   }); // 회원정보
-
   const [errMsg, setErrMsg] = useState({
     idMsg: "",
     pwdMsg: "",
     pwdCheckMsg: "",
     emailMsg: "",
   }); // 에러 메세지
-
   const [validCheck, setValidCheck] = useState({
     id: false,
     pwd: false,
     pwdCheck: false,
     email: false,
   }); // 유효성 체크
-
   useEffect(() => {
     setErrMsg(errMsg);
   }, [errMsg]);
@@ -82,8 +118,7 @@ export const Signup = () => {
         break;
     }
     console.log(userInfo);
-  };
-  // ----------------------------------------------------------------------------
+  }; //  -----------------------------------------------------------------
 
   // ------------------------- 아이디 중복 체크 검사 -------------------------
   const onCheckUserId = () => {
@@ -134,43 +169,32 @@ export const Signup = () => {
           });
         }
       });
-  };
-  //  -----------------------------------------------------------------------
+  }; //  -----------------------------------------------------------------
+
   //  ------------------------------ 인증메일 전송 ----------------------------
   const onVerifyEmail = () => {
     axios
       .post(`${SERVER}/signup/mail`, { email: userInfo.email })
       .then((res: AxiosResponse) => {
         console.log(res);
-        // switch (res.status) {
-        //   case 200:
-        //     setErrMsg({ ...errMsg, emailMsg: "인증 완료 되었습니다." });
-        //     break;
-        //   case 409:
-        //     console.log("409번 응답");
-        //     setErrMsg({ ...errMsg, emailMsg: "올바르지 못 한 이메일 형식입니다." });
-        //     break;
-        //   default:
-        //     setErrMsg({ ...errMsg, emailMsg: "올바르지 못 한 이메일 형식입니다." });
-        // }
       })
       .catch((err: AxiosError) => {
         console.log("에러메세지", err);
       });
     console.log(userInfo);
-  };
-  //  -----------------------------------------------------------------------
+  }; //  -----------------------------------------------------------------
 
   return (
-    <div>
-      <form
+    <GridLayout>
+      <Subtitle text="회원가입" />
+      <Logo alt="LOGO" src="asset/white_logo.png" object-fit="cover" />
+      <Form
         onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
           e.preventDefault();
         }}
       >
-        <h1> 회원가입 </h1>
         <div>
-          <input
+          <Input
             type="text"
             placeholder="ID를 입력하세요"
             onChange={onUserInfo("id")}
@@ -184,7 +208,7 @@ export const Signup = () => {
         </div>
 
         <div>
-          <input
+          <Input
             type="password"
             placeholder="비밀번호를 입력하세요"
             onChange={onUserInfo("pwd")}
@@ -192,7 +216,7 @@ export const Signup = () => {
             required
           />
           <div>{errMsg.pwdMsg} </div>
-          <input
+          <Input
             type="password"
             placeholder="비밀번호를 다시 입력하세요"
             onChange={onUserInfo("pwdCheck")}
@@ -202,7 +226,7 @@ export const Signup = () => {
           <div>{errMsg.pwdCheckMsg}</div>
         </div>
         <div>
-          <input
+          <Input
             type="text"
             placeholder="이메일을 입력하세요"
             onChange={onUserInfo("email")}
@@ -225,8 +249,8 @@ export const Signup = () => {
             가입
           </button>
         </div>
-      </form>
-    </div>
+      </Form>
+    </GridLayout>
   );
 };
 

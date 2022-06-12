@@ -77,14 +77,14 @@ export default {
       host: "smtp.naver.com",
       secure: false,
       auth: {
-        user: process.env.GOOGLE_MAIL_ID, // 보내는 메일의 주소
-        pass: process.env.GOOGLE_MAIL_PASSWORD, // 보내는 메일의 비밀번호
+        user: process.env.MAIL_ID, // 보내는 메일의 주소
+        pass: process.env.MAIL_PASSWORD, // 보내는 메일의 비밀번호
       },
     });
 
     // 메일 옵션
     let mailOptions = {
-      from: process.env.GOOGLE_MAIL_ID, // 보내는 메일의 주소
+      from: process.env.MAIL_ID, // 보내는 메일의 주소
       to: email, // 수신할 이메일
       subject: "studylog 인증메일입니다.", // 메일 제목
       //내용: 인증번호

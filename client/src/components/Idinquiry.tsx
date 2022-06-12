@@ -1,7 +1,5 @@
 import React, { useState } from "react";
-// import { useNavigate } from "react-router-dom";
 import Nav from "../components/Nav";
-import Pwinquiry from "../components/Pwinquiry";
 import axios, { AxiosError, AxiosResponse } from "axios";
 
 axios.defaults.withCredentials = true;
@@ -44,7 +42,6 @@ const Idinquiry = () => {
 
   return (
     <div>
-      <Nav />
       {findId ? (
         <div>
           <div>

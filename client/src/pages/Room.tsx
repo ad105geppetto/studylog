@@ -3,24 +3,24 @@ import { useSelector } from "react-redux";
 import Chat from "components/Chat";
 import styled from "styled-components";
 
-const Container = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  height: 100vh;
-  background-color: #393d46;
-`;
+// const Container = styled.div`
+//   display: flex;
+//   flex-wrap: wrap;
+//   height: 100vh;
+//   background-color: #393d46;
+// `;
 
-const VideoContainer = styled.div`
-  height: 90vh;
-  width: 70%;
-`;
+// const VideoContainer = styled.div`
+//   height: 90vh;
+//   width: 70%;
+// `;
 
-const ChatContainer = styled.div`
-  height: 90vh;
-  width: 30%;
-  background-color: white;
-  border-radius: 10px;
-`;
+// const ChatContainer = styled.div`
+//   height: 90vh;
+//   width: 30%;
+//   background-color: white;
+//   border-radius: 10px;
+// `;
 
 interface socketInterface {
   socket: any;
@@ -153,24 +153,23 @@ const Room = ({ socket, annoy, roomId }: socketInterface) => {
   };
   ///////////////////////
   return (
-    <Container>
-      <VideoContainer>
-        <video
-          style={{ width: 300, height: 400, margin: 5, backgroundColor: "black" }}
-          ref={localVideoRef}
-          autoPlay
-        ></video>
-
-        <video
-          style={{ width: 300, height: 400, margin: 5, backgroundColor: "black" }}
-          ref={remoteVideoRef}
-          autoPlay
-        ></video>
-      </VideoContainer>
-      <ChatContainer>
-        <Chat userInfo={userInfo} socket={socket} annoy={annoy} roomId={roomId} />
-      </ChatContainer>
-
+    <div>
+      // {/* <Container> */}
+      {/* <VideoContainer> */}
+      <video
+        style={{ width: 300, height: 400, margin: 5, backgroundColor: "black" }}
+        ref={localVideoRef}
+        autoPlay
+      ></video>
+      <video
+        style={{ width: 300, height: 400, margin: 5, backgroundColor: "black" }}
+        ref={remoteVideoRef}
+        autoPlay
+      ></video>
+      {/* </VideoContainer> */}
+      {/* <ChatContainer> */}
+      <Chat userInfo={userInfo} socket={socket} annoy={annoy} roomId={roomId} />
+      {/* </ChatContainer> */}
       <br />
       <button onClick={createOffer}>Create Offer</button>
       <button onClick={createAnswer}>Create Answer</button>
@@ -179,7 +178,8 @@ const Room = ({ socket, annoy, roomId }: socketInterface) => {
       <br />
       <button onClick={setRemoteDescription}>Set Remote Description</button>
       <button onClick={addCandidate}>Add Candidates</button>
-    </Container>
+      // {/* </Container> */}
+    </div>
   );
 };
 

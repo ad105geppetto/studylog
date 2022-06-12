@@ -30,7 +30,11 @@ const io = new Server(httpServer, {
 
 // socket.io
 function publicRooms() {
-  const { sockets: { adapter: { sids, rooms } } } = io;
+  const {
+    sockets: {
+      adapter: { sids, rooms },
+    },
+  } = io;
   // 위의 코드는 아래의 코드와 동등하다.
   // const sids = wsServerio.sockets.adapter.sids;
   // const rooms = wsServerio.sockets.adapter.rooms;
@@ -39,7 +43,7 @@ function publicRooms() {
     if (sids.get(key) === undefined) {
       publicRooms.push(key);
     }
-  })
+  });
   return publicRooms;
 }
 
@@ -90,8 +94,6 @@ io.on("connection", (socket) => {
     socket.broadcast.emit("candidate", data);
   });
 });
-
-
 
 // socket.on("disconnect", () => {
 //   console.log(`${socket.id}의 연결이 끊어짐`);
