@@ -13,6 +13,7 @@ import dropoutRouter from "./Dropout";
 import userinfoRouter from "./Userinfo";
 import staticsRouter from "./Statics";
 import todoRouter from "./Todo";
+import roomRouter from "./Room";
 
 const router = express.Router();
 
@@ -30,5 +31,6 @@ router.use("/roomlist", roomlistRouter);
 router.use("/statics", staticsRouter);
 router.use("/todo", todoRouter);
 router.use("/search", searchRouter);
+router.use("/room", roomRouter);
 
 export default router;

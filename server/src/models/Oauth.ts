@@ -7,7 +7,7 @@ export default {
       const queryString2 = `INSERT INTO token (refreshToken) VALUES ("${refreshToken}")`
       db.query(queryString2, (error, result) => {
         if (error) {
-          return callback(error, null)
+          callback(error, null)
         } else {
           callback(null, result)
         }
@@ -18,7 +18,7 @@ export default {
     const queryString = `SELECT * FROM users JOIN token WHERE userId = "${email}" AND email = "${email}" AND profile = "${profile}"`
     db.query(queryString, (error, result) => {
       if (error) {
-        return callback(error, null)
+        callback(error, null)
       } else {
         callback(null, result)
       }
