@@ -74,8 +74,7 @@ const Chat = ({ userInfo, socket, annoy, roomId }: userInfoInterface) => {
 
   const leaveHandler = () => {
     console.log("dddd");
-    socket.disconnect();
-    navigator("/");
+    window.location.replace("/");
   };
 
   return (

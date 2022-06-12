@@ -17,7 +17,7 @@ const Roomlist = ({ socket, annoy, roomId, setRoomId }: socketInterface) => {
   const [rooms, setRooms] = useState([]);
   useEffect(() => {
     axios
-      .get(`${process.env.REACT_APP_SERVER}/roomlist?page=4&limit=7`)
+      .get(`${process.env.REACT_APP_SERVER}/roomlist?page=2&limit=5`)
       .then((res) => {
         // console.log(res.data.data[res.data.data.length - 1]);
         // const target = res.data.data[res.data.data.length - 1];

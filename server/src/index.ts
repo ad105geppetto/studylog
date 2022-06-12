@@ -21,52 +21,52 @@ app.use(cookieParser());
 app.use("/", indexRouter);
 
 const httpServer = http.createServer(app);
-const io = new Server(httpServer, {
-  cors: {
-    origin: "http://localhost:3000",
-    credentials: true,
-  },
-});
+// const io = new Server(httpServer, {
+//   cors: {
+//     origin: "http://localhost:3000",
+//     credentials: true,
+//   },
+// });
 
-// socket.io
-function publicRooms() {
-  const { sockets: { adapter: { sids, rooms } } } = io;
-  // 위의 코드는 아래의 코드와 동등하다.
-  // const sids = wsServerio.sockets.adapter.sids;
-  // const rooms = wsServerio.sockets.adapter.rooms;
-  const publicRooms = [];
-  rooms.forEach((_, key) => {
-    if (sids.get(key) === undefined) {
-      publicRooms.push(key);
-    }
-  })
-  return publicRooms;
-}
+// // socket.io
+// function publicRooms() {
+//   const { sockets: { adapter: { sids, rooms } } } = io;
+//   // 위의 코드는 아래의 코드와 동등하다.
+//   // const sids = wsServerio.sockets.adapter.sids;
+//   // const rooms = wsServerio.sockets.adapter.rooms;
+//   const publicRooms = [];
+//   rooms.forEach((_, key) => {
+//     if (sids.get(key) === undefined) {
+//       publicRooms.push(key);
+//     }
+//   })
+//   return publicRooms;
+// }
 
-io.on("connection", (socket) => {
+// io.on("connection", (socket) => {
 
-  socket.on("room", (roomName, userId) => {
-    socket.join(roomName);
-    console.log(roomName)
-    console.log(io.sockets.adapter.rooms)
-    console.log(io.sockets.adapter.sids)
-    socket.to(roomName).emit("welcome", userId);
-  });
+//   socket.on("room", (roomName, userId) => {
+//     socket.join(roomName);
+//     console.log(roomName)
+//     console.log(io.sockets.adapter.rooms)
+//     console.log(io.sockets.adapter.sids)
+//     socket.to(roomName).emit("welcome", userId);
+//   });
 
-  socket.on("message", (roomName, message, userId, guest) => {
-    console.log("=======메세지========")
-    console.log(io.sockets.adapter.rooms)
-    console.log(io.sockets.adapter.sids)
-    console.log(socket.rooms)
-    socket.to(roomName).emit("chat", message, userId, guest);
-    console.log(message);
-  });
+//   socket.on("message", (roomName, message, userId, guest) => {
+//     console.log("=======메세지========")
+//     console.log(io.sockets.adapter.rooms)
+//     console.log(io.sockets.adapter.sids)
+//     console.log(socket.rooms)
+//     socket.to(roomName).emit("chat", message, userId, guest);
+//     console.log(message);
+//   });
 
-  socket.on('disconnecting', () => {
-    socket.rooms.forEach(room => socket.to(room).emit('bye', "나갔습니다."))
-  })
+//   socket.on('disconnecting', () => {
+//     socket.rooms.forEach(room => socket.to(room).emit('bye', "나갔습니다."))
+//   })
 
-});
+// });
 
 // 방제목이 룸네임으로 하면 되고
 // 채팅기능
