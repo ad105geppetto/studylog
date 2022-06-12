@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-// import { useNavigate } from "react-router-dom";
 import Nav from "../components/Nav";
 import axios, { AxiosError, AxiosResponse } from "axios";
 
@@ -43,7 +42,6 @@ const Idinquiry = () => {
 
   return (
     <div>
-      <Nav />
       {findId ? (
         <div>
           <div>

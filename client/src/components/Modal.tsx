@@ -68,14 +68,20 @@ const Modal = ({ width, height, element, modal, setModal }: Props) => {
   return (
     <>
       <View width={width} height={height}>
+        <div className="exit-wrapper">&times;</div>
         <Wrapper>{element}</Wrapper>
       </View>
       <Canvas />
 
       {/* 모달창 끄는 코드 */}
       <View width={width} height={height}>
+        {/* 모달창에 X마크를 나타내는 태그 */}
+        {/* <div className="exit-wrapper" onClick={modalOff}>
+          &times;
+        </div> */}
         <Wrapper>{element}</Wrapper>
       </View>
+      <Canvas onClick={modalOff} />
     </>
   );
 };

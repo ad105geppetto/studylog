@@ -55,11 +55,8 @@ const Guide = ({ socket }: socketInterface) => {
       <button type="button" onClick={() => navigate("/roomlist")}>
         roomlist
       </button>
-      <button type="button" onClick={() => navigate("/idInquiry")}>
-        idInquiry
-      </button>
-      <button type="button" onClick={() => navigate("/pwInquiry")}>
-        pwInquiry
+      <button type="button" onClick={() => navigate("/findinfo")}>
+        Find Info
       </button>
     </div>
   );

@@ -1,4 +1,4 @@
-import dotenv from "dotenv"
+import dotenv from "dotenv";
 dotenv.config();
 
 /** MySQL DB 연결 */
@@ -12,4 +12,4 @@ const config = {
   },
 };
 
-export default config
+export default config;

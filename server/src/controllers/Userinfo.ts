@@ -33,12 +33,28 @@ export default {
 
   //연습용
   post: (req: Request, res: Response, next: NextFunction) => {
-    console.log(req.file);
-    console.log(req.file.path);
-
+    let profilePath;
+    if (req.file) {
+      profilePath = req.file.path;
+    }
+    // console.log(profilePath);
     const { password, email } = req.body;
-
     console.log(password, email);
+    // models.check(email, (error, result) => {
+    //   if (error) {
+    //     console.log(error);
+    //   } else {
+    //     if (result.length === 0) {
+    //       console.log("이메일 인증 버튼을 누르세요.");
+    //     } else {
+    //       if (result[0].verification === 0) {
+    //         console.log(result[0].verification);
+    //       } else {
+    //         console.log(result[0].verification);
+    //       }
+    //     }
+    //   }
+    // });
   },
 
   //회원정보수정
@@ -46,17 +62,12 @@ export default {
   //그 회원의 정보에 접근해서 update하고
   //다시 토큰발급해준다.
   patch: (req: Request, res: Response, next: NextFunction) => {
-    console.log(req.file);
-
-    const profilePath = req.file.path;
-
+    let profilePath;
+    if (req.file) {
+      profilePath = req.file.path;
+    }
     const { password, email } = req.body;
-    console.log(password, email);
 
-    //다 입력해야만 함
-    //비밀번호만 쓴 경우
-    // password = "0909", email:undefined
-    // 아직 미완성
     if (!password && !email) {
       return res.status(400).send({ message: "이메일이나 비밀번호를 입력해주세요." });
     }
@@ -64,31 +75,57 @@ export default {
     const authorization = req.headers["authorization"];
     const token = authorization.split(" ")[1];
     const tokenData = jwt.verify(token, process.env.ACCESS_SECRET);
-
-    models.patch(tokenData, password, email, profilePath, (error, result) => {
+    models.check(email, (error, result) => {
       if (error) {
         return res.status(500).send({ message: "서버에러!" });
       } else {
         if (result.length === 0) {
-          res.status(404).send({ data: null, message: "회원 정보가 존재하지않습니다." });
+          res.send({ message: "이메일 인증 전송버튼을 누르세요." });
         } else {
-          // console.log(result);
-          const payload = {
-            id: tokenData.id,
-            userId: tokenData.userId,
-            email: email,
-            //ec2의 public/img에 저장되있는 파일의 주소를 넣어줌????
-            profile: profilePath,
-          };
+          if (result[0].verification === 0) {
+            res.status(400).send({ message: "이메일 인증을 해주세요." });
+          } else {
+            models.patch(tokenData, password, email, profilePath, (error, result) => {
+              if (error) {
+                return res.status(500).send({ message: "서버에러!" });
+              } else {
+                if (result.length === 0) {
+                  res.status(404).send({ data: null, message: "회원 정보가 존재하지않습니다." });
+                } else {
+                  // console.log(result[0]);
+                  const payload = {
+                    id: result[0].id,
+                    userId: result[0].userId,
+                    email: result[0].email,
+                    //ec2의 public/img에 저장되있는 파일의 주소를 넣어줌????
+                    profile: result[0].profile,
+                  };
 
-          const accessToken = jwt.sign(payload, process.env.ACCESS_SECRET, { expiresIn: "1d" });
-          const refreshToken = jwt.sign(payload, process.env.REFRESH_SECRET, { expiresIn: "2d" });
+                  const accessToken = jwt.sign(payload, process.env.ACCESS_SECRET, {
+                    expiresIn: "1d",
+                  });
+                  const refreshToken = jwt.sign(payload, process.env.REFRESH_SECRET, {
+                    expiresIn: "2d",
+                  });
 
-          res.status(200).send({
-            accessToken: accessToken,
-            refreshToken: refreshToken,
-            message: "회원 정보가 수정되었습니다.",
-          });
+                  //리프레쉬토큰 쿠키로
+                  res.cookie("refreshToken", refreshToken);
+
+                  res.status(200).send({
+                    accessToken: accessToken,
+                    refreshToken: refreshToken,
+                    userInfo: {
+                      id: result[0].id,
+                      userId: result[0].userId,
+                      email: result[0].email,
+                      profile: result[0].profile,
+                    },
+                    message: "회원 정보가 수정되었습니다.",
+                  });
+                }
+              }
+            });
+          }
         }
       }
     });

@@ -18,10 +18,6 @@ const Pwinquiry = () => {
 
   const [errorMessage, setErrorMessage] = useState("");
 
-  // const onUserInfo = (e) => {
-  //   setUserInfo(e.target.value);
-  // };
-
   const onUserInfo = (key: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
     setUserInfo({ ...userInfo, [key]: e.target.value });
   };
@@ -60,19 +56,10 @@ const Pwinquiry = () => {
         setErrorMessage("아이디와 인증번호를 입력하세요");
         console.log("아이디와 인증번호를 입력하세요", err);
       });
-
-    //서버에서 받아온 데이터(객체)에서 인증번호와 인증번호칸에
-    // 유저가 입력하는 인증번호가 같은가를 비교 후 같으면 찾기 버튼이 활성화 된다.
-    // disable사용
-    //서버에서 받아온 인증번호를 상태로 저장하거나 변수로 저장. 상태가 더 유용하다
   };
 
   return (
     <div>
-      <div>
-        <Nav />
-      </div>
-
       {findPwd ? (
         <div>
           <div>

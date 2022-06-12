@@ -3,12 +3,13 @@ import React, { useState } from "react";
 import axios, { AxiosError, AxiosResponse } from "axios";
 import { logout } from "action";
 import { useDispatch, useSelector } from "react-redux";
-import styled from "styled-components";
 
 const SERVER = process.env.REACT_APP_SERVER;
 
 const Nav = () => {
   const userInfo = useSelector((state: any) => state.userInfoReducer.userInfo);
+
+  // console.log(userInfo.accessToken);
 
   const [token, setToken] = useState(userInfo.accessToken);
 
@@ -57,7 +58,7 @@ const Nav = () => {
             </button>
           </span>
           {!token ? (
-            <div>
+            <span>
               <span>
                 <button type="button" onClick={() => navigate("/login")}>
                   로그인
@@ -68,9 +69,9 @@ const Nav = () => {
                   회원가입
                 </button>
               </span>
-            </div>
+            </span>
           ) : (
-            <div>
+            <span>
               <span>
                 <button type="button" onClick={onLogOutBtn}>
                   로그아웃
@@ -81,7 +82,7 @@ const Nav = () => {
                   내정보
                 </button>
               </span>
-            </div>
+            </span>
           )}
         </ul>
       </nav>

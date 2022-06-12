@@ -4,6 +4,7 @@ import axios, { AxiosError, AxiosResponse } from "axios";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { dropout } from "../action/index";
 
 axios.defaults.withCredentials = true;
 const SERVER = process.env.REACT_APP_SERVER;
@@ -122,24 +123,7 @@ const Mypage = () => {
 
   const onModalOff = () => {
     setModal((value) => !value);
-  };
-
-  //  -----------------------------------------------------------------------
-
-  const onDropOutlBtn = () => {
-    axios
-      .delete(`${SERVER}/dropout`, {
-        headers: { authorization: `Bearer ${userInfo.accessToken}` },
-      })
-      .then((res: AxiosResponse) => {
-        console.log(res.data);
-        // const accessToken = res.data.accessToken;
-        // dispatch(dropout(accessToken));
-      })
-      .catch((err: AxiosError) => console.log(err));
-
-    setModal((value) => !value);
-  };
+  }; //  -----------------------------------------------------------------------
 
   // ---------------------------------- 정보 수정 요청 전송  --------------------
   const onModify = () => {
@@ -200,6 +184,21 @@ const Mypage = () => {
   const dropOut = () => {
     setDrop("drop");
   };
+  //  -------회원탈퇴 버튼 함수-------
+  const onDropOutlBtn = () => {
+    axios
+      .delete(`${SERVER}/dropout`, {
+        headers: { authorization: `Bearer ${userInfo.accessToken}` },
+      })
+      .then((res: AxiosResponse) => {
+        console.log(res.data);
+        const accessToken = res.data.accessToken;
+        dispatch(dropout(accessToken));
+      })
+      .catch((err: AxiosError) => console.log(err));
+    onModalOff();
+  };
+  // ----------------------------------------------------------------
 
   return (
     <div>

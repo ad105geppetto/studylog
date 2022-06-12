@@ -1,5 +1,4 @@
 import { useNavigate } from "react-router-dom";
-// import { io } from "socket.io-client";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import axios from "axios";
@@ -10,16 +9,11 @@ interface socketInterface {
 }
 
 const Creatingroom = ({ socket, setRoomId }: socketInterface) => {
-  const [nickName, setNickName] = useState("");
   const navigate = useNavigate();
   const userInfo = useSelector((state: any) => state.userInfoReducer.userInfo);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  // const roomId = "14";
 
-  // const socket = io("http://localhost:4000", {
-  //   withCredentials: true,
-  // });
   const titleHandler = (e: any) => {
     setTitle(e.target.value);
   };
@@ -39,7 +33,7 @@ const Creatingroom = ({ socket, setRoomId }: socketInterface) => {
       )
       .then((res) => {
         setRoomId(res.data.id);
-        socket.emit("room", res.data.id, userInfo.userId);
+        socket.emit("enterRoom", res.data.id, userInfo.userId);
         navigate(`/room/${res.data.id}`);
       })
       .catch((err) => {
@@ -57,3 +51,22 @@ const Creatingroom = ({ socket, setRoomId }: socketInterface) => {
 };
 
 export default Creatingroom;
+{
+  /* <div>
+      <div>
+        <Nav />
+      </div>
+      <div>
+        <div>
+          <label htmlFor="roomName">방제목</label>
+          <input type="text" id="roomName" />
+        </div>
+        <div>
+          <label htmlFor="content">내용</label>
+          <input type="text" id="content" />
+        </div>
+        <button type="button" onClick={onCreateRoom}>
+          확인
+        </button>
+      </div> */
+}

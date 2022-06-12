@@ -1,103 +1,101 @@
-import React, { useState, useEffect } from "react";
-import styled from "styled-components";
-import { useParams } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
-const Wrapper = styled.div`
-  border: 5px solid salmon;
-  max-width: 400px;
-
-  ul {
-    min-height: 500px;
-    border: 3px solid blue;
-  }
-
-  div {
-    border: 3px solid blue;
-  }
-`;
-
-interface ChatInterface {
+interface userInfoInterface {
   userInfo: any;
   socket: any;
   annoy: any;
   roomId: any;
 }
 
-const Chat = ({ userInfo, socket }: ChatInterface) => {
-  const { roomId } = useParams();
-  const guestNum = (Math.random() * 10000000).toString().slice(0, 4);
-  const annoy = `Annoy${guestNum}`;
-  const [text, setText] = useState("");
-  const [guest, setGuest] = useState("");
-  const [nickName, setNickName] = useState("");
-  const [chatLog, setChatLog] = useState<any>([]);
+const Chat = ({ userInfo, socket, annoy, roomId }: userInfoInterface) => {
+  const navigate = useNavigate();
 
-  useEffect(() => {
-    setGuest(annoy);
+  const [currentMessage, setCurrentMessage] = useState("");
+  const [messageList, setMessageList] = useState<any>([]);
 
-    socket.on("welcome", (name: any) => {
-      const ul = document.getElementById("chatlist");
-      const li = document.createElement("li");
-      li.textContent = `${name ? name : guest} 님 환영합니다. `;
-      ul?.appendChild(li);
-    });
-    console.log(roomId);
-  }, []);
+  const sendMessage = async () => {
+    if (currentMessage !== "") {
+      const messageData = {
+        room: roomId,
+        author: userInfo.userId,
+        message: currentMessage,
+        time: new Date(Date.now()).getHours() + ":" + new Date(Date.now()).getMinutes(),
+      };
 
-  const onGetInRoom = (e: React.MouseEvent<HTMLButtonElement>) => {
-    socket.emit("room", roomId, nickName);
+      await socket.emit("send_message", messageData);
+      //자기메시지
+      setMessageList((list: any) => [...list, messageData]);
+      setCurrentMessage("");
+    }
   };
-
-  const onChangeMessage = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setText(e.target.value);
+  const endChat = async () => {
+    await socket.emit("leave_room", roomId, userInfo.userId);
+    navigate("/");
   };
 
   useEffect(() => {
-    // 서버에서 message 이벤트가 올 경우에 대해서 `on`
-    socket.on("chat", (message: any, name: any, guest: any) => {
-      const ul = document.getElementById("chatlist");
-      const li = document.createElement("li");
-      li.textContent = `${name ? name : guest}: ${message}`;
-      ul?.appendChild(li);
-      console.log("message : ", message);
-      // setChatLog([...chatLog, message]);
+    socket.on("joinRoom", (data: any) => {
+      setMessageList((list: any) => [...list, data]);
     });
+
+    socket.on("receive_message", (data: any) => {
+      //남의메시지
+      setMessageList((list: any) => [...list, data]);
+    });
+    socket.on("leave_room", (data: any) => {
+      setMessageList((list: any) => [...list, data]);
+    });
+
     return () => {
-      socket.disconnect();
+      socket.off("joinRoom");
+      socket.off("receive_message");
+      socket.off("leave_room");
     };
   }, []);
 
-  const clickHandler = () => {
-    if (!text) {
-      return;
-    }
-    const ul = document.getElementById("chatlist");
-    const li = document.createElement("li");
-    li.textContent = `${userInfo.userId ? userInfo.userId : guest}: ${text}`;
-    ul?.appendChild(li);
-    socket.emit("message", roomId, text, userInfo.userId, guest);
-    console.log("text:", text);
-    setText("");
-  };
-
   return (
-    <Wrapper id="chat">
-      <button onClick={onGetInRoom}>입장!!</button>
-      <ul id="chatlist"></ul>
-      <form onSubmit={(e: React.FormEvent<HTMLFormElement>) => e.preventDefault()}>
-        <div className="input">
-          <input
-            type="text"
-            value={text}
-            onChange={onChangeMessage}
-            placeholder="모든 사용자에게 메시지보내기"
-          />
-          <button type="submit" onClick={clickHandler}>
-            보내기
-          </button>
-        </div>
-      </form>
-    </Wrapper>
+    <div className="chat-window">
+      <div className="chat-header">
+        <p>Live Chat</p>
+      </div>
+      <div className="chat-body">
+        {messageList.map((messageContent: any, idx: any) => {
+          return (
+            <div
+              key={idx}
+              className="message"
+              id={userInfo.userId === messageContent.author ? "you" : "other"}
+            >
+              <div>
+                <div className="message-content">
+                  <p>{messageContent.message}</p>
+                </div>
+                <div className="message-meta">
+                  <p id="time">{messageContent.time}</p>
+                  <p id="author">{messageContent.author}</p>
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+      <div className="chat-footer">
+        <input
+          type="text"
+          value={currentMessage}
+          placeholder="Hey..."
+          onChange={(event) => {
+            setCurrentMessage(event.target.value);
+          }}
+          onKeyPress={(event) => {
+            event.key === "Enter" && sendMessage();
+          }}
+        />
+        <button onClick={sendMessage}>&#9658;</button>
+      </div>
+      <button onClick={endChat}>종료</button>
+    </div>
   );
 };
 

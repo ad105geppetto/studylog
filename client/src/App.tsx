@@ -1,6 +1,5 @@
 import { Signup } from "pages/Signup";
 import Login from "pages/Login";
-import Pwinquiry from "./components/Pwinquiry";
 import Landing from "pages/Landing";
 import Mypage from "pages/Mypage";
 import Room from "pages/Room";
@@ -10,9 +9,11 @@ import Todo from "pages/Todo";
 import Creatingroom from "./pages/Creatingroom";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Roomlist from "pages/Roomlist";
-import Idinquiry from "./components/Idinquiry";
+import Nav from "./components/Nav";
 import { io } from "socket.io-client";
 import Guide from "pages/Guide";
+import Findinfo from "pages/Findinfo";
+import Total from "pages/Total";
 
 const socket = io("http://localhost:4000", {
   withCredentials: true,
@@ -34,7 +35,7 @@ function App() {
     axios
       .post(`${SERVER}/Oauth`, { authorizationCode: authCode })
       .then((res: AxiosResponse) => {
-        console.log(res);
+        // console.log(res);
       })
       .catch((err: AxiosError) => {
         console.log("err:", err);
@@ -52,6 +53,7 @@ function App() {
   });
 
   return (
+    //------------------------------------------------------------------------------------------------
     <BrowserRouter>
       <Routes>
         <Route path="/guide" element={<Guide socket={socket} />} />
@@ -71,8 +73,9 @@ function App() {
           path="/roomlist"
           element={<Roomlist socket={socket} annoy={annoy} roomId={roomId} setRoomId={setRoomId} />}
         />
-        <Route path="/idInquiry" element={<Idinquiry />} />
-        <Route path="/pwInquiry" element={<Pwinquiry />} />
+        <Route path="/findinfo" element={<Findinfo />} />
+        <Route path="/Nav" element={<Nav />} />
+        <Route path="/Total" element={<Total />} />
       </Routes>
     </BrowserRouter>
   );
