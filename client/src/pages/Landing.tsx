@@ -42,11 +42,17 @@ const Landing = ({ socket }: socketInterface) => {
       <button type="button" onClick={() => navigate("/roomlist")}>
         roomlist
       </button>
-      <button type="button" onClick={() => navigate("/idInquiry")}>
+      {/* <button type="button" onClick={() => navigate("/idInquiry")}>
         idInquiry
       </button>
       <button type="button" onClick={() => navigate("/pwInquiry")}>
         pwInquiry
+      </button> */}
+      <button type="button" onClick={() => navigate("/findinfo")}>
+        findinfo
+      </button>
+      <button type="button" onClick={() => navigate("/total")}>
+        total
       </button>
     </div>
   );

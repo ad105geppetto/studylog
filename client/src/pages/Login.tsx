@@ -28,7 +28,7 @@ const Login = () => {
 
   // ------------------- 로그인 요청 -----------------------------
   const onClickLoginBtn = () => {
-    console.log(userInfo);
+    // console.log(userInfo);
 
     axios
       .post(
@@ -37,7 +37,7 @@ const Login = () => {
         // { type: "application/json" }
       )
       .then((res: AxiosResponse) => {
-        console.log(res);
+        // console.log(res);
         const accessToken = res.data.accessToken;
         const id = res.data.userInfo.id;
         const userId = res.data.userInfo.userId;
@@ -52,9 +52,6 @@ const Login = () => {
         console.log(err);
       });
   };
-
-  const userInfofo = useSelector((state: any) => state.userInfoReducer.userInfo);
-  console.log(userInfofo);
 
   // ----------------------------- 구글 OAUTH 요청 -----------------------
   const oauthPath = () => {
