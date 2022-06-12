@@ -10,7 +10,7 @@ const upload = multer({
     // 저장한공간 정보 : 하드디스크에 저장
     destination(req, file, done) {
       // 저장 위치
-      done(null, "src/public/"); // uploads라는 폴더 안에 저장
+      done(null, "./public/"); // uploads라는 폴더 안에 저장
     },
     filename(req, file, done) {
       // 파일명을 어떤 이름으로 올릴지

@@ -28,7 +28,7 @@ export default {
               let todos = result.map((ele) => {
                 return {
                   id: ele.id,
-                  tyep: ele.type,
+                  type: ele.type,
                   content: ele.content,
                 };
               });
