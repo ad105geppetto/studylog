@@ -8,14 +8,14 @@ const mailPoster = nodeMailer.createTransport({
   host: 'smtp.naver.com',
   port: 587,
   auth: {
-    user: process.env.MAIL,
+    user: process.env.MAIL_ID,
     pass: process.env.MAIL_PWD
   }
 });
 
 const mailOpt = (user_data, title, contents, html) => {
   const mailOptions = {
-    from: process.env.MAIL,
+    from: process.env.MAIL_ID,
     to: user_data,
     subject: title,
     text: contents,
