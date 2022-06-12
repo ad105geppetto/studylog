@@ -1,51 +1,50 @@
-import nodeMailer from "nodemailer"
-import pwdMailing from "../models/FindPwdMailing"
-import dotenv from "dotenv"
+import nodeMailer from "nodemailer";
+import pwdMailing from "../models/FindPwdMailing";
+import dotenv from "dotenv";
 dotenv.config();
 
 const mailPoster = nodeMailer.createTransport({
-  service: 'Naver',
-  host: 'smtp.naver.com',
+  service: "Naver",
+  host: "smtp.naver.com",
   port: 587,
   auth: {
-    user: process.env.MAIL,
-    pass: process.env.MAIL_PWD
-  }
+    user: process.env.MAIL_ID,
+    pass: process.env.MAIL_PASSWORD,
+  },
 });
 
 const mailOpt = (user_data, title, contents, html) => {
   const mailOptions = {
-    from: process.env.MAIL,
+    from: process.env.MAIL_ID,
     to: user_data,
     subject: title,
     text: contents,
-    html: html
+    html: html,
   };
 
   return mailOptions;
-}
+};
 
 // 메일 전송
 const sendMail = (mailOption) => {
   mailPoster.sendMail(mailOption, function (error, info) {
     if (error) {
-      console.log('에러 ' + error);
-    }
-    else {
-      console.log('전송 완료 ' + info.response);
+      console.log("에러 " + error);
+    } else {
+      console.log("전송 완료 " + info.response);
     }
   });
-}
+};
 
 export default {
   post: (req, res) => {
-    const email = req.body.email
-    const data = [{ dataValues: email }]
-    let title = "[Studylog] 고객님의 인증코드는 다음과 같습니다."
-    let randomAuth = String(Math.floor(Math.random() * 1000000))
+    const email = req.body.email;
+    const data = [{ dataValues: email }];
+    let title = "[Studylog] 고객님의 인증코드는 다음과 같습니다.";
+    let randomAuth = String(Math.floor(Math.random() * 1000000));
     const contents = () => {
-      return `${randomAuth}`
-    }
+      return `${randomAuth}`;
+    };
     const html = `
       <div>
         <div>
@@ -67,16 +66,16 @@ export default {
           <span>인증코드 : </span>
           <span>${randomAuth}</span>
         </div>
-      </div>`
+      </div>`;
 
     const mailOption = mailOpt(data[0].dataValues, title, contents(), html);
-    sendMail(mailOption)
+    sendMail(mailOption);
     pwdMailing.create(randomAuth, email, 0, (error, result1) => {
       if (error) {
         res.status(500).json({ message: "Internal Sever Error" });
       } else {
         res.status(200).json({ message: "ok" });
       }
-    })
-  }
-}
+    });
+  },
+};

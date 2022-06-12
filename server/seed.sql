@@ -93,20 +93,20 @@ VALUES
 INSERT INTO
     `todos` (`userId`, `type`, `content`)
 VALUES
-    (1, "todo", "자바스크립트 챕처 1 공부"),
-    (4, "progress", "MySQL 챕처 1 공부"),
-    (2, "done", "타입스크립트 챕처 1 공부"),
-    (3, "todo", "리엑트 챕처 1 공부"),
-    (5, "progress", "리덕스 챕처 1 공부"),
-    (1, "done", "자바스크립트 챕처 2 공부"),
-    (4, "todo", "MySQL 챕처 4 공부"),
-    (4, "progress", "Socket.IO 챕처 1 공부"),
-    (2, "done", "타입스크립트 챕처 3 공부"),
-    (2, "todo", "Socket.IO 챕처 4 공부"),
-    (3, "progress", "Socket.IO 챕처 2 공부"),
-    (3, "done", "리엑트 챕처 11 공부"),
-    (5, "todo", "리덕스 챕처 8 공부"),
-    (5, "progress", "자바스크립트 챕처 11 공부");
+    (1, "Todo", "자바스크립트 챕처 1 공부"),
+    (4, "Progress", "MySQL 챕처 1 공부"),
+    (2, "Done", "타입스크립트 챕처 1 공부"),
+    (3, "Todo", "리엑트 챕처 1 공부"),
+    (5, "Progress", "리덕스 챕처 1 공부"),
+    (1, "Done", "자바스크립트 챕처 2 공부"),
+    (4, "Todo", "MySQL 챕처 4 공부"),
+    (4, "Progress", "Socket.IO 챕처 1 공부"),
+    (2, "Done", "타입스크립트 챕처 3 공부"),
+    (2, "Todo", "Socket.IO 챕처 4 공부"),
+    (3, "Progress", "Socket.IO 챕처 2 공부"),
+    (3, "Done", "리엑트 챕처 11 공부"),
+    (5, "Todo", "리덕스 챕처 8 공부"),
+    (5, "Progress", "자바스크립트 챕처 11 공부");
 
 
  INSERT INTO `chats` (`userId`, `roomId`, `message`)

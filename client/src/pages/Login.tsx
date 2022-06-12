@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import axios, { AxiosError, AxiosResponse } from "axios";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
-import { store } from "store/store";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { logIn } from "../action/index";
 
 const SERVER = process.env.REACT_APP_SERVER;
@@ -28,8 +27,6 @@ const Login = () => {
 
   // ------------------- 로그인 요청 -----------------------------
   const onClickLoginBtn = () => {
-    // console.log(userInfo);
-
     axios
       .post(
         `${SERVER}/login`,
@@ -37,7 +34,6 @@ const Login = () => {
         // { type: "application/json" }
       )
       .then((res: AxiosResponse) => {
-        // console.log(res);
         const accessToken = res.data.accessToken;
         const id = res.data.userInfo.id;
         const userId = res.data.userInfo.userId;
@@ -52,7 +48,6 @@ const Login = () => {
         console.log(err);
       });
   };
-
   // ----------------------------- 구글 OAUTH 요청 -----------------------
   const oauthPath = () => {
     window.location.assign(OAUTH_URL);

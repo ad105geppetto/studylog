@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-// import logo from "./logo.svg";
 import styled from "styled-components";
 import { Pagenation } from "../components/Pagenation";
 import axios, { AxiosError, AxiosResponse } from "axios";

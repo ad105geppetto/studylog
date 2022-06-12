@@ -1,7 +1,6 @@
-import { DragDropContext, Draggable, Droppable, DropResult } from "react-beautiful-dnd";
-import React, { useState } from "react";
+import { DragDropContext, DropResult } from "react-beautiful-dnd";
+import React, { useEffect, useState } from "react";
 import Cardboard from "./Cardboard";
-import Cards from "./Card";
 import styled from "styled-components";
 import axios, { AxiosError, AxiosResponse } from "axios";
 
@@ -41,7 +40,7 @@ interface ToDos {
   [key: string]: any;
 }
 
-const Boards = (userInfo: any) => {
+const Boards = ({ userInfo }: any) => {
   const [text, setText] = useState<string | null>("");
 
   const onAddText = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -49,39 +48,73 @@ const Boards = (userInfo: any) => {
   };
 
   const [toDos, setToDos] = useState<ToDos>({
-    Todo: [{ id: 1, text: "dummyData" }],
+    Todo: [],
     Progress: [],
     Done: [],
   });
 
-  const onLoadToDos = () => {
-    axios
-      .get(`${SERVER}/todo`, { headers: { authorization: `Bearer ${userInfo.accessToken}` } })
-      .then((res: AxiosResponse) => {
-        setToDos((toDos) => {
-          return {
-            ...toDos,
-            [res.data.type]: [...toDos[res.data.type]],
-          };
-        });
-      })
-      .catch((err: AxiosError) => console.log(err));
+  const [writeMode, setWriteMode] = useState(false);
+  const onWriteMode = () => {
+    setWriteMode((writing) => !writing);
   };
 
+  //!----------------------------- TODO 데이터 불러오기 --------------------------
+  const onLoadToDos = () => {
+    axios
+      .get(`${SERVER}/todo`, {
+        headers: {
+          authorization: `Bearer ${userInfo.accessToken}`,
+        },
+      })
+      .then((res: AxiosResponse) => {
+        const data = res.data.data;
+
+        data.map((data: any) => {
+          const id = data.id;
+          const key = data.type;
+          const text = data.content;
+
+          const newToDo = {
+            id: id,
+            text: text,
+          };
+
+          setToDos((toDos) => {
+            return {
+              ...toDos,
+              [key]: [...toDos[key], newToDo],
+            };
+          });
+        });
+      })
+      .catch((err: AxiosError) => console.log("TODOS ERROR :", err));
+  };
+
+  useEffect(() => {
+    onLoadToDos();
+  }, []);
+
+  //!-----------------------------------------------------------
+
+  //------------------ TODO 데이터 추가하기 ---------------------------
   const onAddToDos = (key: string) => (e: React.MouseEvent<HTMLButtonElement>) => {
-    const newToDo = {
-      id: Math.random(),
-      text: text,
-    };
-
-    setToDos((toDos) => {
-      return {
-        ...toDos,
-        [key]: [...toDos[key], newToDo],
+    if (text?.length === 0) {
+      return;
+    } else {
+      const newToDo = {
+        id: Number((Math.random() * 1000).toString().slice(0, 3)),
+        text: text,
       };
-    });
-    setText("");
 
+      setToDos((toDos) => {
+        return {
+          ...toDos,
+          [key]: [...toDos[key], newToDo],
+        };
+      });
+      setText("");
+      setWriteMode(false);
+    }
     console.log(toDos);
 
     axios
@@ -94,26 +127,37 @@ const Boards = (userInfo: any) => {
       .catch((err: AxiosError) => console.log(err));
   };
 
-  const onModifyToDos = (key: string) => (e: any) => {
-    const filteredToDos = toDos[key].filter((todo: any) => todo.id !== e.currentTarget.value);
-    console.log(e.currentTarget.value);
-
+  // todos는 객체의 값이 배열이고 그 내부에 객체를 가진 데이터 구조
+  // 삭제를 위해서는 객체의 key를 알아야  할 것
+  // 내부 필터링을 통해 id 가 아닌것을 렌더링 해 줄 것
+  // ------------------------ TODOS 삭제 ----------------------------------
+  const onDeleteToDos = (key: string, id: any) => () => {
     setToDos((toDos) => {
       return {
         ...toDos,
-        [key]: [...toDos[key], filteredToDos],
+        [key]: [...toDos[key].filter((todo: any) => todo.id !== id)],
       };
     });
+
+    axios
+      .delete(`${SERVER}/todo/${id}`, {
+        headers: { authorization: `Bearer ${userInfo.accessToken}` },
+      })
+      .then((res: AxiosResponse) => {
+        console.log("RESPONSE 메시지 : ", res);
+      })
+      .catch((err: AxiosError) => console.log("ERROR 메시지 :", err));
   };
 
   /*
- 버튼의 value와 toDoText의 id가 같다면 삭제 또는 수정이 가능 할 수 있을것. 
- 그러기 위해서는  기존의 모든 값들을 가지고 오고 
-
-
-
+  ! 데이터를 추가 하는 경우 id가 임의의 값으로 생성하게 되고 있음
+  ! 데이터 베이스의 id 값을 모르기 때문에 생성시 설정 을 못하겠음
+  ! 새로고침시 추가한 내용도 나오고 그때 삭제하면 정상적으로 삭제가 됨. 
+  ? 데이터 베이스의 인덱스값인 id를 어떻게 가지고 올 수 있을까? 
   */
+  // ------------------------------------------------------------------------
 
+  //----------------------------- TODOS 드래그 ----------------------------
   const onDragEnd = (info: DropResult) => {
     console.log(info);
     const { destination, draggableId, source } = info;
@@ -137,30 +181,30 @@ const Boards = (userInfo: any) => {
 
       sourceToDos.splice(source.index, 1);
       targetToDos.splice(destination.index, 0, sourceObj);
+      console.log(destination);
+
       setToDos({
         ...toDos,
         [source.droppableId]: sourceToDos,
         [destination.droppableId]: targetToDos,
       });
+      // ------------------ToDOS 데이터 수정 (Type 변경)-----------------------------
+      axios
+        .patch(
+          `${SERVER}/todo/${draggableId}`,
+          { type: destination.droppableId, content: sourceObj.text },
+          {
+            headers: { authorization: `Bearer ${userInfo.accessToken}` },
+          }
+        )
+        .then((res: AxiosResponse) => {
+          console.log("RESPONSE 메시지 : ", res);
+        })
+        .catch((err: AxiosError) => console.log("ERROR 메시지 :", err));
     }
   };
 
-  /*
-
-  데이터의 변경이 일어난 객체만 추출한다
-  추출한 객체를 변경한다.
-
-  */
-
-  // const onValid =
-  //   ({ toDo }: FormInterface) =>
-  //   (e: React.ChangeEvent<HTMLFormElement>) => {
-  //     const newTodo = {
-  //       id: Math.random(),
-  //       text: e.target.value,
-  //       type: "",
-  //     };
-  //   };
+  //------------------------------------- ----------------------------
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
@@ -174,7 +218,9 @@ const Boards = (userInfo: any) => {
               key={boardId}
               toDos={toDos[boardId]}
               text={text}
-              onModifyToDos={onModifyToDos}
+              onDeleteToDos={onDeleteToDos}
+              writeMode={writeMode}
+              onWriteMode={onWriteMode}
             />
           ))}
         </BackBoard>

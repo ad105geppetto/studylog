@@ -30,7 +30,7 @@ const Chart = ({ userInfo }: Chartinterface) => {
 
   const onLoadingData = () => {
     axios
-      .get(`{SERVER}/statics`, { headers: { authorization: `Bearer ${userInfo.accessToken}` } })
+      .get(`${SERVER}/statics`, { headers: { authorization: `Bearer ${userInfo.accessToken}` } })
       .then((res: AxiosResponse) => {
         setData([]);
       })

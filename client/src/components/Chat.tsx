@@ -52,7 +52,7 @@ const Chat = ({ userInfo, socket, annoy, roomId }: userInfoInterface) => {
       socket.off("receive_message");
       socket.off("leave_room");
     };
-  }, [socket]);
+  }, []);
 
   return (
     <div className="chat-window">

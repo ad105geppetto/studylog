@@ -20,39 +20,6 @@ export const logIn = (
     },
   };
 };
-// // ------------------------------------
-export const CREATE_TODO = "CREATE_TODO";
-export const createToDo = (id: any, content: any) => {
-  return {
-    type: createToDo,
-    payload: {
-      id,
-      content,
-    },
-  };
-};
-
-// export const DELETE_TODO = "DELETE_TODO";
-// export const deletetoDo = (idcontent: string, type: string) => {
-//   return {
-//     type: deletetoDo,
-//     payload: {},
-//   };
-// };
-
-// export const DRAG_TODO = "DRAG_TODO";
-// export const dragToDo = (id: string, content: string, type: string) => {
-//   return {
-//     type: dragToDo,
-//     payload: {
-//       id,
-//       content,
-//       type,
-//     },
-//   };
-// };
-
-// /*
 
 // 드래그 앤 드롭은 자유롭게 움직이지 않습니까....
 // 그러면 내가 바꿔줄 수 있는것은
@@ -65,7 +32,6 @@ export const createToDo = (id: any, content: any) => {
 //     setToDos(...toDos, targetdestination.in;
 //     기존의 배열을 불러와서 새로운 객체를 만들어주고
 
-// */
 export const dropout = (accessToken: string) => {
   return {
     type: DROP_OUT,

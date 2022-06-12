@@ -6,7 +6,7 @@ const config = {
   development: {
     host: "localhost",
     user: "root",
-    password: "0909",
+    password: process.env.DATABASE_PASSWORD,
     database: "studylog",
     multipleStatements: true,
   },
