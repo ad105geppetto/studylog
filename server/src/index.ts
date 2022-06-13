@@ -48,13 +48,16 @@ function publicRooms() {
 }
 
 io.on("connection", (socket) => {
+  socket.onAny((event, ...args) => {
+    console.log(`got ${event}`);
+  });
   console.log(`User connected ${socket.id}`);
 
   socket.on("enterRoom", (room, username) => {
     socket.join(room);
-    console.log(`User with Id: ${socket.id} joined room: ${room}`);
+    // console.log(`User with Id: ${socket.id} joined room: ${room}`);
     console.log(socket.rooms);
-    socket.broadcast.to(room).emit("joinRoom", {
+    socket.broadcast.to(room).emit("join_Room", {
       room: room,
       author: username,
       message: `${username}님이 들어왔습니다.`,
@@ -93,6 +96,7 @@ io.on("connection", (socket) => {
     console.log(data);
     socket.broadcast.emit("candidate", data);
   });
+
 });
 
 // socket.on("disconnect", () => {

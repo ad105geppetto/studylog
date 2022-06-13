@@ -16,7 +16,7 @@ const Roomlist = ({ socket, annoy, roomId, setRoomId }: socketInterface) => {
   const [rooms, setRooms] = useState([]);
   useEffect(() => {
     axios
-      .get(`${process.env.REACT_APP_SERVER}/roomlist?page=2&limit=10`)
+      .get(`${process.env.REACT_APP_SERVER}/roomlist?page=2&limit=6`)
       .then((res) => {
         // console.log(res.data.data[res.data.data.length - 1]);
         // const target = res.data.data[res.data.data.length - 1];
@@ -38,10 +38,11 @@ const Roomlist = ({ socket, annoy, roomId, setRoomId }: socketInterface) => {
     <div>
       {rooms.length === 0
         ? "없음"
-        : rooms.map((room, idx) => {
+        : rooms.map((room: any, idx: any) => {
+            console.log(room);
             return (
               <button key={idx} onClick={() => enterRoomHandler(room)}>
-                nnnnnn
+                {`Room ID: ${room.id}, title: ${room.title}`}
               </button>
             );
           })}
@@ -63,9 +64,9 @@ const Roomlist = ({ socket, annoy, roomId, setRoomId }: socketInterface) => {
 // ></input>; */}
 
 // 검색버튼 ----------------------------------------------------------------
-{
-  /* <a href="javascript:;" id="headerSearchBtn" className="search" title="검색">
+// {
+/* <a href="javascript:;" id="headerSearchBtn" className="search" title="검색">
   검색
 </a>; */
-}
+// }
 export default Roomlist;

@@ -14,33 +14,15 @@ const Chat = ({ userInfo, socket, annoy, roomId }: userInfoInterface) => {
   const [currentMessage, setCurrentMessage] = useState("");
   const [messageList, setMessageList] = useState<any>([]);
 
-  const sendMessage = async () => {
-    if (currentMessage !== "") {
-      const messageData = {
-        room: roomId,
-        author: userInfo.userId,
-        message: currentMessage,
-        time: new Date(Date.now()).getHours() + ":" + new Date(Date.now()).getMinutes(),
-      };
-
-      await socket.emit("send_message", messageData);
-      //자기메시지
-      setMessageList((list: any) => [...list, messageData]);
-      setCurrentMessage("");
-    }
-  };
-  const endChat = async () => {
-    await socket.emit("leave_room", roomId, userInfo.userId);
-    navigate("/");
-  };
-
   useEffect(() => {
-    socket.on("joinRoom", (data: any) => {
+    socket.on("join_Room", (data: any) => {
+      console.log("12313");
       setMessageList((list: any) => [...list, data]);
     });
 
     socket.on("receive_message", (data: any) => {
       //남의메시지
+      console.log("상대가 보낸 메세지 보기", data);
       setMessageList((list: any) => [...list, data]);
     });
     socket.on("leave_room", (data: any) => {
@@ -53,6 +35,27 @@ const Chat = ({ userInfo, socket, annoy, roomId }: userInfoInterface) => {
       socket.off("leave_room");
     };
   }, [socket]);
+
+  const sendMessage = () => {
+    if (currentMessage !== "") {
+      const messageData = {
+        room: roomId,
+        author: userInfo.userId,
+        message: currentMessage,
+        time: new Date(Date.now()).getHours() + ":" + new Date(Date.now()).getMinutes(),
+      };
+      console.log("내가 메세지 보기", messageData);
+      socket.emit("send_message", messageData);
+      //자기메시지
+      setMessageList((list: any) => [...list, messageData]);
+      setCurrentMessage("");
+    }
+  };
+
+  const endChat = () => {
+    socket.emit("leave_room", roomId, userInfo.userId);
+    navigate("/");
+  };
 
   return (
     <div className="chat-window">
