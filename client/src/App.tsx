@@ -30,6 +30,7 @@ function App() {
   const authCode = url.searchParams.get("code");
 
   // --------------------------- OAUTH 로그인---------------------
+
   const sendAuthCode = (authCode: any) => {
     console.log("1234");
     console.log(SERVER);

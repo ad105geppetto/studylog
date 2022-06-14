@@ -1,6 +1,9 @@
 import Chart from "components/Chart";
 import Boards from "components/Boards";
 import { useSelector } from "react-redux";
+import Nav from "components/Nav";
+import { Wrapper, Menubar, Content, TextButton, Line } from "styles/Todo_style";
+import { Hidden } from "styles/Userpage_style";
 
 import React, { useEffect, useState } from "react";
 // 로그인시 저장 된 userInfo 가지고 오기
@@ -24,18 +27,27 @@ const Todo = () => {
 
   return (
     <div>
-      <nav />
-      <div>
-        <button type="button" onClick={onRenderTodo}>
-          todo
-        </button>
-        <button type="button" onClick={onRenderChart}>
-          공부시간
-        </button>
-      </div>
-      <div>
-        {rendering === "Board" ? <Boards userInfo={userInfo} /> : <Chart userInfo={userInfo} />}
-      </div>
+      <Nav />
+      <Wrapper>
+        <Menubar>
+          <Hidden as="button" id="todo" type="button" onClick={onRenderTodo}>
+            todo
+          </Hidden>
+          <TextButton as="label" htmlFor="todo">
+            TODO
+          </TextButton>
+
+          <Hidden as="button" id="static" type="button" onClick={onRenderChart}>
+            공부시간
+          </Hidden>
+          <TextButton as="label" htmlFor="static">
+            공부시간
+          </TextButton>
+        </Menubar>
+        <Content>
+          {rendering === "Board" ? <Boards userInfo={userInfo} /> : <Chart userInfo={userInfo} />}
+        </Content>
+      </Wrapper>
     </div>
   );
 };

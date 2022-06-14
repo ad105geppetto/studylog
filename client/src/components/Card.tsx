@@ -57,7 +57,7 @@ const Cards = ({ boardId, toDoId, toDoText, index, onDeleteToDos }: CardInterfac
         >
           {toDoText}
           <Button onClick={onDeleteToDos(boardId, toDoId)}>
-            <MdDeleteForever />{" "}
+            <MdDeleteForever />
           </Button>
         </Card>
       )}

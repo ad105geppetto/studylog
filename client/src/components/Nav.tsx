@@ -3,6 +3,14 @@ import React, { useState } from "react";
 import axios, { AxiosError, AxiosResponse } from "axios";
 import { logout } from "action";
 import { useDispatch, useSelector } from "react-redux";
+import styled from "styled-components";
+
+const StyleNav = styled.div`
+  background-color: #f1f196;
+
+  width: 100vw;
+  height: 15vh;
+`;
 
 const SERVER = process.env.REACT_APP_SERVER || "http://localhost:4000";
 
@@ -38,7 +46,7 @@ const Nav = () => {
   };
 
   return (
-    <div>
+    <StyleNav>
       <nav>
         <ul>
           <span>The Nav </span>
@@ -86,7 +94,7 @@ const Nav = () => {
           )}
         </ul>
       </nav>
-    </div>
+    </StyleNav>
   );
 };
 
