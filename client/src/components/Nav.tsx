@@ -5,7 +5,14 @@ import { logout } from "action";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 
-const SERVER = process.env.REACT_APP_SERVER;
+const StyleNav = styled.div`
+  background-color: #f1f196;
+
+  width: 100vw;
+  height: 15vh;
+`;
+
+const SERVER = process.env.REACT_APP_SERVER || "http://localhost:4000";
 
 const Nav = () => {
   const userInfo = useSelector((state: any) => state.userInfoReducer.userInfo);

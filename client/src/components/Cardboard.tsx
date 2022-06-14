@@ -15,11 +15,20 @@ const Title = styled.h1`
   text-align: center;
 `;
 
+const Form = styled.form`
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  input {
+    width: 100%;
+  }
+`;
+
 const Area = styled.div<AreaInterface>`
   flex-grow: 1;
-  margin: 10px;
-  padding: 10px;
-  border-radius: 10px;
+  margin: 0.7vh;
+  padding: 0.3vh;
+  border-radius: 0.5vh;
   background-color: ${(props) =>
     props.isDraggingOver ? "coral" : props.isDraggingFrom ? "orange" : "pink"};
   transition: background-color 0.2s ease-in-out;
@@ -63,13 +72,13 @@ const Cardboard = ({
         추가하기
       </button>
       {writeMode ? (
-        <form onSubmit={(e: React.FormEvent<HTMLFormElement>) => e.preventDefault()}>
-          <input onChange={onAddText} value={text} type="text" />
+        <Form onSubmit={(e: React.FormEvent<HTMLFormElement>) => e.preventDefault()}>
+          <input onChange={onAddText} type="text" />
           <button type="submit" onClick={onAddToDos(boardId)}>
             확인
           </button>
           <button onClick={onWriteMode}> 취소 </button>
-        </form>
+        </Form>
       ) : (
         <div></div>
       )}

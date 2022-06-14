@@ -1,13 +1,23 @@
 import React, { useState } from "react";
 import axios, { AxiosError, AxiosResponse } from "axios";
-import styled from "styled-components";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, NavLink } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { logIn } from "../action/index";
+import {
+  Wrapper,
+  LoginInput,
+  Large_Button,
+  Small_Button,
+  Title,
+  Logo,
+  ButtonWrapper,
+  LoginErrorMsg,
+} from "styles/Userpage_style";
 
-const SERVER = process.env.REACT_APP_SERVER;
+const CLIENT = "http://localhost:3000";
+const SERVER = process.env.REACT_APP_SERVER || "http://localhost:4000";
 const OAUTH_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID;
-const OAUTH_URL = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${OAUTH_ID}&redirect_uri=http://localhost:3000&response_type=code&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile%20openid&access_type=offline&`;
+const OAUTH_URL = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${OAUTH_ID}&redirect_uri=${CLIENT}&response_type=code&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile%20openid&access_type=offline&`;
 
 const Login = () => {
   const dispatch = useDispatch();
@@ -22,8 +32,7 @@ const Login = () => {
   // ----------------------------- 로그인 정보 입력---------------------------
   const onUserInfo = (key: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
     setUserInfo({ ...userInfo, [key]: e.target.value });
-  };
-  // ---------------------------------------------------------------------------
+  }; // ---------------------------------------------------------------------------
 
   // ------------------- 로그인 요청 -----------------------------
   const onClickLoginBtn = () => {
@@ -46,60 +55,72 @@ const Login = () => {
       })
       .catch((err: AxiosError) => {
         console.log(err);
+        setErrMsg(() => "올바르지 못 한 로그인 요청입니다.");
       });
   };
   // ----------------------------- 구글 OAUTH 요청 -----------------------
   const oauthPath = () => {
     window.location.assign(OAUTH_URL);
     //  버튼 클릭시 Oauth 정보가 담긴 url로 이동시킴
-  };
-  // ---------------------------------------------------------------------------
+  }; // --------------------------------------------------------------
+
   //  ------------------------ 페이지 전환 -----------------------------------
   const onNavigate = (url: string) => (e: React.MouseEvent<HTMLButtonElement>) => {
     navigate(url);
-  };
-  //  ------------------------------------------------------------------------------
+  }; //  ----------------------------------------------------------------------
+
   return (
     <div>
-      <div>로그인</div>
-      <form
-        onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
-          e.preventDefault();
-        }}
-      >
+      <NavLink to="/guide">
+        <Logo alt="LOGO" src="asset/white_logo.png" object-fit="cover" />
+      </NavLink>
+      <Wrapper>
         <div>
-          <div>아이디</div>
-          <input
-            type="text"
-            onChange={onUserInfo("id")}
-            placeholder="아이디를 입력해주세요"
-            required
-          />
+          <Title>로그인</Title>
+          <form
+            onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
+              e.preventDefault();
+            }}
+          >
+            <div>
+              <LoginInput
+                type="text"
+                onChange={onUserInfo("id")}
+                placeholder="아이디를 입력해주세요"
+                required
+              />
+            </div>
+            <div>
+              <LoginInput
+                type="password"
+                onChange={onUserInfo("pwd")}
+                placeholder="비밀번호를 입력해주세요"
+                required
+              />
+            </div>
+            <LoginErrorMsg> {errMsg}</LoginErrorMsg>
+            <ButtonWrapper>
+              <div>
+                <Small_Button onClick={onClickLoginBtn}>로그인</Small_Button>
+
+                <Small_Button type="button" onClick={onNavigate("/signup")}>
+                  회원가입
+                </Small_Button>
+              </div>
+              <div>
+                <Large_Button type="button" onClick={onNavigate("/idinquiry")}>
+                  아이디/비밀번호 찾기
+                </Large_Button>
+              </div>
+              <div>
+                <Large_Button type="button" onClick={oauthPath}>
+                  GOOGLE 계정 로그인
+                </Large_Button>
+              </div>
+            </ButtonWrapper>
+          </form>
         </div>
-        <div>
-          <div>비밀번호</div>
-          <input
-            type="password"
-            onChange={onUserInfo("pwd")}
-            placeholder="비밀번호를 입력해주세요"
-            required
-          />
-        </div>
-        <div>
-          <button onClick={onClickLoginBtn}>로그인</button>
-          <button type="button" onClick={onNavigate("/signup")}>
-            회원가입
-          </button>
-        </div>
-        <div>
-          <button type="button" onClick={onNavigate("/idinquiry")}>
-            아이디/비밀번호 찾기
-          </button>
-        </div>
-        <div>
-          <button onClick={oauthPath}> GOOGLE 계정 로그인 </button>
-        </div>
-      </form>
+      </Wrapper>
     </div>
   );
 };

@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import axios, { AxiosError, AxiosResponse } from "axios";
 
 axios.defaults.withCredentials = true;
-const SERVER = process.env.REACT_APP_SERVER;
+const SERVER = process.env.REACT_APP_SERVER || "http://localhost:4000";
 
 interface Chartinterface {
   userInfo: any;
@@ -13,7 +13,7 @@ interface Chartinterface {
 const Chart = ({ userInfo }: Chartinterface) => {
   const [data, setData] = useState([]);
   const [isLineGraph, setIsLineGraph] = useState(true);
-
+  const [weekSummary, setWeekSummary] = useState(0);
   const dummyData = [
     { name: "월", 시간: 3 },
     { name: "화", 시간: 3.4 },
@@ -28,6 +28,10 @@ const Chart = ({ userInfo }: Chartinterface) => {
     setIsLineGraph((isLineGraph) => !isLineGraph);
   };
 
+  const sumData = () => {
+    const value = 1;
+    setWeekSummary(() => value);
+  };
   const onLoadingData = () => {
     axios
       .get(`${SERVER}/statics`, { headers: { authorization: `Bearer ${userInfo.accessToken}` } })
@@ -44,6 +48,8 @@ const Chart = ({ userInfo }: Chartinterface) => {
   return (
     <div>
       <div> 나의 공부 시간 </div>
+
+      <div> 이번 주 나의 공부시간 {weekSummary} </div>
 
       {isLineGraph ? (
         <LineChart

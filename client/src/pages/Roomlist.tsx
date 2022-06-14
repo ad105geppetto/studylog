@@ -40,7 +40,7 @@ const Post = styled.div`
   }
 `;
 
-const SERVER = process.env.REACT_APP_SERVER;
+
 
 interface IPosts {
   id: number;
@@ -50,13 +50,14 @@ interface IPosts {
 }
 
 interface socketInterface {
-  socket: any;
   annoy: any;
   roomId: any;
   setRoomId: any;
 }
 
-const Roomlist = ({ socket, annoy, roomId, setRoomId }: socketInterface) => {
+const SERVER = process.env.REACT_APP_SERVER || "http://localhost:4000";
+
+const Roomlist = ({ annoy, roomId, setRoomId }: socketInterface) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -99,10 +100,8 @@ const Roomlist = ({ socket, annoy, roomId, setRoomId }: socketInterface) => {
 
   // 화상대화방 만드는 함수
   const enterRoomHandler = (room: any) => {
-    // 서버에서 받아온 방 id값
-    setRoomId(room.Id);
-    // 소켓에 이벤트 발생시키기
-    socket.emit("enterRoom", room.id, userInfo.userId ? userInfo.userId : annoy);
+    setRoomId(room.id);
+    // socket.emit("enterRoom", room.id, userInfo.userId ? userInfo.userId : annoy);
     navigate(`/room/${room.id}`);
   };
 

@@ -2,33 +2,34 @@ import { useRef, useEffect } from "react";
 import { useSelector } from "react-redux";
 import Chat from "components/Chat";
 import styled from "styled-components";
+import { io } from "socket.io-client";
 
-const Container = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  height: 100vh;
-  background-color: #393d46;
-`;
+// const Container = styled.div`
+//   display: flex;
+//   flex-wrap: wrap;
+//   height: 100vh;
+//   background-color: #393d46;
+// `;
 
-const VideoContainer = styled.div`
-  height: 90vh;
-  width: 70%;
-`;
+// const VideoContainer = styled.div`
+//   height: 90vh;
+//   width: 70%;
+// `;
 
-const ChatContainer = styled.div`
-  height: 90vh;
-  width: 30%;
-  background-color: white;
-  border-radius: 10px;
-`;
+// const ChatContainer = styled.div`
+//   height: 90vh;
+//   width: 30%;
+//   background-color: white;
+//   border-radius: 10px;
+// `;
 
 interface socketInterface {
-  socket: any;
   annoy: any;
   roomId: any;
 }
 
-const Room = ({ socket, annoy, roomId }: socketInterface) => {
+const Room = ({ annoy, roomId }: socketInterface) => {
+  const SERVER = process.env.REACT_APP_SERVER || "http://localhost:4000";
   const userInfo = useSelector((state: any) => state.userInfoReducer.userInfo);
   // 로그인시 저장 된 userInfo 가지고 오기
   ///////////////////////
@@ -41,7 +42,12 @@ const Room = ({ socket, annoy, roomId }: socketInterface) => {
   // const socketRef = useRef<SocketIOClient.Socket>();
   // const pcRef = useRef<RTCPeerConnection>();
 
+  const socket = io(`${SERVER}`, {
+    withCredentials: true,
+  });
   useEffect(() => {
+    socket.emit("enterRoom", roomId, userInfo.userId);
+
     socket.on("connection-success", (success: any) => {
       console.log(success);
     });
@@ -97,7 +103,7 @@ const Room = ({ socket, annoy, roomId }: socketInterface) => {
     };
 
     pc.current = _pc;
-  }, [socket]);
+  }, []);
 
   const createOffer = () => {
     pc.current
@@ -153,24 +159,23 @@ const Room = ({ socket, annoy, roomId }: socketInterface) => {
   };
   ///////////////////////
   return (
-    <Container>
-      <VideoContainer>
-        <video
-          style={{ width: 300, height: 400, margin: 5, backgroundColor: "black" }}
-          ref={localVideoRef}
-          autoPlay
-        ></video>
-
-        <video
-          style={{ width: 300, height: 400, margin: 5, backgroundColor: "black" }}
-          ref={remoteVideoRef}
-          autoPlay
-        ></video>
-      </VideoContainer>
-      <ChatContainer>
-        <Chat userInfo={userInfo} socket={socket} annoy={annoy} roomId={roomId} />
-      </ChatContainer>
-
+    <div>
+      // {/* <Container> */}
+      {/* <VideoContainer> */}
+      <video
+        style={{ width: 300, height: 400, margin: 5, backgroundColor: "black" }}
+        ref={localVideoRef}
+        autoPlay
+      ></video>
+      <video
+        style={{ width: 300, height: 400, margin: 5, backgroundColor: "black" }}
+        ref={remoteVideoRef}
+        autoPlay
+      ></video>
+      {/* </VideoContainer> */}
+      {/* <ChatContainer> */}
+      <Chat userInfo={userInfo} socket={socket} annoy={annoy} roomId={roomId} />
+      {/* </ChatContainer> */}
       <br />
       <button onClick={createOffer}>Create Offer</button>
       <button onClick={createAnswer}>Create Answer</button>
@@ -179,7 +184,8 @@ const Room = ({ socket, annoy, roomId }: socketInterface) => {
       <br />
       <button onClick={setRemoteDescription}>Set Remote Description</button>
       <button onClick={addCandidate}>Add Candidates</button>
-    </Container>
+      // {/* </Container> */}
+    </div>
   );
 };
 

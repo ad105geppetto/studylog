@@ -4,37 +4,26 @@ import Cardboard from "./Cardboard";
 import styled from "styled-components";
 import axios, { AxiosError, AxiosResponse } from "axios";
 
-const SERVER = process.env.REACT_APP_SERVER;
+const SERVER = process.env.REACT_APP_SERVER || "http://localhost:4000";
 
 const Wrapper = styled.div`
-  background-color: white;
+  /* background-color: white;
   display: flex;
-  min-height: 90vh;
-  width: 90vw;
+  min-height: 70vh;
+  width: 70vw;
   margin: 0 auto;
   justify-content: center;
   align-items: center;
-  height: 100%;
+  height: 100%; */
 `;
 
 const BackBoard = styled.div`
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  min-height: 50px;
-  gap: 30px;
+  display: flex;
+  flex-direction: row;
+  min-height: 30vh;
+  max-height: 40vh;
+  gap: 2vw;
 `;
-
-const Form = styled.form`
-  width: 100%;
-  input {
-    width: 100%;
-  }
-`;
-
-interface ToDosInterface {
-  id: number;
-  text: any;
-}
 
 interface ToDos {
   [key: string]: any;
@@ -68,7 +57,9 @@ const Boards = ({ userInfo }: any) => {
       })
       .then((res: AxiosResponse) => {
         const data = res.data.data;
-
+        if (data.length === 0) {
+          return;
+        }
         data.map((data: any) => {
           const id = data.id;
           const key = data.type;
@@ -102,7 +93,7 @@ const Boards = ({ userInfo }: any) => {
       return;
     } else {
       const newToDo = {
-        id: Number((Math.random() * 1000).toString().slice(0, 3)),
+        id: new Date().getTime(),
         text: text,
       };
 
@@ -125,6 +116,7 @@ const Boards = ({ userInfo }: any) => {
       )
       .then((res: AxiosResponse) => console.log(res))
       .catch((err: AxiosError) => console.log(err));
+    window.location.reload();
   };
 
   // todos는 객체의 값이 배열이고 그 내부에 객체를 가진 데이터 구조

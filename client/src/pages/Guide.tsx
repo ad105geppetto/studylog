@@ -11,11 +11,7 @@ const LandingWrapper = styled.div`
   }
 `;
 
-interface socketInterface {
-  socket: any;
-}
-
-const Guide = ({ socket }: socketInterface) => {
+const Guide = () => {
   const navigate = useNavigate();
   const userInfo = useSelector((state: any) => state.userInfoReducer.userInfo);
   const guestNum = (Math.random() * 10000000).toString().slice(0, 4);
@@ -30,10 +26,6 @@ const Guide = ({ socket }: socketInterface) => {
 
   return (
     <div>
-      <button type="button" onClick={() => navigate("/guide")}>
-        Landing
-      </button>
-
       <button type="button" onClick={() => navigate("/signup")}>
         회원가입
       </button>
