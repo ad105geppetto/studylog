@@ -39,7 +39,7 @@ interface IPosts {
   id: number;
   title: string;
 }
-const SERVER = process.env.REACT_APP_SERVER;
+const SERVER = process.env.REACT_APP_SERVER || "http://localhost:3000";
 
 function Total() {
   // 여기서는 더미데이터, 실제로는 서버에서 받아오는 데이터

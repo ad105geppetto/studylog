@@ -7,6 +7,7 @@ interface socketInterface {
   socket: any;
   setRoomId: any;
 }
+const SERVER = process.env.REACT_APP_SERVER || "http://localhost:3000";
 
 const Creatingroom = ({ socket, setRoomId }: socketInterface) => {
   const navigate = useNavigate();
@@ -25,7 +26,7 @@ const Creatingroom = ({ socket, setRoomId }: socketInterface) => {
   const createRoomHandler = () => {
     axios
       .post(
-        `${process.env.REACT_APP_SERVER}/room`,
+        `${SERVER}/room`,
         { title: title, content: content },
         {
           headers: { authorization: `Bearer ${userInfo.accessToken}` },

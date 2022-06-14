@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { dropout } from "../action/index";
 
 axios.defaults.withCredentials = true;
-const SERVER = process.env.REACT_APP_SERVER;
+const SERVER = process.env.REACT_APP_SERVER || "http://localhost:3000";
 
 const Findinfo = () => {
   const [isLogedIn, setIsLogedIn] = useState(true);

@@ -42,7 +42,7 @@ const Input = styled.input`
   background-color: white;
 `;
 
-const SERVER = process.env.REACT_APP_SERVER;
+const SERVER = process.env.REACT_APP_SERVER || "http://localhost:3000";
 
 export const Signup = () => {
   const navigate = useNavigate();

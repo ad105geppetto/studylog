@@ -10,13 +10,15 @@ interface socketInterface {
   setRoomId: any;
 }
 
+const SERVER = process.env.REACT_APP_SERVER || "http://localhost:3000";
+
 const Roomlist = ({ socket, annoy, roomId, setRoomId }: socketInterface) => {
   const navigate = useNavigate();
   const userInfo = useSelector((state: any) => state.userInfoReducer.userInfo);
   const [rooms, setRooms] = useState([]);
   useEffect(() => {
     axios
-      .get(`${process.env.REACT_APP_SERVER}/roomlist?page=2&limit=6`)
+      .get(`${SERVER}/roomlist?page=2&limit=6`)
       .then((res) => {
         // console.log(res.data.data[res.data.data.length - 1]);
         // const target = res.data.data[res.data.data.length - 1];

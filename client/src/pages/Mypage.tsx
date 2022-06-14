@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { dropout } from "../action/index";
 
 axios.defaults.withCredentials = true;
-const SERVER = process.env.REACT_APP_SERVER;
+const SERVER = process.env.REACT_APP_SERVER || "http://localhost:3000";
 
 const Mypage = () => {
   const userInfo = useSelector((state: any) => state.userInfoReducer.userInfo);
