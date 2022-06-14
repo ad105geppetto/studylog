@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 import axios, { AxiosError, AxiosResponse } from "axios";
 
-const SERVER = process.env.REACT_APP_SERVER;
+const SERVER = process.env.REACT_APP_SERVER || "http://localhost:4000";
 
 const Password = () => {
   const navigate = useNavigate();

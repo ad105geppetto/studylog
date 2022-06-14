@@ -3,7 +3,7 @@ import Nav from "../components/Nav";
 import axios, { AxiosError, AxiosResponse } from "axios";
 
 axios.defaults.withCredentials = true;
-const SERVER = process.env.REACT_APP_SERVER;
+const SERVER = process.env.REACT_APP_SERVER || "http://localhost:4000";
 
 const Idinquiry = () => {
   const [userEmail, setUserEmail] = useState("");

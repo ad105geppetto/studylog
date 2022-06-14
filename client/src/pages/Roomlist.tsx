@@ -4,19 +4,20 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 
 interface socketInterface {
-  socket: any;
   annoy: any;
   roomId: any;
   setRoomId: any;
 }
 
-const Roomlist = ({ socket, annoy, roomId, setRoomId }: socketInterface) => {
+const SERVER = process.env.REACT_APP_SERVER || "http://localhost:4000";
+
+const Roomlist = ({ annoy, roomId, setRoomId }: socketInterface) => {
   const navigate = useNavigate();
   const userInfo = useSelector((state: any) => state.userInfoReducer.userInfo);
   const [rooms, setRooms] = useState([]);
   useEffect(() => {
     axios
-      .get(`${process.env.REACT_APP_SERVER}/roomlist?page=2&limit=5`)
+      .get(`${SERVER}/roomlist?page=2&limit=14`)
       .then((res) => {
         // console.log(res.data.data[res.data.data.length - 1]);
         // const target = res.data.data[res.data.data.length - 1];
@@ -30,7 +31,7 @@ const Roomlist = ({ socket, annoy, roomId, setRoomId }: socketInterface) => {
 
   const enterRoomHandler = (room: any) => {
     setRoomId(room.id);
-    socket.emit("enterRoom", room.id, userInfo.userId ? userInfo.userId : annoy);
+    // socket.emit("enterRoom", room.id, userInfo.userId ? userInfo.userId : annoy);
     navigate(`/room/${room.id}`);
   };
 
@@ -38,10 +39,11 @@ const Roomlist = ({ socket, annoy, roomId, setRoomId }: socketInterface) => {
     <div>
       {rooms.length === 0
         ? "없음"
-        : rooms.map((room, idx) => {
+        : rooms.map((room: any, idx: any) => {
+            console.log(room);
             return (
               <button key={idx} onClick={() => enterRoomHandler(room)}>
-                nnnnnn
+                {`Room ID: ${room.id}, title: ${room.title}`}
               </button>
             );
           })}
@@ -63,9 +65,9 @@ const Roomlist = ({ socket, annoy, roomId, setRoomId }: socketInterface) => {
 // ></input>; */}
 
 // 검색버튼 ----------------------------------------------------------------
-{
-  /* <a href="javascript:;" id="headerSearchBtn" className="search" title="검색">
+// {
+/* <a href="javascript:;" id="headerSearchBtn" className="search" title="검색">
   검색
 </a>; */
-}
+// }
 export default Roomlist;

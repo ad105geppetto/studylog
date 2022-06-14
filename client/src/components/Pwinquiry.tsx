@@ -3,7 +3,7 @@ import axios, { AxiosError, AxiosResponse } from "axios";
 import Nav from "./Nav";
 
 axios.defaults.withCredentials = true;
-const SERVER = process.env.REACT_APP_SERVER;
+const SERVER = process.env.REACT_APP_SERVER || "http://localhost:4000";
 
 const Pwinquiry = () => {
   const [userInfo, setUserInfo] = useState({
