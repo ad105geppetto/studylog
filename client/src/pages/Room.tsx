@@ -2,6 +2,7 @@ import { useRef, useEffect } from "react";
 import { useSelector } from "react-redux";
 import Chat from "components/Chat";
 import styled from "styled-components";
+import { io } from "socket.io-client";
 
 // const Container = styled.div`
 //   display: flex;
@@ -23,12 +24,12 @@ import styled from "styled-components";
 // `;
 
 interface socketInterface {
-  socket: any;
   annoy: any;
   roomId: any;
 }
 
-const Room = ({ socket, annoy, roomId }: socketInterface) => {
+const Room = ({ annoy, roomId }: socketInterface) => {
+  const SERVER = process.env.REACT_APP_SERVER || "http://localhost:4000";
   const userInfo = useSelector((state: any) => state.userInfoReducer.userInfo);
   // 로그인시 저장 된 userInfo 가지고 오기
   ///////////////////////
@@ -41,7 +42,12 @@ const Room = ({ socket, annoy, roomId }: socketInterface) => {
   // const socketRef = useRef<SocketIOClient.Socket>();
   // const pcRef = useRef<RTCPeerConnection>();
 
+  const socket = io(`${SERVER}`, {
+    withCredentials: true,
+  });
   useEffect(() => {
+    socket.emit("enterRoom", roomId, userInfo.userId);
+
     socket.on("connection-success", (success: any) => {
       console.log(success);
     });
@@ -97,7 +103,7 @@ const Room = ({ socket, annoy, roomId }: socketInterface) => {
     };
 
     pc.current = _pc;
-  }, [socket]);
+  }, []);
 
   const createOffer = () => {
     pc.current

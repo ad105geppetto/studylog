@@ -15,11 +15,11 @@ import Guide from "pages/Guide";
 import Findinfo from "pages/Findinfo";
 import Total from "pages/Total";
 
-const SERVER = process.env.REACT_APP_SERVER || "http://localhost:3000";
+const SERVER = process.env.REACT_APP_SERVER || "http://localhost:4000";
 
-const socket = io(`${SERVER}`, {
-  withCredentials: true,
-});
+// const socket = io(`${SERVER}`, {
+//   withCredentials: true,
+// });
 
 function App() {
   const guestNum = (Math.random() * 10000000).toString().slice(0, 4);
@@ -44,7 +44,7 @@ function App() {
   };
 
   useEffect(() => {
-    sendAuthCode(authCode);
+    // sendAuthCode(authCode);
   }, []);
   // outh 서버로 전송이 안댐 , 뭔가 틀렸을텐데 뭘까
   // ----------------------------------------
@@ -53,22 +53,19 @@ function App() {
     //------------------------------------------------------------------------------------------------
     <BrowserRouter>
       <Routes>
-        <Route path="/guide" element={<Guide socket={socket} />} />
+        <Route path="/guide" element={<Guide />} />
         <Route path="/" element={<Landing />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />
         <Route path="/mypage" element={<Mypage />} />
         <Route path="/todos" element={<Todo />} />
         <Route path="/room">
-          <Route path=":roomId" element={<Room socket={socket} annoy={annoy} roomId={roomId} />} />
+          <Route path=":roomId" element={<Room annoy={annoy} roomId={roomId} />} />
         </Route>
-        <Route
-          path="/creatingroom"
-          element={<Creatingroom socket={socket} setRoomId={setRoomId} />}
-        />
+        <Route path="/creatingroom" element={<Creatingroom setRoomId={setRoomId} />} />
         <Route
           path="/roomlist"
-          element={<Roomlist socket={socket} annoy={annoy} roomId={roomId} setRoomId={setRoomId} />}
+          element={<Roomlist annoy={annoy} roomId={roomId} setRoomId={setRoomId} />}
         />
         <Route path="/findinfo" element={<Findinfo />} />
         <Route path="/Nav" element={<Nav />} />

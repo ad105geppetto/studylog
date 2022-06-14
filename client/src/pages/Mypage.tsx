@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { dropout } from "../action/index";
 
 axios.defaults.withCredentials = true;
-const SERVER = process.env.REACT_APP_SERVER || "http://localhost:3000";
+const SERVER = process.env.REACT_APP_SERVER || "http://localhost:4000";
 
 const Mypage = () => {
   const userInfo = useSelector((state: any) => state.userInfoReducer.userInfo);
@@ -271,36 +271,3 @@ const Mypage = () => {
 };
 
 export default Mypage;
-
-/*
-
-    const data = {
-      title: post.title,
-      image: post.image,
-    };
-
-    const formData = new FormData();
-    formData.append("image", imageFile[0]);
-    formData.append("data", new Blob([JSON.stringify(data)], { type: "application/json" }));
-
-//////////
-axios
-      .put(
-        `http://localhost:4000/records/${id}`,
-        {
-          title: 상태값,
-          content: 상태값,
-          image: 상태값
-        },
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-          withCredentials: true,
-        }
-      )
-      .then((res) => console.log(res))
-      .catch((err) => console.log(err.response));
-
-
-*/

@@ -4,7 +4,7 @@ import axios, { AxiosError, AxiosResponse } from "axios";
 import { logout } from "action";
 import { useDispatch, useSelector } from "react-redux";
 
-const SERVER = process.env.REACT_APP_SERVER || "http://localhost:3000";
+const SERVER = process.env.REACT_APP_SERVER || "http://localhost:4000";
 
 const Nav = () => {
   const userInfo = useSelector((state: any) => state.userInfoReducer.userInfo);

@@ -4,21 +4,20 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 
 interface socketInterface {
-  socket: any;
   annoy: any;
   roomId: any;
   setRoomId: any;
 }
 
-const SERVER = process.env.REACT_APP_SERVER || "http://localhost:3000";
+const SERVER = process.env.REACT_APP_SERVER || "http://localhost:4000";
 
-const Roomlist = ({ socket, annoy, roomId, setRoomId }: socketInterface) => {
+const Roomlist = ({ annoy, roomId, setRoomId }: socketInterface) => {
   const navigate = useNavigate();
   const userInfo = useSelector((state: any) => state.userInfoReducer.userInfo);
   const [rooms, setRooms] = useState([]);
   useEffect(() => {
     axios
-      .get(`${SERVER}/roomlist?page=2&limit=6`)
+      .get(`${SERVER}/roomlist?page=2&limit=14`)
       .then((res) => {
         // console.log(res.data.data[res.data.data.length - 1]);
         // const target = res.data.data[res.data.data.length - 1];
@@ -32,7 +31,7 @@ const Roomlist = ({ socket, annoy, roomId, setRoomId }: socketInterface) => {
 
   const enterRoomHandler = (room: any) => {
     setRoomId(room.id);
-    socket.emit("enterRoom", room.id, userInfo.userId ? userInfo.userId : annoy);
+    // socket.emit("enterRoom", room.id, userInfo.userId ? userInfo.userId : annoy);
     navigate(`/room/${room.id}`);
   };
 

@@ -4,7 +4,7 @@ import Cardboard from "./Cardboard";
 import styled from "styled-components";
 import axios, { AxiosError, AxiosResponse } from "axios";
 
-const SERVER = process.env.REACT_APP_SERVER || "http://localhost:3000";
+const SERVER = process.env.REACT_APP_SERVER || "http://localhost:4000";
 
 const Wrapper = styled.div`
   background-color: white;
