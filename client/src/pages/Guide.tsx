@@ -30,10 +30,6 @@ const Guide = ({ socket }: socketInterface) => {
 
   return (
     <div>
-      <button type="button" onClick={() => navigate("/guide")}>
-        Landing
-      </button>
-
       <button type="button" onClick={() => navigate("/signup")}>
         회원가입
       </button>

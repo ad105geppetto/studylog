@@ -30,6 +30,7 @@ function App() {
   const authCode = url.searchParams.get("code");
 
   // --------------------------- OAUTH 로그인---------------------
+
   const sendAuthCode = (authCode: any) => {
     console.log("1234");
     axios
@@ -47,10 +48,6 @@ function App() {
   }, []);
   // outh 서버로 전송이 안댐 , 뭔가 틀렸을텐데 뭘까
   // ----------------------------------------
-
-  const socket = io("http://localhost:4000", {
-    withCredentials: true,
-  });
 
   return (
     //------------------------------------------------------------------------------------------------

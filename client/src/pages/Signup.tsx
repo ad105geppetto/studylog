@@ -1,46 +1,18 @@
 import React, { useState, useEffect } from "react";
 import axios, { AxiosError, AxiosResponse } from "axios";
-import Subtitle from "components/Subtitle";
-import styled from "styled-components";
-import { useNavigate } from "react-router-dom";
-// import { Wrapper, Input } from "styles/Userpage_style";
-
-const GridLayout = styled.div`
-  display: grid;
-  grid-template-columns: repeat(12, 140px);
-  grid-template-rows: repeat(10, 100px);
-  grid-column-gap: 20px;
-  grid-template-areas:
-    "Logo . . . . . . . . . . ."
-    "Logo . . . Title Title Title Title . . . . "
-    ". . . . . . . . . . . ."
-    ". . . Content Content Content Content Content Content . . ."
-    ". . . Content Content Content Content Content Content . . ."
-    ". . . Content Content Content Content Content Content . . ."
-    ". . . Content Content Content Content Content Content . . ."
-    ". . . Content Content Content Content Content Content . . ."
-    ". . . Content Content Content Content Content Content . . .";
-  /*
-    ". . . Content Content Content Content . . ."
-    ". . . Content Content Content Content . . ."
-    ". . . Content Content Content Content . . ."
-    ". . . Content Content Content Content . . ."; */
-`;
-
-const Logo = styled.img`
-  height: 20vh;
-  width: 10vw;
-`;
-
-const Form = styled.form`
-  grid-area: Content;
-  background-color: blue;
-`;
-
-const Input = styled.input`
-  grid-area: Input;
-  background-color: white;
-`;
+import { useNavigate, NavLink } from "react-router-dom";
+import { FiCheckSquare } from "react-icons/fi";
+import { MdOutlineMarkEmailRead } from "react-icons/md";
+import {
+  Wrapper,
+  Input,
+  Button,
+  ErrorMsg,
+  Title,
+  Logo,
+  Large_Button,
+  ButtonWrapper,
+} from "styles/Userpage_style";
 
 const SERVER = process.env.REACT_APP_SERVER;
 
@@ -92,6 +64,8 @@ export const Signup = () => {
         } else if (value.length < 5 || value.length > 15) {
           setErrMsg({ ...errMsg, pwdMsg: "비밀번호는 5글자 이상 15글자 미만 입니다." });
           setValidCheck({ ...validCheck, pwd: false });
+        } else if (value === userInfo.pwdCheck) {
+          setErrMsg({ ...errMsg, pwdCheckMsg: "" });
         } else {
           setErrMsg({ ...errMsg, pwdMsg: "" });
           setValidCheck({ ...validCheck, pwd: true });
@@ -185,72 +159,79 @@ export const Signup = () => {
   }; //  -----------------------------------------------------------------
 
   return (
-    <GridLayout>
-      <Subtitle text="회원가입" />
-      <Logo alt="LOGO" src="asset/white_logo.png" object-fit="cover" />
-      <Form
-        onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
-          e.preventDefault();
-        }}
-      >
+    <div>
+      <NavLink to="/guide">
+        <Logo alt="LOGO" src="asset/white_logo.png" object-fit="cover" />
+      </NavLink>
+      <Wrapper>
         <div>
-          <Input
-            type="text"
-            placeholder="ID를 입력하세요"
-            onChange={onUserInfo("id")}
-            maxLength={10}
-            required
-          />
-          <button type="button" onClick={onCheckUserId}>
-            중복체크
-          </button>
-          <div>{errMsg.idMsg} </div>
-        </div>
-
-        <div>
-          <Input
-            type="password"
-            placeholder="비밀번호를 입력하세요"
-            onChange={onUserInfo("pwd")}
-            maxLength={15}
-            required
-          />
-          <div>{errMsg.pwdMsg} </div>
-          <Input
-            type="password"
-            placeholder="비밀번호를 다시 입력하세요"
-            onChange={onUserInfo("pwdCheck")}
-            maxLength={15}
-            required
-          />
-          <div>{errMsg.pwdCheckMsg}</div>
-        </div>
-        <div>
-          <Input
-            type="text"
-            placeholder="이메일을 입력하세요"
-            onChange={onUserInfo("email")}
-            required
-          />
-          <button type="button" onClick={onVerifyEmail}>
-            인증
-          </button>
-          <div>{errMsg.emailMsg}</div>
-        </div>
-        <div>
-          <button
-            disabled={
-              validCheck.email && validCheck.id && validCheck.pwd && validCheck.pwdCheck
-                ? false
-                : true
-            }
-            onClick={onSingup}
+          <Title> 회 원 가 입 </Title>
+          <form
+            onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
+              e.preventDefault();
+            }}
           >
-            가입
-          </button>
+            <div>
+              <Input
+                type="text"
+                placeholder="ID를 입력하세요"
+                onChange={onUserInfo("id")}
+                maxLength={10}
+                required
+              />
+              <Button type="button" onClick={onCheckUserId}>
+                <FiCheckSquare size="1.2rem" color="red" /> 중복체크
+              </Button>
+              <ErrorMsg>{errMsg.idMsg} </ErrorMsg>
+            </div>
+
+            <div>
+              <Input
+                type="password"
+                placeholder="비밀번호를 입력하세요"
+                onChange={onUserInfo("pwd")}
+                maxLength={15}
+                required
+              />
+              <ErrorMsg>{errMsg.pwdMsg} </ErrorMsg>
+
+              <Input
+                type="password"
+                placeholder="비밀번호를 다시 입력하세요"
+                onChange={onUserInfo("pwdCheck")}
+                maxLength={15}
+                required
+              />
+              <ErrorMsg>{errMsg.pwdCheckMsg}</ErrorMsg>
+            </div>
+
+            <div>
+              <Input
+                type="text"
+                placeholder="이메일을 입력하세요"
+                onChange={onUserInfo("email")}
+                required
+              />
+              <Button type="button" onClick={onVerifyEmail}>
+                <MdOutlineMarkEmailRead size="1rem" color="red" /> 이메일 인증
+              </Button>
+              <ErrorMsg>{errMsg.emailMsg}</ErrorMsg>
+            </div>
+
+            <Large_Button
+              disabled={
+                validCheck.email && validCheck.id && validCheck.pwd && validCheck.pwdCheck
+                  ? false
+                  : true
+              }
+              onClick={onSingup}
+            >
+              가입
+            </Large_Button>
+          </form>
         </div>
-      </Form>
-    </GridLayout>
+      </Wrapper>
+    </div>
   );
 };
 

@@ -3,8 +3,23 @@ import Modal from "components/Modal";
 import axios, { AxiosError, AxiosResponse } from "axios";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, NavLink } from "react-router-dom";
 import { dropout } from "../action/index";
+import {
+  Wrapper,
+  Title,
+  LoginInput,
+  Large_Button,
+  Small_Button,
+  Logo,
+  Input,
+  Button,
+  ButtonWrapper,
+  ErrorMsg,
+  ImageBoard,
+  Hidden,
+  Upload_Button,
+} from "styles/Userpage_style";
 
 axios.defaults.withCredentials = true;
 const SERVER = process.env.REACT_APP_SERVER;
@@ -142,16 +157,6 @@ const Mypage = () => {
       formData.append("password", pwd);
     }
 
-    // formData Key 확인하기
-    for (let key of formData.keys()) {
-      console.log(`formData Key 값 : ${key}`);
-    }
-
-    // formdata value 확인하기
-    for (let value of formData.values()) {
-      console.log("formData value : ", value);
-    }
-
     axios
       .patch(`${SERVER}/userinfo`, formData, {
         headers: {
@@ -184,7 +189,7 @@ const Mypage = () => {
   const dropOut = () => {
     setDrop("drop");
   };
-  //  -------회원탈퇴 버튼 함수-------
+  // -------------------회원탈퇴 버튼 함수-------------------------
   const onDropOutlBtn = () => {
     axios
       .delete(`${SERVER}/dropout`, {
@@ -197,51 +202,65 @@ const Mypage = () => {
       })
       .catch((err: AxiosError) => console.log(err));
     onModalOff();
+  }; // ----------------------------------------------
+
+  const onErrorImg = (event: React.SyntheticEvent<HTMLImageElement, Event>) => {
+    event.currentTarget.src = "asset/Dark_logo.png";
   };
-  // ----------------------------------------------------------------
 
   return (
     <div>
-      <form onSubmit={(e: React.FormEvent<HTMLFormElement>) => e.preventDefault()}>
+      <NavLink to="/guide">
+        <Logo alt="LOGO" src="asset/white_logo.png" object-fit="cover" />
+      </NavLink>
+      <Wrapper>
         <div>
-          아이디 :<input type="text" value={userInfo.userId} disabled />
-        </div>
-        <div>
-          <img alt="프로필 사진" src={preview} />
-        </div>
-        <div>
-          <input type="file" accept=".jpg, .png" onChange={onUploadImage} />
-        </div>
-        비밀번호 : <input type="password" onChange={onModifyUserInfo("pwd")} />
-        <div> {errMsg.pwdMsg} </div>
-        비밀번호 확인 <input type="password" onChange={onModifyUserInfo("pwdCheck")} />
-        <div> {errMsg.pwdCheckMsg} </div>
-        <div>
-          <input type="eamil" onChange={onModifyUserInfo("email")} defaultValue={userInfo.email} />
-          <button type="button" onClick={onVerifyEmail}>
-            이메일 인증
-          </button>
-          <div>{errMsg.emailMsg}</div>
-        </div>
-        <div>
-          <button
-            type="submit"
-            onClick={onModify}
-            disabled={validCheck.pwd === true && validCheck.pwdCheck === true ? false : true}
-          >
-            회원정보 수정
-          </button>
-
-          <div className="im-container">
-            <div className="im-wrapper">
-              <button
-                onClick={() => {
-                  setModal(true);
-                }}
-              >
-                회원탈퇴
-              </button>
+          <Title>회원정보</Title>
+          <form onSubmit={(e: React.FormEvent<HTMLFormElement>) => e.preventDefault()}>
+            <div>
+              <LoginInput type="text" value={userInfo.userId} disabled />
             </div>
+            <div>
+              <ImageBoard src={preview} onError={onErrorImg} />
+              <Hidden id="fileupload" type="file" accept=".jpg, .png" onChange={onUploadImage} />
+              <Upload_Button as="label" htmlFor="fileupload">
+                이미지 업로드
+              </Upload_Button>
+            </div>
+            <Input type="password" onChange={onModifyUserInfo("pwd")} />
+            <ErrorMsg> {errMsg.pwdMsg} </ErrorMsg>
+            <Input type="password" onChange={onModifyUserInfo("pwdCheck")} />
+            <ErrorMsg> {errMsg.pwdCheckMsg} </ErrorMsg>
+            <div>
+              <Input
+                type="eamil"
+                onChange={onModifyUserInfo("email")}
+                defaultValue={userInfo.email}
+              />
+              <Button type="button" onClick={onVerifyEmail}>
+                이메일 인증
+              </Button>
+              <ErrorMsg>{errMsg.emailMsg}</ErrorMsg>
+            </div>
+
+            <ButtonWrapper>
+              <div>
+                <Small_Button
+                  type="submit"
+                  onClick={onModify}
+                  disabled={validCheck.pwd === true && validCheck.pwdCheck === true ? false : true}
+                >
+                  회원정보 수정
+                </Small_Button>
+                <Small_Button
+                  onClick={() => {
+                    setModal(true);
+                  }}
+                >
+                  회원탈퇴
+                </Small_Button>
+              </div>
+            </ButtonWrapper>
             {modal && (
               <Modal
                 modal={modal}
@@ -263,9 +282,9 @@ const Mypage = () => {
                 }
               />
             )}
-          </div>
+          </form>
         </div>
-      </form>
+      </Wrapper>
     </div>
   );
 };
