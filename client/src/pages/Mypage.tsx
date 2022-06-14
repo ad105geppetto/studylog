@@ -143,14 +143,14 @@ const Mypage = () => {
     }
 
     // formData Key 확인하기
-    for (let key of formData.keys()) {
-      console.log(`formData Key 값 : ${key}`);
-    }
+    // for (let key of formData.keys()) {
+    //   console.log(`formData Key 값 : ${key}`);
+    // }
 
-    // formdata value 확인하기
-    for (let value of formData.values()) {
-      console.log("formData value : ", value);
-    }
+    // // formdata value 확인하기
+    // for (let value of formData.values()) {
+    //   console.log("formData value : ", value);
+    // }
 
     axios
       .patch(`${SERVER}/userinfo`, formData, {

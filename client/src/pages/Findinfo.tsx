@@ -57,7 +57,7 @@ const Findinfo = () => {
         <div></div>
       )}
 
-      <div className="im-container">
+      {/* <div className="im-container">
         <div className="im-wrapper">
           <button
             onClick={() => {
@@ -85,7 +85,7 @@ const Findinfo = () => {
             }
           />
         )}
-      </div>
+      </div> */}
     </div>
   );
 };

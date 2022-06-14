@@ -13,7 +13,7 @@ import Nav from "./components/Nav";
 import { io } from "socket.io-client";
 import Guide from "pages/Guide";
 import Findinfo from "pages/Findinfo";
-import Total from "pages/Total";
+// import Total from "pages/Roomlist";
 
 const socket = io("http://localhost:4000", {
   withCredentials: true,
@@ -48,10 +48,6 @@ function App() {
   // outh 서버로 전송이 안댐 , 뭔가 틀렸을텐데 뭘까
   // ----------------------------------------
 
-  const socket = io("http://localhost:4000", {
-    withCredentials: true,
-  });
-
   return (
     //------------------------------------------------------------------------------------------------
     <BrowserRouter>
@@ -69,13 +65,16 @@ function App() {
           path="/creatingroom"
           element={<Creatingroom socket={socket} setRoomId={setRoomId} />}
         />
-        <Route
+        {/* <Route
           path="/roomlist"
           element={<Roomlist socket={socket} annoy={annoy} roomId={roomId} setRoomId={setRoomId} />}
-        />
+        /> */}
         <Route path="/findinfo" element={<Findinfo />} />
         <Route path="/Nav" element={<Nav />} />
-        <Route path="/Total" element={<Total />} />
+        <Route
+          path="/Roomlist"
+          element={<Roomlist socket={socket} annoy={annoy} roomId={roomId} setRoomId={setRoomId} />}
+        />
       </Routes>
     </BrowserRouter>
   );
