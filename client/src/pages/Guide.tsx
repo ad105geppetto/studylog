@@ -44,14 +44,14 @@ const Guide = () => {
       <button type="button" onClick={onClickCreate}>
         creatingroom
       </button>
-      <button type="button" onClick={() => navigate("/roomlist")}>
-        roomlist
-      </button>
+      {/* <button type="button" onClick={() => navigate("/roooomlist")}>
+        roooomlist
+      </button> */}
       <button type="button" onClick={() => navigate("/findinfo")}>
         Find Info
       </button>
-      <button type="button" onClick={() => navigate("/Total")}>
-        guide
+      <button type="button" onClick={() => navigate("/roomlist")}>
+        roomlist
       </button>
     </div>
   );

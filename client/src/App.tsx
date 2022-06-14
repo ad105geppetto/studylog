@@ -13,7 +13,7 @@ import Nav from "./components/Nav";
 import { io } from "socket.io-client";
 import Guide from "pages/Guide";
 import Findinfo from "pages/Findinfo";
-import Total from "pages/Total";
+// import Total from "pages/Roomlist";
 
 const SERVER = process.env.REACT_APP_SERVER || "http://localhost:4000";
 
@@ -70,7 +70,10 @@ function App() {
         />
         <Route path="/findinfo" element={<Findinfo />} />
         <Route path="/Nav" element={<Nav />} />
-        <Route path="/Total" element={<Total />} />
+        <Route
+          path="/Roomlist"
+          element={<Roomlist annoy={annoy} roomId={roomId} setRoomId={setRoomId} />}
+        />
       </Routes>
     </BrowserRouter>
   );

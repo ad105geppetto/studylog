@@ -1,7 +1,7 @@
 import { Draggable } from "react-beautiful-dnd";
 import React from "react";
 import styled from "styled-components";
-import { MdDeleteForever } from "react-icons/md";
+// import { MdDeleteForever } from "react-icons/md";
 
 const Card = styled.div<{ isDragging: boolean }>`
   display: flex;
@@ -56,9 +56,7 @@ const Cards = ({ boardId, toDoId, toDoText, index, onDeleteToDos }: CardInterfac
           {...provided.draggableProps}
         >
           {toDoText}
-          <Button onClick={onDeleteToDos(boardId, toDoId)}>
-            <MdDeleteForever />
-          </Button>
+          <Button onClick={onDeleteToDos(boardId, toDoId)}>{/* <MdDeleteForever /> */}</Button>
         </Card>
       )}
     </Draggable>

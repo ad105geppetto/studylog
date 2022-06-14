@@ -13,6 +13,10 @@ export const initialState = {
     Done: [],
   },
 
+  pageInfo: {
+    page: [],
+  },
+
   wirteMod: false,
 };
 
