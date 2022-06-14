@@ -9,8 +9,8 @@ import { roomlist } from "action";
 import { useDispatch } from "react-redux";
 
 const Root = styled.div`
-  width: 100%;
-  height: 100%;
+  width: 100vw;
+  height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -18,18 +18,19 @@ const Root = styled.div`
 `;
 
 const Container = styled.div`
-  width: 80%;
+  width: 80vw;
   display: grid;
   grid-template-columns: repeat(12, 1fr);
   column-gap: 24px;
 `;
 
 const Post = styled.div`
-  height: 300px;
+  height: 27vh;
   grid-column: span 4;
   display: flex;
   flex-direction: column;
-  margin: 20px 0;
+  margin: 5vh 0 1vh; 0;
+  /* margin: 1vh 0 1vh; 0; */
   border: 5px solid black;
 
   /* 반응형 만들어주는 코드 */
@@ -64,17 +65,11 @@ const Roomlist = ({ socket, annoy, roomId, setRoomId }: socketInterface) => {
   // 페이지네이션에서 보여지는 페이지
   const [page, setPage] = useState<any>(1);
   // 한 페이지당 보여지는 목록의 갯수
-  const [limit, setLimit] = useState(3);
+  const [limit, setLimit] = useState(6);
   // 서버에서 받아오는 데이터의 총 갯수
   const [total, setTotal] = useState(0);
 
   const [search, setSearch] = useState("");
-
-  // const [searchInfo, setSearchInfo] = useState({
-  //   page: "",
-  //   limit: "",
-  //   title: "",
-  // });
 
   // const [rooms, setRooms] = useState([]);
 
@@ -82,9 +77,6 @@ const Roomlist = ({ socket, annoy, roomId, setRoomId }: socketInterface) => {
   // const pageInfo = useSelector((state: any) => state.pageInfoReducer.pageInfo);
 
   useEffect(() => {
-    // const getPageData = (page: number) => {
-    //   return datas.slice(limit * page, limit * (page + 1));
-    // };
     getPageData(page, limit);
   }, [page, limit]);
 
@@ -96,11 +88,7 @@ const Roomlist = ({ socket, annoy, roomId, setRoomId }: socketInterface) => {
         headers: { authorization: `Bearer ${userInfo.accessToken}`, userId: userInfo.userId },
       })
       .then((res: AxiosResponse) => {
-        // res.data.slice(limit * page, limit * (page + 1));
         setPosts(res.data.data);
-        // const posts = setPosts(res.data.data);
-        // dispatch(roomlist(posts));
-
         setTotal(res.data.total);
         console.log(res);
       })
@@ -133,11 +121,9 @@ const Roomlist = ({ socket, annoy, roomId, setRoomId }: socketInterface) => {
         console.log(err);
       });
   };
-  // const onSearch = () => {
-  //   navigate("/search");
-  // };
 
   // rooms가 의미하는 바를 정확하게 모르겠다
+
   const onChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value);
   };
@@ -146,7 +132,7 @@ const Roomlist = ({ socket, annoy, roomId, setRoomId }: socketInterface) => {
     <Root>
       <Nav />
 
-      <input
+      {/* <input
         type="text"
         onChange={onChangeHandler}
         placeholder="검색어를 입력해주세요"
@@ -154,7 +140,7 @@ const Roomlist = ({ socket, annoy, roomId, setRoomId }: socketInterface) => {
       />
       <button type="button" onClick={onSearch}>
         검색
-      </button>
+      </button> */}
 
       <Container>
         {posts.length === 0
@@ -174,8 +160,8 @@ const Roomlist = ({ socket, annoy, roomId, setRoomId }: socketInterface) => {
           setLimit(Number(e.target.value));
         }}
       >
-        <option value={3}>3</option>
         <option value={6}>6</option>
+        <option value={3}>3</option>
         <option value={9}>9</option>
       </select>
       <Pagenation totalPage={Math.ceil(total / limit)} page={page} setPage={setPage} />
