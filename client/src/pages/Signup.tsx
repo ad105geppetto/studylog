@@ -14,7 +14,7 @@ import {
   ButtonWrapper,
 } from "styles/Userpage_style";
 
-const SERVER = process.env.REACT_APP_SERVER;
+const SERVER = process.env.REACT_APP_SERVER || "http://localhost:4000";
 
 export const Signup = () => {
   const navigate = useNavigate();

@@ -4,11 +4,11 @@ import { useSelector } from "react-redux";
 import axios from "axios";
 
 interface socketInterface {
-  socket: any;
   setRoomId: any;
 }
+const SERVER = process.env.REACT_APP_SERVER || "http://localhost:4000";
 
-const Creatingroom = ({ socket, setRoomId }: socketInterface) => {
+const Creatingroom = ({ setRoomId }: socketInterface) => {
   const navigate = useNavigate();
   const userInfo = useSelector((state: any) => state.userInfoReducer.userInfo);
   const [title, setTitle] = useState("");
@@ -25,7 +25,7 @@ const Creatingroom = ({ socket, setRoomId }: socketInterface) => {
   const createRoomHandler = () => {
     axios
       .post(
-        `${process.env.REACT_APP_SERVER}/room`,
+        `${SERVER}/room`,
         { title: title, content: content },
         {
           headers: { authorization: `Bearer ${userInfo.accessToken}` },
@@ -33,7 +33,7 @@ const Creatingroom = ({ socket, setRoomId }: socketInterface) => {
       )
       .then((res) => {
         setRoomId(res.data.id);
-        socket.emit("enterRoom", res.data.id, userInfo.userId);
+        // socket.emit("enterRoom", res.data.id, userInfo.userId);
         navigate(`/room/${res.data.id}`);
       })
       .catch((err) => {

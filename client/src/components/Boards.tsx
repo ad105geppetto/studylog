@@ -4,7 +4,7 @@ import Cardboard from "./Cardboard";
 import styled from "styled-components";
 import axios, { AxiosError, AxiosResponse } from "axios";
 
-const SERVER = process.env.REACT_APP_SERVER;
+const SERVER = process.env.REACT_APP_SERVER || "http://localhost:4000";
 
 const Wrapper = styled.div`
   /* background-color: white;
@@ -24,18 +24,6 @@ const BackBoard = styled.div`
   max-height: 40vh;
   gap: 2vw;
 `;
-
-const Form = styled.form`
-  width: 100%;
-  input {
-    width: 100%;
-  }
-`;
-
-interface ToDosInterface {
-  id: number;
-  text: any;
-}
 
 interface ToDos {
   [key: string]: any;

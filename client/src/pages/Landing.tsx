@@ -39,7 +39,7 @@ const Landing = () => {
     e.preventDefault();
     // console.log(e);
     const { deltaY } = e;
-    console.log(deltaY);
+    // console.log(deltaY);
 
     if (deltaY > 0 && page === 0) {
       // 페이지가 내려가는 경우

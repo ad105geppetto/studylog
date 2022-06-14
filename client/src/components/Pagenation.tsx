@@ -24,7 +24,7 @@ export const Pagenation = ({ totalPage, page, setPage }: IProps) => {
           if (page === 1) {
             return;
           }
-          handlePage(page);
+          handlePage(page - 1);
         }}
       >
         {"<"}
@@ -42,7 +42,7 @@ export const Pagenation = ({ totalPage, page, setPage }: IProps) => {
       })}
       <PageBtn
         onClick={() => {
-          if (page === totalPage - 1) {
+          if (page === totalPage) {
             return;
           }
           handlePage(page + 1);

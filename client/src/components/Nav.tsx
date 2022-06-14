@@ -12,7 +12,7 @@ const StyleNav = styled.div`
   height: 15vh;
 `;
 
-const SERVER = process.env.REACT_APP_SERVER;
+const SERVER = process.env.REACT_APP_SERVER || "http://localhost:4000";
 
 const Nav = () => {
   const userInfo = useSelector((state: any) => state.userInfoReducer.userInfo);
