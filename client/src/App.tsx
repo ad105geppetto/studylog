@@ -15,7 +15,7 @@ import Guide from "pages/Guide";
 import Findinfo from "pages/Findinfo";
 import Total from "pages/Total";
 
-const socket = io("http://localhost:4000", {
+const socket = io(`${process.env.REACT_APP_SERVER}`, {
   withCredentials: true,
 });
 
@@ -23,7 +23,6 @@ function App() {
   const guestNum = (Math.random() * 10000000).toString().slice(0, 4);
   const geust = `Annoy${guestNum}`;
   const [annoy, setAnnoy] = useState(geust);
-  console.log(annoy);
   const [roomId, setRoomId] = useState("");
   const SERVER = process.env.REACT_APP_SERVER;
   const url = new URL(window.location.href);
@@ -32,6 +31,7 @@ function App() {
   // --------------------------- OAUTH 로그인---------------------
   const sendAuthCode = (authCode: any) => {
     console.log("1234");
+    console.log(process.env.REACT_APP_SERVER);
     axios
       .post(`${SERVER}/Oauth`, { authorizationCode: authCode })
       .then((res: AxiosResponse) => {
