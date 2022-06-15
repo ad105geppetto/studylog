@@ -40,6 +40,7 @@ function App() {
     axios
       .post(`${SERVER}/Oauth`, { authorizationCode: authCode })
       .then((res: AxiosResponse) => {
+        console.log("=====Oauth====서버에서 받아옴");
         console.log(res);
         const accessToken = res.data.accessToken;
 
