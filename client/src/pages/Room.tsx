@@ -5,24 +5,21 @@ import Chat from "components/Chat";
 import styled from "styled-components";
 import { io } from "socket.io-client";
 
-// const Container = styled.div`
-//   display: flex;
-//   flex-wrap: wrap;
-//   height: 100vh;
-//   background-color: #393d46;
-// `;
+const Container = styled.div`
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  height: 100vh;
+  width: 100vw;
+  background-color: #393d46;
+`;
 
-// const VideoContainer = styled.div`
-//   height: 90vh;
-//   width: 70%;
-// `;
+const VideoContainer = styled.div`
+  height: 90vh;
+  width: 70%;
+`;
 
-// const ChatContainer = styled.div`
-//   height: 90vh;
-//   width: 30%;
-//   background-color: white;
-//   border-radius: 10px;
-// `;
+const ChatContainer = styled.div``;
 
 interface Props {
   stream: any;

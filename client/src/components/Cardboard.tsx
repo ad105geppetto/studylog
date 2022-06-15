@@ -1,26 +1,57 @@
 import { Droppable } from "react-beautiful-dnd";
 import Cards from "./Card";
 import styled from "styled-components";
-
+import { MdAddCircle } from "react-icons/md";
 const Board = styled.div`
-  background-color: #c2f7bd;
-  min-height: 400px;
-  min-width: 330px;
-  border: 5px solid white;
+  background-color: #eeeeee;
+  overflow-y: auto;
+  min-height: 40vh;
+  min-width: 18vw;
+
+  box-shadow: 0.2vw 0.2vw 0.5vw 0.2vw rgba(0, 0, 0, 0.69);
   display: flex;
   flex-direction: column;
+
+  @media only screen and (max-width: 400px) {
+    flex-direction: column;
+    justify-content: flex-start;
+  }
 `;
 
 const Title = styled.h1`
-  text-align: center;
+  display: flex;
+  justify-content: space-evenly;
 `;
 
 const Form = styled.form`
-  width: 100%;
-  margin: 0;
+  min-width: 18vw;
+  height: 4vh;
+  display: flex;
   padding: 0;
+
   input {
-    width: 100%;
+    margin: 0.5vw 0.5vw 0.5vw 0.65vw;
+    min-width: 16.5vw;
+  }
+
+  button {
+    display: inline-block;
+    all: unset;
+    color: green;
+    align-self: center;
+    margin-left: -2vw;
+    padding-right: 1vw;
+    font-size: 1rem;
+    line-height: 100%;
+
+    &:hover {
+      color: red;
+    }
+
+    &:active {
+      position: relative;
+      top: 1px;
+    }
   }
 `;
 
@@ -30,7 +61,7 @@ const Area = styled.div<AreaInterface>`
   padding: 0.3vh;
   border-radius: 0.5vh;
   background-color: ${(props) =>
-    props.isDraggingOver ? "coral" : props.isDraggingFrom ? "orange" : "pink"};
+    props.isDraggingOver ? "#dbdbdb" : props.isDraggingFrom ? "white" : "#eeeeee"};
   transition: background-color 0.2s ease-in-out;
 `;
 
@@ -51,37 +82,21 @@ interface CardBoardProps {
   onAddToDos: any;
   text: any;
   onDeleteToDos: any;
-  writeMode: any;
-  onWriteMode: any;
 }
 
-const Cardboard = ({
-  toDos,
-  boardId,
-  onAddToDos,
-  onAddText,
-  text,
-  onDeleteToDos,
-  writeMode,
-  onWriteMode,
-}: CardBoardProps) => {
+const Cardboard = ({ toDos, boardId, onAddToDos, onAddText, onDeleteToDos }: CardBoardProps) => {
   return (
     <Board>
-      <Title>{boardId}</Title>
-      <button type="button" onClick={onWriteMode}>
-        추가하기
-      </button>
-      {writeMode ? (
-        <Form onSubmit={(e: React.FormEvent<HTMLFormElement>) => e.preventDefault()}>
-          <input onChange={onAddText} type="text" />
-          <button type="submit" onClick={onAddToDos(boardId)}>
-            확인
-          </button>
-          <button onClick={onWriteMode}> 취소 </button>
-        </Form>
-      ) : (
-        <div></div>
-      )}
+      <Title>
+        <div>{boardId}</div> <div id="length"> {toDos.length}</div>
+      </Title>
+      <Form onSubmit={(e: React.FormEvent<HTMLFormElement>) => e.preventDefault()}>
+        <input onChange={onAddText} placeholder={`${boardId} 를 추가하세요`} type="text" />
+        <button type="submit" id="inputbutton" onClick={onAddToDos(boardId)}>
+          <MdAddCircle />
+        </button>
+      </Form>
+
       <Droppable droppableId={boardId}>
         {(provided, snapshot) => (
           <Area

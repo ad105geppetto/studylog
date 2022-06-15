@@ -141,11 +141,6 @@ io.on("connection", (socket) => {
       time: new Date(Date.now()).getHours() + ":" + new Date(Date.now()).getMinutes(),
     });
   });
-
-  // socket.on('disconnect', () => {
-  //   io.sockets.emit('room_change', publicRooms())
-  // })
-
 });
 
 // socket.on("disconnect", () => {

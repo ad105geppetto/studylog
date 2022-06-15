@@ -1,39 +1,41 @@
 import { Draggable } from "react-beautiful-dnd";
 import React from "react";
 import styled from "styled-components";
-// import { MdDeleteForever } from "react-icons/md";
+import { MdCancelPresentation } from "react-icons/md";
 
 const Card = styled.div<{ isDragging: boolean }>`
   display: flex;
   justify-content: space-between;
-  background-color: ${(props) => (props.isDragging ? "lightgrey" : "white")};
-  border: 5px solid pink;
-  border-radius: 10px;
-  min-width: 200px;
-  min-height: 35px;
-  padding: 5px;
-`;
+  background-color: ${(props) => (props.isDragging ? "#fce8e8" : "white")};
+  box-shadow: ${(props) => (props.isDragging ? "10px 5px 5px black" : "")};
+  margin-bottom: 0.4vh;
 
-const Button = styled.button`
-  box-shadow: inset 0px 1px 0px 0px #cf866c;
-  background: linear-gradient(to bottom, #d0451b 5%, #bc3315 100%);
-  background-color: #d0451b;
-  border-radius: 15px;
-  border: 1px solid #942911;
-  display: inline-block;
-  cursor: pointer;
-  color: #ffffff;
-  font-size: 15px;
-  padding: 5px 7px;
-  text-shadow: 0px 2px 0px #854629;
+  border: 0.2vh solid cornflowerblue;
+  max-width: 15.8vw;
+  min-height: 4vh;
+  line-height: 4vh;
+  font-size: 1rem;
+  text-align: center;
+  padding: 0 0.5vw 0 0.5vw;
 
-  &&:hover {
-    background: linear-gradient(to bottom, #bc3315 5%, #d0451b 100%);
-    background-color: #bc3315;
+  @media only screen and (max-width: 400px) {
+    max-width: 250px;
   }
-  &::active {
-    position: relative;
-    top: 1px;
+
+  button {
+    all: unset;
+    color: orange;
+    align-self: center;
+    margin-left: 0.3vw;
+    font-size: 1.5rem;
+
+    &:hover {
+      color: red;
+    }
+    &:active {
+      position: relative;
+      top: 1px;
+    }
   }
 `;
 
@@ -56,7 +58,9 @@ const Cards = ({ boardId, toDoId, toDoText, index, onDeleteToDos }: CardInterfac
           {...provided.draggableProps}
         >
           {toDoText}
-          <Button onClick={onDeleteToDos(boardId, toDoId)}>{/* <MdDeleteForever /> */}</Button>
+          <button onClick={onDeleteToDos(boardId, toDoId)} id="removebutton">
+            <MdCancelPresentation />
+          </button>
         </Card>
       )}
     </Draggable>

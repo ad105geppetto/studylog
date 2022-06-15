@@ -7,22 +7,35 @@ import axios, { AxiosError, AxiosResponse } from "axios";
 const SERVER = process.env.REACT_APP_SERVER || "http://localhost:4000";
 
 const Wrapper = styled.div`
-  /* background-color: white;
+  background: linear-gradient(to bottom, white, pink);
   display: flex;
-  min-height: 70vh;
+  flex-direction: column;
+  justify-content: space-evenly;
+  height: 70vh;
   width: 70vw;
-  margin: 0 auto;
-  justify-content: center;
+  margin: 0;
   align-items: center;
-  height: 100%; */
+
+  @media only screen and (max-width: 400px) {
+    flex-direction: column;
+    justify-content: flex-start;
+    height: 100vh;
+  }
 `;
 
 const BackBoard = styled.div`
   display: flex;
   flex-direction: row;
-  min-height: 30vh;
-  max-height: 40vh;
+  justify-content: space-evenly;
+  min-height: 40vh;
+  max-height: 50vh;
+  width: 70vw;
   gap: 2vw;
+
+  @media only screen and (max-width: 400px) {
+    flex-direction: column;
+    justify-content: flex-start;
+  }
 `;
 
 interface ToDos {
@@ -31,21 +44,14 @@ interface ToDos {
 
 const Boards = ({ userInfo }: any) => {
   const [text, setText] = useState<string | null>("");
-
   const onAddText = (e: React.ChangeEvent<HTMLInputElement>) => {
     setText(e.target.value);
   };
-
   const [toDos, setToDos] = useState<ToDos>({
     Todo: [],
     Progress: [],
     Done: [],
   });
-
-  const [writeMode, setWriteMode] = useState(false);
-  const onWriteMode = () => {
-    setWriteMode((writing) => !writing);
-  };
 
   //!----------------------------- TODO 데이터 불러오기 --------------------------
   const onLoadToDos = () => {
@@ -104,7 +110,6 @@ const Boards = ({ userInfo }: any) => {
         };
       });
       setText("");
-      setWriteMode(false);
     }
     console.log(toDos);
 
@@ -199,8 +204,9 @@ const Boards = ({ userInfo }: any) => {
   //------------------------------------- ----------------------------
 
   return (
-    <DragDropContext onDragEnd={onDragEnd}>
-      <Wrapper>
+    <Wrapper>
+      <h1> 간단한 메모와 함께 오늘 할 일을 체크해보세요</h1>
+      <DragDropContext onDragEnd={onDragEnd}>
         <BackBoard>
           {Object.keys(toDos).map((boardId) => (
             <Cardboard
@@ -211,13 +217,11 @@ const Boards = ({ userInfo }: any) => {
               toDos={toDos[boardId]}
               text={text}
               onDeleteToDos={onDeleteToDos}
-              writeMode={writeMode}
-              onWriteMode={onWriteMode}
             />
           ))}
         </BackBoard>
-      </Wrapper>
-    </DragDropContext>
+      </DragDropContext>
+    </Wrapper>
   );
 };
 

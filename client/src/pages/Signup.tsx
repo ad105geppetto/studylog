@@ -6,11 +6,12 @@ import { MdOutlineMarkEmailRead } from "react-icons/md";
 import {
   Wrapper,
   Input,
-  Button,
   ErrorMsg,
   Title,
   Logo,
   Large_Button,
+  InnerButton,
+  SuccessMsg,
   ButtonWrapper,
 } from "styles/Userpage_style";
 
@@ -18,6 +19,10 @@ const SERVER = process.env.REACT_APP_SERVER || "http://localhost:4000";
 
 export const Signup = () => {
   const navigate = useNavigate();
+  const [successMsg, setSuccessMsg] = useState({
+    idMsg: "",
+    emailMsg: "",
+  });
   const [userInfo, setUserInfo] = useState({
     id: "",
     pwd: "",
@@ -50,10 +55,13 @@ export const Signup = () => {
         const idRegex = /^[a-z0-9]{0,10}$/;
         if (!idRegex.test(value)) {
           setErrMsg({ ...errMsg, idMsg: "올바르지 못 한 아이디 입니다." });
+          setSuccessMsg({ ...successMsg, idMsg: "" });
         } else if (value.length < 3 || value.length > 10) {
           setErrMsg({ ...errMsg, idMsg: "아이디는 3글자 이상 10글자 미만 입니다. " });
+          setSuccessMsg({ ...successMsg, idMsg: "" });
         } else {
           setErrMsg({ ...errMsg, idMsg: "" });
+          setSuccessMsg({ ...successMsg, idMsg: "" });
         }
 
         break;
@@ -96,27 +104,26 @@ export const Signup = () => {
 
   // ------------------------- 아이디 중복 체크 검사 -------------------------
   const onCheckUserId = () => {
+    if (!userInfo.id) {
+      setErrMsg({ ...errMsg, idMsg: "아이디를 입력 해주세요." });
+      return;
+    }
+
     axios
       .post(`${SERVER}/check`, { userId: userInfo.id })
       .then((res: AxiosResponse) => {
-        console.log(res);
-        console.log(userInfo.id);
-        switch (res.status) {
-          case 200:
-            setErrMsg({ ...errMsg, idMsg: "사용 가능한 아이디 입니다." });
-            setValidCheck({ ...validCheck, id: true });
-            break;
-          case 409:
-            setErrMsg({ ...errMsg, idMsg: "아이디가 중복 됩니다." });
-            break;
-          case 500:
-            setErrMsg({
-              ...errMsg,
-              idMsg: "다시 한 번 시도해주세요 반복되는 경우 재접속을 권장드립니다.",
-            });
+        if (res.status === 200) {
+          setSuccessMsg({ ...successMsg, idMsg: "사용 가능 한 아이디입니다." });
+          setValidCheck({ ...validCheck, id: true });
         }
+        console.log(res);
       })
-      .catch((err: AxiosError) => console.log(err));
+      .catch((err: AxiosError) => {
+        if (err.message === "Request failed with status code 409") {
+          setErrMsg({ ...errMsg, idMsg: "아이디가 중복입니다 다른 아이디를 사용해주세요" });
+        }
+        console.log(err.message);
+      });
   }; //  -----------------------------------------------------------------
 
   //  ------------------------------ 회원가입 요청  전송 ----------------------------
@@ -128,7 +135,8 @@ export const Signup = () => {
         email: userInfo.email,
       })
       .then((res: AxiosResponse) => {
-        navigate("/");
+        alert("회원 가입이 완료 되었습니다.");
+        navigate("/roomlist");
         // 메인페이지로 리다이렉트
       })
       .catch((err: any) => {
@@ -141,16 +149,33 @@ export const Signup = () => {
             ...errMsg,
             emailMsg: "요청하신 메일에서 인증 버튼을 눌러주세요.",
           });
+          setSuccessMsg({
+            ...successMsg,
+            emailMsg: "",
+          });
         }
       });
   }; //  -----------------------------------------------------------------
 
   //  ------------------------------ 인증메일 전송 ----------------------------
   const onVerifyEmail = () => {
+    if (!userInfo.email) {
+      setErrMsg({ ...errMsg, emailMsg: "이메일을 입력해주세요." });
+      return;
+    }
     axios
       .post(`${SERVER}/signup/mail`, { email: userInfo.email })
       .then((res: AxiosResponse) => {
-        console.log(res);
+        if (res.status === 200) {
+          setSuccessMsg({
+            ...successMsg,
+            emailMsg: "이메일 인증 요청이 완료 되었습니다. 이메일을 확인해주세요",
+          });
+          setErrMsg({
+            ...errMsg,
+            emailMsg: "",
+          });
+        }
       })
       .catch((err: AxiosError) => {
         console.log("에러메세지", err);
@@ -160,7 +185,7 @@ export const Signup = () => {
 
   return (
     <div>
-      <NavLink to="/guide">
+      <NavLink to="/roomlist">
         <Logo alt="LOGO" src="asset/white_logo.png" object-fit="cover" />
       </NavLink>
       <Wrapper>
@@ -179,9 +204,10 @@ export const Signup = () => {
                 maxLength={10}
                 required
               />
-              <Button type="button" onClick={onCheckUserId}>
+              <InnerButton type="button" onClick={onCheckUserId}>
                 <FiCheckSquare size="1.2rem" color="red" /> 중복체크
-              </Button>
+              </InnerButton>
+              <SuccessMsg>{successMsg.idMsg}</SuccessMsg>
               <ErrorMsg>{errMsg.idMsg} </ErrorMsg>
             </div>
 
@@ -212,22 +238,24 @@ export const Signup = () => {
                 onChange={onUserInfo("email")}
                 required
               />
-              <Button type="button" onClick={onVerifyEmail}>
-                <MdOutlineMarkEmailRead size="1rem" color="red" /> 이메일 인증
-              </Button>
+              <InnerButton type="button" onClick={onVerifyEmail}>
+                <MdOutlineMarkEmailRead size="1.3rem" color="red" /> 이메일 인증
+              </InnerButton>
               <ErrorMsg>{errMsg.emailMsg}</ErrorMsg>
+              <SuccessMsg>{successMsg.emailMsg}</SuccessMsg>
             </div>
-
-            <Large_Button
-              disabled={
-                validCheck.email && validCheck.id && validCheck.pwd && validCheck.pwdCheck
-                  ? false
-                  : true
-              }
-              onClick={onSingup}
-            >
-              가입
-            </Large_Button>
+            <ButtonWrapper>
+              <Large_Button
+                disabled={
+                  validCheck.email && validCheck.id && validCheck.pwd && validCheck.pwdCheck
+                    ? false
+                    : true
+                }
+                onClick={onSingup}
+              >
+                가입
+              </Large_Button>
+            </ButtonWrapper>
           </form>
         </div>
       </Wrapper>
@@ -236,6 +264,15 @@ export const Signup = () => {
 };
 
 export default Signup;
+
+/* 
+ ! 회원 가입 인증메일  요청시,
+ 인증 메일이 발송 되었습니다. < 메세지 출력 
+ 
+
+
+
+*/
 
 /*
 

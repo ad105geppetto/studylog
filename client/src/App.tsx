@@ -10,12 +10,11 @@ import Creatingroom from "./pages/Creatingroom";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Roomlist from "pages/Roomlist";
 import Nav from "./components/Nav";
-import { io } from "socket.io-client";
-import Guide from "pages/Guide";
 import Findinfo from "pages/Findinfo";
+import { io } from "socket.io-client";
+import { logIn } from "./action/index";
 // import Total from "pages/Roomlist";
 import { useDispatch } from "react-redux";
-import { logIn } from "./action/index";
 import { useNavigate } from "react-router-dom";
 
 const SERVER = process.env.REACT_APP_SERVER || "http://localhost:4000";
@@ -61,7 +60,6 @@ function App() {
     //------------------------------------------------------------------------------------------------
     <BrowserRouter>
       <Routes>
-        <Route path="/guide" element={<Guide />} />
         <Route path="/" element={<Landing />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />

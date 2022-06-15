@@ -16,7 +16,7 @@ const Image = styled.img`
   z-index: 1;
 `;
 const InnerImage = styled.img`
-  height: 93vh;
+  height: 85vh;
   width: 100vw;
   z-index: 1;
 `;
@@ -24,8 +24,8 @@ const Logo = styled.img`
   position: absolute;
   top: 25vh;
   left: 35vw;
-  max-height: 50vh;
-  max-width: 50vh;
+  height: 50%;
+  width: 28%;
 `;
 
 const Landing = () => {
@@ -68,19 +68,19 @@ const Landing = () => {
   return (
     <Wrapper>
       <div>
-        <NavLink to="/guide">
+        <NavLink to="/roomlist">
           <Logo alt="studylog" src="asset/white_logo.png" />
         </NavLink>
         <Image alt="LandingPage_1" src="asset/pencils1920.jpg" />
       </div>
-      <div>
+      {/* <div>
         <Nav />
         <InnerImage alt="Landing_page2" src="asset/space.jpg" />
       </div>
       <div>
         <Nav />
         <InnerImage alt="Landing_page3" src="asset/universe.jpg" />
-      </div>
+      </div> */}
     </Wrapper>
   );
 };
