@@ -14,7 +14,7 @@ import {
   LoginErrorMsg,
 } from "styles/Userpage_style";
 
-const CLIENT = "http://localhost:3000";
+const CLIENT = process.env.REACT_APP_CLIENT || "http://localhost:3000";
 const SERVER = process.env.REACT_APP_SERVER || "http://localhost:4000";
 const OAUTH_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID;
 const OAUTH_URL = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${OAUTH_ID}&redirect_uri=${CLIENT}&response_type=code&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile%20openid&access_type=offline&`;

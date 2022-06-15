@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 
 interface userInfoInterface {
   userInfo: any;
@@ -9,7 +8,7 @@ interface userInfoInterface {
 }
 
 const Chat = ({ userInfo, socket, annoy, roomId }: userInfoInterface) => {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   const [currentMessage, setCurrentMessage] = useState("");
   const [messageList, setMessageList] = useState<any>([]);
@@ -17,6 +16,10 @@ const Chat = ({ userInfo, socket, annoy, roomId }: userInfoInterface) => {
   useEffect(() => {
     socket.on("join_Room", (data: any) => {
       console.log("12313");
+      setMessageList((list: any) => [...list, data]);
+    });
+
+    socket.on("welcome", (data: any) => {
       setMessageList((list: any) => [...list, data]);
     });
 
@@ -52,10 +55,9 @@ const Chat = ({ userInfo, socket, annoy, roomId }: userInfoInterface) => {
     }
   };
 
-  const endChat = () => {
-    socket.emit("leave_room", roomId, userInfo.userId);
-    navigate("/");
-  };
+  // const endChat = () => {
+  //   navigate("/");
+  // };
 
   return (
     <div className="chat-window">
@@ -97,7 +99,6 @@ const Chat = ({ userInfo, socket, annoy, roomId }: userInfoInterface) => {
         />
         <button onClick={sendMessage}>&#9658;</button>
       </div>
-      <button onClick={endChat}>종료</button>
     </div>
   );
 };

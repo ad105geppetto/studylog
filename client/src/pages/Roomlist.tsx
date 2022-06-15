@@ -29,7 +29,7 @@ const Post = styled.div`
   grid-column: span 4;
   display: flex;
   flex-direction: column;
-  margin: 5vh 0 1vh; 0;
+  margin: 5vh 0 1vh 0;
   /* margin: 1vh 0 1vh; 0; */
   border: 5px solid black;
 
@@ -39,8 +39,6 @@ const Post = styled.div`
     grid-column: span 12;
   }
 `;
-
-
 
 interface IPosts {
   id: number;
