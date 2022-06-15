@@ -33,7 +33,7 @@ export const Pagenation = ({ totalPage, page, setPage }: IProps) => {
         return (
           <PageBtn
             key={index}
-            style={page === p ? { background: "red" } : {}}
+            style={page === p ? { background: " #F0E5CF", color: " black" } : {}}
             onClick={() => handlePage(p)}
           >
             {p}
@@ -71,4 +71,7 @@ const PageBtn = styled.div`
   justify-content: center;
   align-items: center;
   cursor: pointer;
+  color: white;
+  font-size: 0.7rem;
+  font-weight: 600;
 `;
