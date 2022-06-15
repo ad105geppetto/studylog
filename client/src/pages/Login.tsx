@@ -108,7 +108,7 @@ const Login = () => {
                 </Small_Button>
               </div>
               <div>
-                <Large_Button type="button" onClick={onNavigate("/idinquiry")}>
+                <Large_Button type="button" onClick={onNavigate("/findinfo")}>
                   아이디/비밀번호 찾기
                 </Large_Button>
               </div>

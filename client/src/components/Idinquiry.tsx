@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Nav from "../components/Nav";
 import axios, { AxiosError, AxiosResponse } from "axios";
+import styled from "styled-components";
 
 axios.defaults.withCredentials = true;
 const SERVER = process.env.REACT_APP_SERVER || "http://localhost:4000";
@@ -50,11 +51,11 @@ const Idinquiry = () => {
           </div>
           <div>{errorMessage ? errorMessage : null}</div>
 
-          <form>
+          <div>
             <button type="button" onClick={onClickFindId}>
               찾기
             </button>
-          </form>
+          </div>
         </div>
       ) : (
         <div>
@@ -65,5 +66,7 @@ const Idinquiry = () => {
     </div>
   );
 };
+
+const Container = styled.div``;
 
 export default Idinquiry;
