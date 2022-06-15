@@ -101,8 +101,7 @@ const Container = styled.div`
   }
 
   .create {
-    height:7vh
-
+    height: 7vh;
     margin-top: 4vw;
     display: flex;
     /* flex-direction: row; */
@@ -110,7 +109,7 @@ const Container = styled.div`
     align-items: center;
     align-items: center;
     font-size: 1.5rem;
-    margin:auto;
+    margin: auto;
     /* display:block; */
   }
 `;
@@ -137,7 +136,7 @@ const Input = styled.input`
 
 const Button = styled.button`
   width: 12vw;
-  height:8vh;
+  height: 8vh;
   /* height: 6vh; */
   border: 2px solid black;
   border-radius: 10px;
@@ -145,10 +144,10 @@ const Button = styled.button`
   /* display: flex;
   justify-content: center; */
   /* align-items: center; */
-  margin-top: 10px
+  margin-top: 10px;
   margin-right: 10px;
   background-color: white;
-  padding: 5px
+  padding: 5px;
 `;
 
 export default Creatingroom;

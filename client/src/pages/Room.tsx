@@ -1,5 +1,6 @@
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import Chat from "components/Chat";
 import styled from "styled-components";
 import { io } from "socket.io-client";
@@ -20,24 +21,49 @@ const VideoContainer = styled.div`
 
 const ChatContainer = styled.div``;
 
+interface Props {
+  stream: any;
+}
+
+const Video = ({ stream }: Props) => {
+  const ref = useRef<HTMLVideoElement>(null);
+  // const [isMuted, setIsMuted] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (ref.current) ref.current.srcObject = stream;
+    // if (muted) setIsMuted(muted);
+  }, [stream]);
+
+  return (
+    <div>
+      {/* <VideoContainer ref={ref} muted={isMuted} autoPlay /> */}
+      <video ref={ref} autoPlay />
+    </div>
+  );
+};
+
 interface socketInterface {
   annoy: any;
   roomId: any;
 }
 
+type WebRTCUser = {
+  id: string;
+  email: string;
+  stream: MediaStream;
+};
+
 const Room = ({ annoy, roomId }: socketInterface) => {
   const SERVER = process.env.REACT_APP_SERVER || "http://localhost:4000";
+  const navigate = useNavigate();
   const userInfo = useSelector((state: any) => state.userInfoReducer.userInfo);
   // 로그인시 저장 된 userInfo 가지고 오기
   ///////////////////////
   const localVideoRef = useRef<any>(null);
   const remoteVideoRef = useRef<any>(null);
   const pc = useRef(new RTCPeerConnection(undefined));
-  const textRef = useRef<any>();
   const candidates = useRef<any>([]);
-
-  // const socketRef = useRef<SocketIOClient.Socket>();
-  // const pcRef = useRef<RTCPeerConnection>();
+  const [users, setUsers] = useState<WebRTCUser[]>([]);
 
   const socket = io(`${SERVER}`, {
     withCredentials: true,
@@ -45,19 +71,49 @@ const Room = ({ annoy, roomId }: socketInterface) => {
   useEffect(() => {
     socket.emit("enterRoom", roomId, userInfo.userId);
 
-    socket.on("connection-success", (success: any) => {
-      console.log(success);
+    socket.on("welcome", () => {
+      //offer 생성
+      pc.current
+        .createOffer()
+        .then((offer) => {
+          pc.current.setLocalDescription(offer);
+          //1. PeerA의 sdp
+          socket.emit("offer", roomId, {
+            sdp: offer,
+          });
+        })
+        .catch((e) => console.log(e));
     });
 
-    socket.on("sdp", (data: any) => {
-      console.log(data);
-      //textarea에 적어놓을게 아니라
-      textRef.current.value = JSON.stringify(data.sdp);
+    socket.on("offer", (data: any) => {
+      pc.current.setRemoteDescription(new RTCSessionDescription(data.sdp));
+      pc.current
+        .createAnswer({
+          offerToReceiveAudio: true,
+          offerToReceiveVideo: true,
+        })
+        .then((answer) => {
+          pc.current.setLocalDescription(answer);
+
+          //1. PeerB의 sdp
+          socket.emit("answer", roomId, {
+            sdp: answer,
+          });
+        })
+        .catch((e) => console.log(e));
+    });
+
+    socket.on("answer", (data: any) => {
+      pc.current.setRemoteDescription(new RTCSessionDescription(data.sdp));
     });
 
     socket.on("candidate", (candidate: any) => {
-      console.log(candidate);
+      // console.log(candidate);
       candidates.current = [...candidates.current, candidate];
+
+      candidates.current.forEach((candidate: any) => {
+        pc.current.addIceCandidate(new RTCIceCandidate(candidate));
+      });
     });
 
     ////////////////////
@@ -83,96 +139,49 @@ const Room = ({ annoy, roomId }: socketInterface) => {
 
     _pc.onicecandidate = (e) => {
       if (e.candidate) {
-        console.log(JSON.stringify(e.candidate));
+        // console.log(JSON.stringify(e.candidate));
 
         //3. candidate
-        socket.emit("candidate", e.candidate);
+        socket.emit("candidate", roomId, e.candidate);
       }
-    };
-
-    _pc.oniceconnectionstatechange = (e) => {
-      console.log(e);
     };
 
     _pc.ontrack = (e) => {
       //we got remote stream
       remoteVideoRef.current.srcObject = e.streams[0];
+      console.log("====e.streams=====");
+      console.log(e.streams);
     };
 
     pc.current = _pc;
   }, []);
 
-  const createOffer = () => {
-    pc.current
-      .createOffer({
-        offerToReceiveAudio: true,
-        offerToReceiveVideo: true,
-      })
-      .then((sdp) => {
-        console.log(JSON.stringify(sdp));
-        pc.current.setLocalDescription(sdp);
-
-        //1. PeerA의 sdp
-        socket.emit("sdp", {
-          sdp: sdp,
-        });
-      })
-      .catch((e) => console.log(e));
-  };
-
-  const createAnswer = () => {
-    pc.current
-      .createAnswer({
-        offerToReceiveAudio: 1,
-        offerToReceiveVideo: 1,
-      })
-      .then((sdp) => {
-        console.log(JSON.stringify(sdp));
-        pc.current.setLocalDescription(sdp);
-
-        //1. PeerB의 sdp
-        socket.emit("sdp", {
-          sdp: sdp,
-        });
-      })
-      .catch((e) => console.log(e));
-  };
-
-  const setRemoteDescription = () => {
-    // get the  SDP value from the text editor
-    const sdp = JSON.parse(textRef.current.value);
-    console.log(sdp);
-    pc.current.setRemoteDescription(new RTCSessionDescription(sdp));
-  };
-
-  const addCandidate = () => {
-    // const candidate = JSON.parse(textRef.current.value);
-    // console.log(candidate);
-
-    candidates.current.forEach((candidate: any) => {
-      console.log(candidate);
-      pc.current.addIceCandidate(new RTCIceCandidate(candidate));
-    });
+  const endChat = () => {
+    console.log(remoteVideoRef.current.srcObject);
+    remoteVideoRef.current.srcObject = null;
+    console.log(remoteVideoRef.current.srcObject);
+    socket.disconnect();
+    navigate("/");
   };
   ///////////////////////
   return (
-    <Container>
-      <VideoContainer>
-        <video
-          style={{ width: 300, height: 400, margin: 5, backgroundColor: "black" }}
-          ref={localVideoRef}
-          autoPlay
-        ></video>
-        <video
-          style={{ width: 300, height: 400, margin: 5, backgroundColor: "black" }}
-          ref={remoteVideoRef}
-          autoPlay
-        ></video>
-      </VideoContainer>
-      <ChatContainer>
-        <Chat userInfo={userInfo} socket={socket} annoy={annoy} roomId={roomId} />
-      </ChatContainer>
-    </Container>
+    <div>
+      <video
+        style={{ width: 300, height: 400, margin: 5, backgroundColor: "black" }}
+        ref={localVideoRef}
+        autoPlay
+      ></video>
+      <video
+        style={{ width: 300, height: 400, margin: 5, backgroundColor: "black" }}
+        ref={remoteVideoRef}
+        autoPlay
+      ></video>
+      {users.map((user, index) => (
+        <Video key={index} stream={user.stream} />
+      ))}
+      <Chat userInfo={userInfo} socket={socket} annoy={annoy} roomId={roomId} />
+      <button onClick={endChat}>종료</button>
+    </div>
   );
 };
 
