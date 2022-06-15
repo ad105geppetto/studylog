@@ -30,35 +30,34 @@ const Post = styled.div`
   grid-column: span 4;
   display: flex;
   flex-direction: column;
-  margin: 3vh 0 1vh; 0;
+  margin: 3vh 0 1vh 0;
   border: 2px dashed white;
   /* 위아래중에 가운데 플렉스 디렉션이 컬럼일 때*/
-  justify-content:center;
-/* 스트링 값 센터 배치 */
+  justify-content: center;
+  /* 스트링 값 센터 배치 */
   text-align: center;
   align-items: center;
-  color:white;
-  .title{
+  color: white;
+  .title {
     margin-bottom: 5vh;
-    font-size:1rem;
+    font-size: 1rem;
   }
 
-
-div {
-  width:20vw;
-  font-size:1.1rem;
-}
+  div {
+    width: 20vw;
+    font-size: 1.1rem;
+  }
 
   /* 반응형 만들어주는 코드 */
   /* 핸드폰 */
   @media only screen and (max-width: 500px) {
     grid-column: span 12;
   }
-/* 태블릿 */
+  /* 태블릿 */
   @media only screen and (max-width: 768px) {
     grid-column: span 12;
   }
-/* PC */
+  /* PC */
   @media only screen and (max-width: 1200px) {
     grid-column: span 12;
   }

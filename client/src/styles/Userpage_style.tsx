@@ -16,10 +16,15 @@ export const Wrapper = styled.div`
 `;
 
 export const ButtonWrapper = styled.div`
-  margin-top: 2vw;
-  display: inline-block;
-  flex-direction: column;
-  justify-content: space-between;
+  display: flex;
+  /* grid-template-columns: 1fr 1fr; */
+  flex-flow: row wrap;
+  justify-content: space-evenly;
+`;
+
+export const ButtonWrapper2 = styled(ButtonWrapper)`
+  flex-flow: column;
+  align-items: center;
 `;
 
 export const Title = styled.div`
@@ -31,7 +36,7 @@ export const Title = styled.div`
   text-align: center;
   align-items: center;
   color: white;
-  border: 0.3rem dotted white;
+  border: 2px dashed white;
   border-radius: 1vh;
   margin-bottom: 5vh;
 `;
@@ -55,15 +60,15 @@ export const LoginInput = styled(Input)`
   margin-bottom: 3vh;
 `;
 
-const fadeOut = keyframes`
-  from {
-    opacity: 1;
-  }
+// const fadeOut = keyframes`
+//   from {
+//     color: red;
+//   }
 
-  to {
-    opacity: 0;
-  }
-`;
+//   to {
+//    color : #4B6587;
+//   }
+// `;
 
 export const ErrorMsg = styled.div`
   color: red;
@@ -73,19 +78,23 @@ export const ErrorMsg = styled.div`
   margin-bottom: 2vh;
 `;
 
+export const SuccessMsg = styled(ErrorMsg)`
+  color: lightgreen;
+`;
+
 export const LoginErrorMsg = styled(ErrorMsg)`
+  color: red;
   text-align: center;
   font-size: 1rem;
-  animation: ${fadeOut} 2s linear;
 `;
 
 export const ImageBoard = styled(Logo)`
   height: 15vh;
-  width: 25vw;
-  padding-bottom: 1.2vw;
-  border: 0.2rem solid red;
+  width: 15vw;
+  border: 0.2rem solid lightgrey;
   border-radius: 1rem;
   background-color: white;
+  margin-bottom: 2vh;
 `;
 
 export const Div = styled.div`
@@ -95,16 +104,14 @@ export const Div = styled.div`
 
 //! 버튼
 export const Button = styled.button`
-  width: 7vw;
-  height: 5.5vh;
+  min-width: 7vw;
+  min-height: 5.5vh;
   line-height: 5.5vh;
-  background: white;
   border-radius: 1rem;
   display: inline-block;
   cursor: pointer;
   font-size: 1rem;
   font-weight: 300;
-  margin-left: -7vw;
   outline: 0;
   border: 0;
 
@@ -122,33 +129,35 @@ export const Upload_Button = styled(Button)`
 
 export const Large_Button = styled(Button)`
   height: 5vh;
-  width: 23vw;
+  width: 20vw;
   font-size: 1rem;
   text-align: center;
   font-weight: bold;
   margin-bottom: 2vh;
-  margin-left: 0;
-  align-items: center;
 `;
 
 export const Small_Button = styled(Button)`
-  height: 5vh;
-  width: 10vw;
   font-size: 1rem;
-  align-self: baseline;
   text-align: center;
   font-weight: bold;
   margin-bottom: 2vh;
-  margin-left: 0; ;
 `;
 
 //! 버튼
 
 export const InnerButton = styled(Button)`
+  all: unset;
   min-width: 5vw;
+  line-height: 5.5vh;
+  text-align: center;
+  font-size: 135%;
   min-height: 5.5vh;
+  margin-left: -6vw;
 `;
 
-export const LeftButton = styled(Button)`
-  align-self: flex-start;
+export const Label = styled.label`
+  font-size: 1rem;
+  margin-left: -5vw;
+  margin-top: -3vw;
+  cursor: pointer;
 `;

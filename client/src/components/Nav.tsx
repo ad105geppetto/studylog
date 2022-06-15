@@ -40,7 +40,7 @@ const Nav = () => {
 
         const accessToken = res.data.accessToken;
         dispatch(logout(accessToken));
-        navigate("/");
+        navigate("/roomlist");
         // 새로고침하는 코드
         window.location.reload();
       })
@@ -49,7 +49,7 @@ const Nav = () => {
 
   return (
     <Container>
-      <Logobox onClick={() => navigate("/")}>
+      <Logobox onClick={() => navigate("/roomlist")}>
         <Logo alt="LOGO" src="asset/dark_logo.png" object-fit="cover" />
       </Logobox>
       <LinkContainer>
@@ -82,15 +82,12 @@ const Nav = () => {
         </Logobox>
       ) : (
         <Logobox>
-          <Btn>
-            <button type="button" onClick={onLogOutBtn}>
-              로그아웃
-            </button>
+          <Btn type="button" onClick={onLogOutBtn}>
+            로그아웃
           </Btn>
-          <Btn>
-            <button type="button" onClick={() => navigate("/mypage")}>
-              내정보
-            </button>
+
+          <Btn type="button" onClick={() => navigate("/mypage")}>
+            내정보
           </Btn>
         </Logobox>
       )}
@@ -101,7 +98,7 @@ const Nav = () => {
 
 const Container = styled.div`
   /* 상단에 네비바를 고정하는 방법 */
-  position: fixed;
+  /* position: ab; */
   top: 0;
   /* ---------------------------------------------------------------- */
   width: 100%;

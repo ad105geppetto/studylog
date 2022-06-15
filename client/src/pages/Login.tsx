@@ -12,6 +12,7 @@ import {
   Logo,
   ButtonWrapper,
   LoginErrorMsg,
+  ButtonWrapper2,
 } from "styles/Userpage_style";
 
 const CLIENT = "http://localhost:3000";
@@ -51,7 +52,7 @@ const Login = () => {
 
         dispatch(logIn(accessToken, id, userId, email, profile));
 
-        navigate("/");
+        navigate("/roomlist");
       })
       .catch((err: AxiosError) => {
         console.log(err);
@@ -71,7 +72,7 @@ const Login = () => {
 
   return (
     <div>
-      <NavLink to="/guide">
+      <NavLink to="/roomlist">
         <Logo alt="LOGO" src="asset/white_logo.png" object-fit="cover" />
       </NavLink>
       <Wrapper>
@@ -87,7 +88,6 @@ const Login = () => {
                 type="text"
                 onChange={onUserInfo("id")}
                 placeholder="아이디를 입력해주세요"
-                required
               />
             </div>
             <div>
@@ -95,18 +95,20 @@ const Login = () => {
                 type="password"
                 onChange={onUserInfo("pwd")}
                 placeholder="비밀번호를 입력해주세요"
-                required
               />
             </div>
             <LoginErrorMsg> {errMsg}</LoginErrorMsg>
             <ButtonWrapper>
               <div>
                 <Small_Button onClick={onClickLoginBtn}>로그인</Small_Button>
-
+              </div>
+              <div>
                 <Small_Button type="button" onClick={onNavigate("/signup")}>
                   회원가입
                 </Small_Button>
               </div>
+            </ButtonWrapper>
+            <ButtonWrapper2>
               <div>
                 <Large_Button type="button" onClick={onNavigate("/findinfo")}>
                   아이디/비밀번호 찾기
@@ -117,7 +119,7 @@ const Login = () => {
                   GOOGLE 계정 로그인
                 </Large_Button>
               </div>
-            </ButtonWrapper>
+            </ButtonWrapper2>
           </form>
         </div>
       </Wrapper>

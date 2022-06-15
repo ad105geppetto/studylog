@@ -1,4 +1,5 @@
 export const LOG_IN = "LOG_IN";
+export const OAUTH_LOGIN = "OAUTH_LOGIN";
 export const DROP_OUT = "DROP_OUT";
 export const LOG_OUT = "LOG_OUT";
 export const ROOM_LIST = "ROOM_LIST";
@@ -18,6 +19,15 @@ export const logIn = (
       userId,
       email,
       profile,
+    },
+  };
+};
+
+export const OauthlogIn = (accessToken: string) => {
+  return {
+    type: LOG_IN,
+    payload: {
+      accessToken,
     },
   };
 };
