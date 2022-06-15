@@ -4,21 +4,24 @@ import Chat from "components/Chat";
 import styled from "styled-components";
 import { io } from "socket.io-client";
 
-const Container = styled.div`
-  display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  height: 100vh;
-  width: 100vw;
-  background-color: #393d46;
-`;
+// const Container = styled.div`
+//   display: flex;
+//   flex-wrap: wrap;
+//   height: 100vh;
+//   background-color: #393d46;
+// `;
 
-const VideoContainer = styled.div`
-  height: 90vh;
-  width: 70%;
-`;
+// const VideoContainer = styled.div`
+//   height: 90vh;
+//   width: 70%;
+// `;
 
-const ChatContainer = styled.div``;
+// const ChatContainer = styled.div`
+//   height: 90vh;
+//   width: 30%;
+//   background-color: white;
+//   border-radius: 10px;
+// `;
 
 interface socketInterface {
   annoy: any;
@@ -156,23 +159,33 @@ const Room = ({ annoy, roomId }: socketInterface) => {
   };
   ///////////////////////
   return (
-    <Container>
-      <VideoContainer>
-        <video
-          style={{ width: 300, height: 400, margin: 5, backgroundColor: "black" }}
-          ref={localVideoRef}
-          autoPlay
-        ></video>
-        <video
-          style={{ width: 300, height: 400, margin: 5, backgroundColor: "black" }}
-          ref={remoteVideoRef}
-          autoPlay
-        ></video>
-      </VideoContainer>
-      <ChatContainer>
-        <Chat userInfo={userInfo} socket={socket} annoy={annoy} roomId={roomId} />
-      </ChatContainer>
-    </Container>
+    <div>
+      // {/* <Container> */}
+      {/* <VideoContainer> */}
+      <video
+        style={{ width: 300, height: 400, margin: 5, backgroundColor: "black" }}
+        ref={localVideoRef}
+        autoPlay
+      ></video>
+      <video
+        style={{ width: 300, height: 400, margin: 5, backgroundColor: "black" }}
+        ref={remoteVideoRef}
+        autoPlay
+      ></video>
+      {/* </VideoContainer> */}
+      {/* <ChatContainer> */}
+      <Chat userInfo={userInfo} socket={socket} annoy={annoy} roomId={roomId} />
+      {/* </ChatContainer> */}
+      <br />
+      <button onClick={createOffer}>Create Offer</button>
+      <button onClick={createAnswer}>Create Answer</button>
+      <br />
+      <textarea ref={textRef}></textarea>
+      <br />
+      <button onClick={setRemoteDescription}>Set Remote Description</button>
+      <button onClick={addCandidate}>Add Candidates</button>
+      // {/* </Container> */}
+    </div>
   );
 };
 

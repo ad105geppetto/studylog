@@ -26,7 +26,6 @@ const io = new Server(httpServer, {
     origin: true,
     credentials: true,
   },
-
 });
 
 // socket.io
@@ -97,7 +96,6 @@ io.on("connection", (socket) => {
     console.log(data);
     socket.broadcast.emit("candidate", data);
   });
-
 });
 
 // socket.on("disconnect", () => {

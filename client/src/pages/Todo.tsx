@@ -10,7 +10,7 @@ import React, { useEffect, useState } from "react";
 
 const Todo = () => {
   const userInfo = useSelector((state: any) => state.userInfoReducer.userInfo);
-
+  const [isLogin, setIsLogin] = useState(false);
   const [rendering, setRendering] = useState("Board");
 
   const onRenderTodo = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -21,8 +21,15 @@ const Todo = () => {
     setRendering((rendering) => "Chart");
   };
 
+  const onLoginState = () => {
+    if (userInfo.accessToken) {
+      setIsLogin(() => true);
+    }
+  };
+
   useEffect(() => {
     console.log(userInfo);
+    onLoginState();
   }, []);
 
   return (
@@ -30,22 +37,24 @@ const Todo = () => {
       <Nav />
       <Wrapper>
         <Menubar>
-          <Hidden as="button" id="todo" type="button" onClick={onRenderTodo}>
-            todo
-          </Hidden>
-          <TextButton as="label" htmlFor="todo">
-            TODO
+          <TextButton type="button" onClick={onRenderTodo}>
+            To Do
           </TextButton>
-
-          <Hidden as="button" id="static" type="button" onClick={onRenderChart}>
-            공부시간
-          </Hidden>
-          <TextButton as="label" htmlFor="static">
+          <Line />
+          <TextButton as="button" id="static" type="button" onClick={onRenderChart}>
             공부시간
           </TextButton>
         </Menubar>
         <Content>
-          {rendering === "Board" ? <Boards userInfo={userInfo} /> : <Chart userInfo={userInfo} />}
+          {isLogin ? (
+            rendering === "Board" ? (
+              <Boards userInfo={userInfo} />
+            ) : (
+              <Chart userInfo={userInfo} />
+            )
+          ) : (
+            <div> 로그인 해주세요 </div>
+          )}
         </Content>
       </Wrapper>
     </div>

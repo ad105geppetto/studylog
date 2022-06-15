@@ -5,8 +5,8 @@
   font-size: 10px;
 }
 
-/* .body::-webkit-scrollbar {
+.body::-webkit-scrollbar {
   display: none;
-} */
+}
 
 /* 스크롤바 보이지 않게 하기, html 기본 여백 삭제  */

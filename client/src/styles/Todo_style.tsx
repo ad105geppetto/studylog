@@ -28,12 +28,13 @@ export const Content = styled.div`
 `;
 
 export const TextButton = styled.button`
+  all: unset;
   align-self: center;
   width: 5vw;
   height: 5.5vh;
   line-height: 5.5vh;
   text-align: center;
-  font-size: 1.5rem;
+  font-size: 2vh;
   font-weight: bold;
   color: white;
   cursor: pointer;
@@ -47,7 +48,7 @@ export const TextButton = styled.button`
 `;
 
 export const Line = styled.hr`
-  border: 1px;
-  color: silver;
-  width: 90px;
+  border: none;
+  border-top: dotted white;
+  width: 80%;
 `;

@@ -5,20 +5,20 @@ import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { useNavigate, NavLink } from "react-router-dom";
 import { dropout } from "../action/index";
+import { MdOutlineMarkEmailRead } from "react-icons/md";
 import {
   Wrapper,
   Title,
   LoginInput,
-  Large_Button,
   Small_Button,
   Logo,
   Input,
-  Button,
   ButtonWrapper,
   ErrorMsg,
   ImageBoard,
   Hidden,
-  Upload_Button,
+  InnerButton,
+  Label,
 } from "styles/Userpage_style";
 
 axios.defaults.withCredentials = true;
@@ -90,6 +90,8 @@ const Mypage = () => {
         } else if (value.length < 5 || value.length > 15) {
           setErrMsg({ ...errMsg, pwdMsg: "비밀번호는 5글자 이상 15글자 미만 입니다." });
           setValidCheck({ ...validCheck, pwd: false });
+        } else if (value === modifiedUserInfo.pwdCheck) {
+          setErrMsg({ ...errMsg, pwdCheckMsg: "" });
         } else {
           setErrMsg({ ...errMsg, pwdMsg: "" });
           setValidCheck({ ...validCheck, pwd: true });
@@ -114,7 +116,6 @@ const Mypage = () => {
         }
         break;
     }
-    console.log(validCheck);
   };
 
   //  ------------------------------ 인증메일 전송 ----------------------------
@@ -210,7 +211,7 @@ const Mypage = () => {
 
   return (
     <div>
-      <NavLink to="/guide">
+      <NavLink to="/roomlist">
         <Logo alt="LOGO" src="asset/white_logo.png" object-fit="cover" />
       </NavLink>
       <Wrapper>
@@ -223,9 +224,7 @@ const Mypage = () => {
             <div>
               <ImageBoard src={preview} onError={onErrorImg} />
               <Hidden id="fileupload" type="file" accept=".jpg, .png" onChange={onUploadImage} />
-              <Upload_Button as="label" htmlFor="fileupload">
-                이미지 업로드
-              </Upload_Button>
+              <Label htmlFor="fileupload">이미지 업로드</Label>
             </div>
             <Input type="password" onChange={onModifyUserInfo("pwd")} />
             <ErrorMsg> {errMsg.pwdMsg} </ErrorMsg>
@@ -237,9 +236,10 @@ const Mypage = () => {
                 onChange={onModifyUserInfo("email")}
                 defaultValue={userInfo.email}
               />
-              <Button type="button" onClick={onVerifyEmail}>
-                이메일 인증
-              </Button>
+              <InnerButton id="verify_mail" type="button" onClick={onVerifyEmail}>
+                <MdOutlineMarkEmailRead size="1.3rem" color="red" /> 이메일 인증
+              </InnerButton>
+
               <ErrorMsg>{errMsg.emailMsg}</ErrorMsg>
             </div>
 
@@ -252,6 +252,8 @@ const Mypage = () => {
                 >
                   회원정보 수정
                 </Small_Button>
+              </div>
+              <div>
                 <Small_Button
                   onClick={() => {
                     setModal(true);
