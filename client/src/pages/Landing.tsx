@@ -73,14 +73,14 @@ const Landing = () => {
         </NavLink>
         <Image alt="LandingPage_1" src="asset/pencils1920.jpg" />
       </div>
-      <div>
+      {/* <div>
         <Nav />
         <InnerImage alt="Landing_page2" src="asset/space.jpg" />
       </div>
       <div>
         <Nav />
         <InnerImage alt="Landing_page3" src="asset/universe.jpg" />
-      </div>
+      </div> */}
     </Wrapper>
   );
 };

@@ -94,13 +94,9 @@ const Chat = ({ userInfo, socket, annoy, roomId }: userInfoInterface) => {
               id={userInfo.userId === messageContent.author ? "you" : "other"}
             >
               <div>
-                <div className="message-content">
-                  <p>{messageContent.message}</p>
-                </div>
-                <div className="message-meta">
-                  <p id="time">{messageContent.time}</p>
-                  <p id="author">{messageContent.author}</p>
-                </div>
+                <p>{messageContent.message}</p>
+                <p id="time">{messageContent.time}</p>
+                <p id="author">{messageContent.author}</p>
               </div>
             </div>
           );

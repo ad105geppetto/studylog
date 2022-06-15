@@ -6,6 +6,7 @@ import axios, { AxiosError, AxiosResponse } from "axios";
 import Modal from "../components/Modal";
 import { useDispatch, useSelector } from "react-redux";
 import { dropout } from "../action/index";
+import styled from "styled-components";
 
 axios.defaults.withCredentials = true;
 const SERVER = process.env.REACT_APP_SERVER || "http://localhost:4000";
@@ -43,11 +44,14 @@ const Findinfo = () => {
   // ----------------------------------
 
   return (
-    <div>
+    <Root>
       <Nav />
-
-      <button onClick={onChangeRender("id")}> 아이디 찾기 </button>
-      <button onClick={onChangeRender("pwd")}> 비밀번호 찾기 </button>
+      <LinkContainer>
+        <Findbox>
+          <button onClick={onChangeRender("id")}> 아이디 찾기 </button>
+          <button onClick={onChangeRender("pwd")}> 비밀번호 찾기 </button>
+        </Findbox>
+      </LinkContainer>
 
       {renderingTarget === "id" ? (
         <Idinquiry />
@@ -56,8 +60,51 @@ const Findinfo = () => {
       ) : (
         <div></div>
       )}
+    </Root>
+  );
+};
 
-      {/* <div className="im-container">
+const Root = styled.div`
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  /* background-color: black; */
+  button {
+    width: 20vw;
+    color: #4b6587;
+    font-size: 1rem;
+    font-weight: 700;
+  }
+`;
+
+const LinkContainer = styled.div`
+  width: 60vw;
+  height: 10vh;
+  /* display: flex;
+  justify-content: center;
+  align-items: center; */
+  border: 2px dashed #4b6587;
+  background: black;
+`;
+
+const Findbox = styled.div`
+  /* position: relative; */
+  /* border-right: 1px dotted black; */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 10vh;
+  flex: 1;
+  cursor: pointer;
+`;
+
+export default Findinfo;
+
+{
+  /* <div className="im-container">
         <div className="im-wrapper">
           <button
             onClick={() => {
@@ -85,8 +132,5 @@ const Findinfo = () => {
             }
           />
         )}
-      </div> */}
-    </div>
-  );
-};
-export default Findinfo;
+      </div> */
+}

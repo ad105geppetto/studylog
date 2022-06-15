@@ -206,7 +206,7 @@ const Mypage = () => {
   }; // ----------------------------------------------
 
   const onErrorImg = (event: React.SyntheticEvent<HTMLImageElement, Event>) => {
-    event.currentTarget.src = "asset/Dark_logo.png";
+    event.currentTarget.src = "asset/dark_logo.png";
   };
 
   return (

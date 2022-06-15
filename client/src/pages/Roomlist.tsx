@@ -22,22 +22,53 @@ const Container = styled.div`
   display: grid;
   grid-template-columns: repeat(12, 1fr);
   column-gap: 24px;
+  padding-top: 10vh;
 `;
 
 const Post = styled.div`
-  height: 27vh;
+  height: 25vh;
   grid-column: span 4;
   display: flex;
   flex-direction: column;
-  margin: 5vh 0 1vh 0;
-  /* margin: 1vh 0 1vh; 0; */
-  border: 5px solid black;
+  margin: 3vh 0 1vh 0;
+  border: 2px dashed white;
+  /* 위아래중에 가운데 플렉스 디렉션이 컬럼일 때*/
+  justify-content: center;
+  /* 스트링 값 센터 배치 */
+  text-align: center;
+  align-items: center;
+  color: white;
+  .title {
+    margin-bottom: 5vh;
+    font-size: 1rem;
+  }
+
+  div {
+    width: 20vw;
+    font-size: 1.1rem;
+  }
 
   /* 반응형 만들어주는 코드 */
-  /* 핸드폰일 경우 */
+  /* 핸드폰 */
   @media only screen and (max-width: 500px) {
     grid-column: span 12;
   }
+  /* 태블릿 */
+  @media only screen and (max-width: 768px) {
+    grid-column: span 12;
+  }
+  /* PC */
+  @media only screen and (max-width: 1200px) {
+    grid-column: span 12;
+  }
+`;
+
+const Input = styled.input`
+  z-index: 99;
+`;
+
+const Button = styled.button`
+  z-index: 99;
 `;
 
 interface IPosts {
@@ -129,15 +160,15 @@ const Roomlist = ({ annoy, roomId, setRoomId }: socketInterface) => {
     <Root>
       <Nav />
 
-      {/* <input
+      {/* <Input
         type="text"
         onChange={onChangeHandler}
         placeholder="검색어를 입력해주세요"
         autoComplete="off"
       />
-      <button type="button" onClick={onSearch}>
+      <Button type="button" onClick={onSearch}>
         검색
-      </button> */}
+      </Button> */}
 
       <Container>
         {posts.length === 0
@@ -145,9 +176,9 @@ const Roomlist = ({ annoy, roomId, setRoomId }: socketInterface) => {
           : posts.map((post: any, index: any): any => {
               return (
                 <Post key={index} onClick={() => enterRoomHandler(post)}>
-                  <div style={{ minWidth: "200px" }}>{post.title}</div>
-                  <div style={{ flex: "1" }}>{post.entry}</div>
-                  <div style={{ flex: "1" }}>{post.content}</div>
+                  <div className="title">제목 : {post.title}</div>
+                  <div>참여인원 : {post.entry}</div>
+                  <div>내용 : {post.content}</div>
                 </Post>
               );
             })}
