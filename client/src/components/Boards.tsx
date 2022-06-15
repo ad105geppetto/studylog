@@ -66,7 +66,7 @@ const Boards = ({ userInfo }: any) => {
         if (data.length === 0) {
           return;
         }
-        data.map((data: any) => {
+        data.forEach((data: any) => {
           const id = data.id;
           const key = data.type;
           const text = data.content;
