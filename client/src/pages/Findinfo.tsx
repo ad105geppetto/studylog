@@ -3,7 +3,7 @@ import Idinquiry from "../components/Idinquiry";
 import Pwinquiry from "../components/Pwinquiry";
 import Nav from "components/Nav";
 import axios, { AxiosError, AxiosResponse } from "axios";
-import Modal from "../components/Modal";
+// import Modal from "../components/Modal";
 import { useDispatch, useSelector } from "react-redux";
 import { dropout } from "../action/index";
 import styled from "styled-components";
@@ -48,8 +48,32 @@ const Findinfo = () => {
       <Nav />
       <LinkContainer>
         <Findbox>
-          <button onClick={onChangeRender("id")}> 아이디 찾기 </button>
-          <button onClick={onChangeRender("pwd")}> 비밀번호 찾기 </button>
+          <Btn
+            style={
+              renderingTarget === "id"
+                ? { backgroundColor: "#f7f6f2", color: "#4b6587", border: "1px dashed #4b6587" }
+                : {}
+            }
+            className="id"
+            type="button"
+            onClick={onChangeRender("id")}
+          >
+            아이디 찾기
+          </Btn>
+          <Btn
+            style={
+              renderingTarget === "pwd"
+                ? { backgroundColor: "#f7f6f2", color: "#4b6587", border: "1px dashed #4b6587" }
+                : {}
+            }
+            className="pwd"
+            type="button"
+            onClick={onChangeRender("pwd")}
+          >
+            비밀번호 찾기
+          </Btn>
+          {/* <button onClick={onChangeRender("id")}> 아이디 찾기 </button> */}
+          {/* <button onClick={onChangeRender("pwd")}> 비밀번호 찾기 </button> */}
         </Findbox>
       </LinkContainer>
 
@@ -72,12 +96,12 @@ const Root = styled.div`
   justify-content: center;
   align-items: center;
   /* background-color: black; */
-  button {
+  /* button {
     width: 20vw;
     color: #4b6587;
     font-size: 1rem;
     font-weight: 700;
-  }
+  } */
 `;
 
 const LinkContainer = styled.div`
@@ -86,8 +110,10 @@ const LinkContainer = styled.div`
   /* display: flex;
   justify-content: center;
   align-items: center; */
-  border: 2px dashed #4b6587;
-  background: black;
+  /* border: 2px dashed #4b6587; */
+  /* background: black; */
+  margin-top: 1vh;
+  /* margin-bottom: 1vh; */
 `;
 
 const Findbox = styled.div`
@@ -99,6 +125,34 @@ const Findbox = styled.div`
   height: 10vh;
   flex: 1;
   cursor: pointer;
+
+  .id {
+    /* background-color: #f7f6f2; */
+    border: solid lightgrey;
+    border: 1px dashed #f7f6f2;
+    color: #f7f6f2;
+  }
+  .pwd {
+    /* background: #4b6587; */
+    border: 1px dashed #f7f6f2;
+    color: #f7f6f2;
+  }
+`;
+
+const Btn = styled.button`
+  width: 30vw;
+  height: 12vh;
+  border: 1px solid grey;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* margin-right: 10px; */
+  /* background-color: white; */
+  /* padding: 10px 10px; */
+  background-color: #4b6587;
+  /* color: #4b6587; */
+  font-size: 1rem;
+  font-weight: 700;
 `;
 
 export default Findinfo;
