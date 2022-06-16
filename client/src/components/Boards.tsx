@@ -7,7 +7,7 @@ import axios, { AxiosError, AxiosResponse } from "axios";
 const SERVER = process.env.REACT_APP_SERVER || "http://localhost:4000";
 
 const Wrapper = styled.div`
-  background: linear-gradient(to bottom, white, pink);
+  background: linear-gradient(to bottom, white, #f7f6f2);
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;

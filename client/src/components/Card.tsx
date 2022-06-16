@@ -17,6 +17,7 @@ const Card = styled.div<{ isDragging: boolean }>`
   font-size: 1rem;
   text-align: center;
   padding: 0 0.5vw 0 0.5vw;
+  word-break: break-all;
 
   @media only screen and (max-width: 400px) {
     max-width: 250px;

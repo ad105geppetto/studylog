@@ -11,6 +11,9 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Roomlist from "pages/Roomlist";
 import Nav from "./components/Nav";
 import Findinfo from "pages/Findinfo";
+import { logIn } from "./action/index";
+// import Total from "pages/Roomlist";
+import { useDispatch } from "react-redux";
 
 const SERVER = process.env.REACT_APP_SERVER || "http://localhost:4000";
 
@@ -19,6 +22,7 @@ const SERVER = process.env.REACT_APP_SERVER || "http://localhost:4000";
 // });
 
 function App() {
+  const dispatch = useDispatch();
   const guestNum = (Math.random() * 10000000).toString().slice(0, 4);
   const geust = `Annoy${guestNum}`;
   const [annoy, setAnnoy] = useState(geust);
@@ -34,7 +38,10 @@ function App() {
     axios
       .post(`${SERVER}/Oauth`, { authorizationCode: authCode })
       .then((res: AxiosResponse) => {
-        // console.log(res);
+        console.log(res);
+        const accessToken = res.data.accessToken;
+
+        dispatch(logIn(accessToken, "anony", "anony", "anony@gggg.com", "null"));
       })
       .catch((err: AxiosError) => {
         console.log("err:", err);
@@ -42,10 +49,8 @@ function App() {
   };
 
   useEffect(() => {
-    // sendAuthCode(authCode);
+    sendAuthCode(authCode);
   }, []);
-  // outh 서버로 전송이 안댐 , 뭔가 틀렸을텐데 뭘까
-  // ----------------------------------------
 
   return (
     //------------------------------------------------------------------------------------------------

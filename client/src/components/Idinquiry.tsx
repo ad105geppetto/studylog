@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Nav from "../components/Nav";
+// import Nav from "../components/Nav";
 import axios, { AxiosError, AxiosResponse } from "axios";
 import styled from "styled-components";
 
@@ -42,31 +42,84 @@ const Idinquiry = () => {
   };
 
   return (
-    <div>
+    <Container>
       {findId ? (
-        <div>
+        <Idbox>
           <div>
-            <span>이메일</span>
-            <input type="email" onChange={onUserEmail} placeholder="이메일를 입력해주세요" />
+            <Input type="email" onChange={onUserEmail} placeholder="이메일를 입력해주세요" />
           </div>
           <div>{errorMessage ? errorMessage : null}</div>
 
           <div>
-            <button type="button" onClick={onClickFindId}>
+            <Button className="find" type="button" onClick={onClickFindId}>
               찾기
-            </button>
+            </Button>
           </div>
-        </div>
+        </Idbox>
       ) : (
         <div>
-          <span>아이디</span>
-          <div>{userId}</div>
+          <span className="Id">아이디</span>
+          <div className="shiwId">{userId}</div>
         </div>
       )}
-    </div>
+    </Container>
   );
 };
 
-const Container = styled.div``;
+const Container = styled.div`
+  width: 60vw;
+  height: 44vh;
+  /* display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  column-gap: 24px; */
+  padding-top: 10vh;
+  margin: auto;
+  background-color: #f7f6f2;
+  margin-bottom: 17vh;
+  /* background-color: black; */
+`;
 
+const Button = styled.button`
+  min-width: 10vw;
+  min-height: 5.5vh;
+  /* line-height: 5.5vh; */
+  border-radius: 1rem;
+  display: inline-block;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 700;
+  outline: 0;
+  background: white;
+  margin-bottom: 10vh;
+  border: 2px solid grey;
+`;
+
+const Idbox = styled.div`
+  /* .find {
+    height: 7vh;
+    margin-top: 4vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    align-items: center;
+    font-size: 1.5rem;
+    margin: auto;
+    border-radius: 1rem; */
+  font-size: 1rem;
+  text-align: center;
+  font-weight: bold;
+  /* margin-top: 5vh; */
+  /* margin-bottom: 2vh; */
+`;
+
+const Input = styled.input`
+  width: 30vw;
+  height: 10vh;
+  font-size: 1rem;
+  align-items: center;
+  background-color: white;
+  border: 0.2rem solid lightgrey;
+  border-radius: 1vh;
+  margin-bottom: 20vh;
+`;
 export default Idinquiry;
