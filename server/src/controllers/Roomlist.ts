@@ -38,7 +38,14 @@ export default {
       }
     });
   },
-  post: () => {},
-  put: () => {},
-  delete: () => {},
+  delete: (req, res) => {
+    const { roomId } = req.query;
+    models.delete(roomId, (error, result) => {
+      if (error) {
+        res.status(500).json({ message: "Internal Sever Error" });
+      } else {
+        res.status(200).json({ message: `${roomId} 삭제 완료했습니다.` });
+      }
+    })
+  },
 };

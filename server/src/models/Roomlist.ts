@@ -10,5 +10,15 @@ export default {
         callback(null, result)
       }
     })
+  },
+  delete: (roomId, callback: Function) => {
+    const queryString = `DELETE FROM rooms WHERE id = ${roomId}`
+    db.query(queryString, (error, result) => {
+      if (error) {
+        return callback(error, null)
+      } else {
+        callback(null, result)
+      }
+    })
   }
 }
