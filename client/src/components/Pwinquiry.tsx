@@ -135,7 +135,7 @@ const Container = styled.div`
     outline: 0;
     /* border: 0; */
     background: white;
-    margin-left:1vw;
+    margin-left: 1vw;
   }
   .find {
     min-width: 7vw;
@@ -143,7 +143,7 @@ const Container = styled.div`
     line-height: 5.5vh;
     border-radius: 1rem;
     display: inline-block;
-    justify-content:center;
+    justify-content: center;
     /* display: inline-block;
     align-items: center; */
     cursor: pointer;
@@ -153,8 +153,8 @@ const Container = styled.div`
     /* border: 0; */
     border: 2px solid grey;
     text-align: center;
-
     background: white;
+  }
 `;
 
 const Input = styled.input`

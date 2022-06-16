@@ -14,7 +14,6 @@ import Findinfo from "pages/Findinfo";
 import { logIn } from "./action/index";
 // import Total from "pages/Roomlist";
 import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
 
 const SERVER = process.env.REACT_APP_SERVER || "http://localhost:4000";
 
@@ -48,8 +47,6 @@ function App() {
   useEffect(() => {
     sendAuthCode(authCode);
   }, []);
-  // outh 서버로 전송이 안댐 , 뭔가 틀렸을텐데 뭘까
-  // ----------------------------------------
 
   return (
     //------------------------------------------------------------------------------------------------

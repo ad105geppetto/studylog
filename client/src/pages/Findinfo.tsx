@@ -43,6 +43,10 @@ const Findinfo = () => {
   };
   // ----------------------------------
 
+  interface StyleInterface {
+    findId: any;
+  }
+
   return (
     <Root>
       <Nav />

@@ -100,7 +100,6 @@ const Button = styled.button`
 `;
 
 const Idbox = styled.div`
-
   /* .find {
     height: 7vh;
     margin-top: 4vw;
@@ -116,8 +115,6 @@ const Idbox = styled.div`
   font-weight: bold;
   /* margin-top: 5vh; */
   /* margin-bottom: 2vh; */
-
-  }
 `;
 
 const Input = styled.input`

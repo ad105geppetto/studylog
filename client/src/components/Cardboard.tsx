@@ -29,8 +29,11 @@ const Form = styled.form`
   display: flex;
   padding: 0;
 
-  input {
+  textarea {
+    border: none;
+    resize: none;
     margin: 0.5vw 0.5vw 0.5vw 0.65vw;
+    padding-left: 0.5vw;
     min-width: 16.5vw;
   }
 
@@ -39,7 +42,7 @@ const Form = styled.form`
     all: unset;
     color: green;
     align-self: center;
-    margin-left: -2vw;
+    margin-left: -2.5vw;
     padding-right: 1vw;
     font-size: 1rem;
     line-height: 100%;
@@ -91,7 +94,7 @@ const Cardboard = ({ toDos, boardId, onAddToDos, onAddText, onDeleteToDos }: Car
         <div>{boardId}</div> <div id="length"> {toDos.length}</div>
       </Title>
       <Form onSubmit={(e: React.FormEvent<HTMLFormElement>) => e.preventDefault()}>
-        <input onChange={onAddText} placeholder={`${boardId} 를 추가하세요`} type="text" />
+        <textarea onChange={onAddText} placeholder={`${boardId} 를 추가하세요`} />
         <button type="submit" id="inputbutton" onClick={onAddToDos(boardId)}>
           <MdAddCircle />
         </button>
