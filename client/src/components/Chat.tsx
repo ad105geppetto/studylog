@@ -5,24 +5,74 @@ import styled from "styled-components";
 const ChatWindow = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
-  background-color: white;
+  justify-content: space-between;
+  background-color: #f0e5cf;
   width: 20vw;
-  min-height: 100%;
-  max-height: 100%;
+  height: 85vh;
+  margin: 1vw 1vw 0 0;
+  border: 0.3rem solid lightgrey;
+  border-radius: 1rem;
   overflow-y: auto;
 `;
 
-const ChatView = styled(ChatWindow)`
+const ChatView = styled.div`
+  display: flex;
+  margin: 2vh 2vh 2vh 2vh;
+  padding-top: 1rem;
   flex-direction: column;
-  justify-content: flex-end;
-  max-height: 80%;
+  background-color: #f7f6f2;
+  border: 0.2rem solid lightgrey;
+  border-radius: 1rem;
+  height: 70vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background-color: #f7f6f2;
+  word-break: break-all;
 `;
 
-const ChatInput = styled(ChatWindow)`
-  flex-direction: column;
-  justify-content: flex-end;
-  max-height: 20%;
+const ChatInfo = styled.div`
+  display: flex;
+  justify-content: flex-start;
+`;
+
+const TimeStamp = styled.div`
+  line-height: 3vh;
+  text-align: center;
+  margin: 0 0 0 5vw;
+  font-size: 1vh;
+`;
+
+const UserName = styled(TimeStamp)`
+  margin: 0 0 0 1vw;
+  font-size: 1.5vh;
+`;
+
+const Message = styled.span`
+  font-size: 1.5vh;
+`;
+
+const ChatInput = styled.div`
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-between;
+  margin: 0 1.5rem 1rem 1rem;
+  height: 9vh;
+  text-indent: 30px;
+
+  textarea {
+    border: none;
+    resize: none;
+    line-height: 100%;
+    border-radius: 1rem;
+    padding: 0 1vw 0 1vw;
+    border: 0.2rem solid lightgrey;
+    width: 90%;
+  }
+
+  button {
+    all: unset;
+    margin-left: -5vw;
+  }
 `;
 
 interface userInfoInterface {
@@ -39,7 +89,7 @@ const Chat = ({ userInfo, socket, annoy, roomId }: userInfoInterface) => {
   const [messageList, setMessageList] = useState<any>([]);
 
   useEffect(() => {
-    socket.on("join_Room", (data: any) => {
+    socket.on("join_room", (data: any) => {
       console.log("12313");
       setMessageList((list: any) => [...list, data]);
     });
@@ -83,7 +133,7 @@ const Chat = ({ userInfo, socket, annoy, roomId }: userInfoInterface) => {
 
   return (
     <ChatWindow>
-      <div> Live Chat </div>
+      <div className="title"> MESSAGE </div>
       <ChatView>
         {messageList.map((messageContent: any, idx: any) => {
           return (
@@ -92,19 +142,17 @@ const Chat = ({ userInfo, socket, annoy, roomId }: userInfoInterface) => {
               className="message"
               id={userInfo.userId === messageContent.author ? "you" : "other"}
             >
-              <div>
-                <p>{messageContent.message}</p>
-                <p id="time">{messageContent.time}</p>
-                <p id="author">{messageContent.author}</p>
-              </div>
+              <ChatInfo>
+                <UserName>{messageContent.author}</UserName>
+                <TimeStamp>{messageContent.time}</TimeStamp>
+              </ChatInfo>
+              <Message>{messageContent.message}</Message>
             </div>
           );
         })}
       </ChatView>
-      <div className="chat-footer">
-        <ChatInput
-          as="input"
-          type="text"
+      <ChatInput>
+        <textarea
           value={currentMessage}
           placeholder="Hey..."
           onChange={(event: any) => {
@@ -114,8 +162,8 @@ const Chat = ({ userInfo, socket, annoy, roomId }: userInfoInterface) => {
             event.key === "Enter" && sendMessage();
           }}
         />
-        <button onClick={sendMessage}>&#9658;</button>
-      </div>
+        <button onClick={sendMessage}> 전송 </button>
+      </ChatInput>
     </ChatWindow>
   );
 };

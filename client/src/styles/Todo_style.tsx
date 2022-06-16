@@ -12,7 +12,7 @@ export const Menubar = styled.div`
   width: 10vw;
   height: 70vh;
   margin: 5vh 7vw 0 7vw;
-  border: 0.3rem dotted white;
+  border: 0.2rem dashed white;
   border-radius: 1vw;
 `;
 

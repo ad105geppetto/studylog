@@ -11,17 +11,11 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Roomlist from "pages/Roomlist";
 import Nav from "./components/Nav";
 import Findinfo from "pages/Findinfo";
-import { io } from "socket.io-client";
 import { logIn } from "./action/index";
 // import Total from "pages/Roomlist";
 import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
 
 const SERVER = process.env.REACT_APP_SERVER || "http://localhost:4000";
-
-// const socket = io(`${SERVER}`, {
-//   withCredentials: true,
-// });
 
 function App() {
   const dispatch = useDispatch();
@@ -54,8 +48,6 @@ function App() {
   useEffect(() => {
     sendAuthCode(authCode);
   }, []);
-  // outh 서버로 전송이 안댐 , 뭔가 틀렸을텐데 뭘까
-  // ----------------------------------------
 
   return (
     //------------------------------------------------------------------------------------------------

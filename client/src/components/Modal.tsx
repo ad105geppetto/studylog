@@ -21,17 +21,19 @@ const View = styled.div<{ width: string; height: string }>`
   }
   position: fixed;
   display: flex;
-  flex-direction: column;
+  flex-direction: center;
   left: calc(50vw - ${(props) => props.width}px / 2);
   top: calc(50vh - ${(props) => props.height}px / 2);
   width: ${(props) => props.width}px;
   height: ${(props) => props.height}px;
   padding: 8px;
-  background-color: white;
+  background-color: #f7f6f2;
   border-radius: 8px;
   animation-name: switchModalOn;
   animation-duration: 0.5s;
   z-index: 2000;
+  font-size: 20px;
+  /* background-color: black; */
   .exit-wrapper {
     position: absolute;
     top: 4px;
@@ -46,7 +48,12 @@ const View = styled.div<{ width: string; height: string }>`
 `;
 
 // 모달창 내용물 감싸는 div
-const Wrapper = styled.div``;
+const Wrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* background: black; */
+`;
 
 // 모달창 팝업시 외부 접근방지 배경
 const Canvas = styled.div`

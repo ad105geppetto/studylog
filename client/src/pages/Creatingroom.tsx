@@ -89,6 +89,9 @@ const Container = styled.div`
   flex-direction: column;
   column-gap: 24px;
   padding-top: 10vh;
+  /* background-color: white; */
+  /* margin-top: 10vh; */
+  margin-bottom: 13vh;
   .title {
     height: 10vh;
     margin-top: 1vw;
@@ -106,7 +109,6 @@ const Container = styled.div`
     display: flex;
     /* flex-direction: row; */
     justify-content: center;
-    align-items: center;
     align-items: center;
     font-size: 1.5rem;
     margin: auto;
