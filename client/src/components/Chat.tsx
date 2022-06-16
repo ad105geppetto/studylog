@@ -89,7 +89,7 @@ const Chat = ({ userInfo, socket, annoy, roomId }: userInfoInterface) => {
   const [messageList, setMessageList] = useState<any>([]);
 
   useEffect(() => {
-    socket.on("join_Room", (data: any) => {
+    socket.on("join_room", (data: any) => {
       console.log("12313");
       setMessageList((list: any) => [...list, data]);
     });
@@ -118,7 +118,7 @@ const Chat = ({ userInfo, socket, annoy, roomId }: userInfoInterface) => {
     if (currentMessage !== "") {
       const messageData = {
         room: roomId,
-        author: userInfo.userId,
+        author: userInfo.userId ? userInfo.userId : annoy,
         message: currentMessage,
         time: new Date(Date.now()).getHours() + ":" + new Date(Date.now()).getMinutes(),
       };

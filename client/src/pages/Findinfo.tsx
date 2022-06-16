@@ -50,18 +50,36 @@ const Findinfo = () => {
   return (
     <Root>
       <Nav />
-      {/* <LinkContainer> */}
-      <Findbox>
-        <Btn findId className="id" type="button" onClick={onChangeRender("id")}>
-          아이디 찾기
-        </Btn>
-        <Btn className="pwd" type="button" onClick={onChangeRender("pwd")}>
-          비밀번호 찾기
-        </Btn>
-        {/* <button onClick={onChangeRender("id")}> 아이디 찾기 </button> */}
-        {/* <button onClick={onChangeRender("pwd")}> 비밀번호 찾기 </button> */}
-      </Findbox>
-      {/* </LinkContainer> */}
+      <LinkContainer>
+        <Findbox>
+          <Btn
+            style={
+              renderingTarget === "id"
+                ? { backgroundColor: "#f7f6f2", color: "#4b6587", border: "1px dashed #4b6587" }
+                : {}
+            }
+            className="id"
+            type="button"
+            onClick={onChangeRender("id")}
+          >
+            아이디 찾기
+          </Btn>
+          <Btn
+            style={
+              renderingTarget === "pwd"
+                ? { backgroundColor: "#f7f6f2", color: "#4b6587", border: "1px dashed #4b6587" }
+                : {}
+            }
+            className="pwd"
+            type="button"
+            onClick={onChangeRender("pwd")}
+          >
+            비밀번호 찾기
+          </Btn>
+          {/* <button onClick={onChangeRender("id")}> 아이디 찾기 </button> */}
+          {/* <button onClick={onChangeRender("pwd")}> 비밀번호 찾기 </button> */}
+        </Findbox>
+      </LinkContainer>
 
       {renderingTarget === "id" ? (
         <Idinquiry />
@@ -112,29 +130,31 @@ const Findbox = styled.div`
   flex: 1;
   cursor: pointer;
 
-  /* .id {
-    background-color: #f7f6f2;
+  .id {
+    /* background-color: #f7f6f2; */
     border: solid lightgrey;
+    border: 1px dashed #f7f6f2;
+    color: #f7f6f2;
   }
   .pwd {
-    background: #4b6587;
+    /* background: #4b6587; */
     border: 1px dashed #f7f6f2;
-    color: white;
-  } */
+    color: #f7f6f2;
+  }
 `;
 
-const Btn = styled.button<{ findId?: any }>`
+const Btn = styled.button`
   width: 30vw;
   height: 12vh;
   border: 1px solid grey;
   display: flex;
   justify-content: center;
   align-items: center;
-  background: ${(props) => (props.findId ? "blue" : "red")};
   /* margin-right: 10px; */
-
+  /* background-color: white; */
   /* padding: 10px 10px; */
-  color: #4b6587;
+  background-color: #4b6587;
+  /* color: #4b6587; */
   font-size: 1rem;
   font-weight: 700;
 `;

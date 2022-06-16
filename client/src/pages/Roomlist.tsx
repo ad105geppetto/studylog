@@ -23,6 +23,8 @@ const Container = styled.div`
   grid-template-columns: repeat(12, 1fr);
   column-gap: 24px;
   padding-top: 10vh;
+  margin-bottom: 1vh;
+  /* background-color: white; */
 `;
 
 const Post = styled.div`
@@ -54,13 +56,13 @@ const Post = styled.div`
     grid-column: span 12;
   }
   /* 태블릿 */
-  @media only screen and (max-width: 768px) {
+  /* @media only screen and (max-width: 768px) {
     grid-column: span 12;
-  }
+  } */
   /* PC */
-  @media only screen and (max-width: 1200px) {
+  /* @media only screen and (max-width: 1200px) {
     grid-column: span 12;
-  }
+  } */
 `;
 
 const Input = styled.input`

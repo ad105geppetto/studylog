@@ -44,14 +44,19 @@ const Idinquiry = () => {
   return (
     <Container>
       {findId ? (
-        <Idbox>
+        <Idbox style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
           <div>
             <Input type="email" onChange={onUserEmail} placeholder="이메일를 입력해주세요" />
           </div>
           <div>{errorMessage ? errorMessage : null}</div>
 
           <div>
-            <Button className="find" type="button" onClick={onClickFindId}>
+            <Button
+              style={{ margin: "-50vh" }}
+              className="find"
+              type="button"
+              onClick={onClickFindId}
+            >
               찾기
             </Button>
           </div>
@@ -90,7 +95,7 @@ const Button = styled.button`
   font-weight: 700;
   outline: 0;
   background: white;
-  margin-bottom: 10vh;
+  /* margin-bottom: 20vh; */
   border: 2px solid grey;
 `;
 

@@ -42,7 +42,7 @@ const Pwinquiry = () => {
   // ------------------------------------------------------------------------
 
   // 비밀번호 받기 함수------------------------------------------------------
-  const onClickFindPwd = async () => {
+  const onClickFindPwd = () => {
     axios
       .post(`${SERVER}/userpwd`, {
         userId: userInfo.userId,
@@ -89,7 +89,7 @@ const Pwinquiry = () => {
             />
           </div>
 
-          <div>
+          <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
             <Button className="find" type="button" onClick={onClickFindPwd}>
               찾기
             </Button>

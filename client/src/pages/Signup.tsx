@@ -244,6 +244,7 @@ export const Signup = () => {
               <ErrorMsg>{errMsg.emailMsg}</ErrorMsg>
               <SuccessMsg>{successMsg.emailMsg}</SuccessMsg>
             </div>
+
             <ButtonWrapper>
               <Large_Button
                 disabled={

@@ -17,10 +17,6 @@ import { useDispatch } from "react-redux";
 
 const SERVER = process.env.REACT_APP_SERVER || "http://localhost:4000";
 
-// const socket = io(`${SERVER}`, {
-//   withCredentials: true,
-// });
-
 function App() {
   const dispatch = useDispatch();
   const guestNum = (Math.random() * 10000000).toString().slice(0, 4);
