@@ -231,8 +231,8 @@ io.on("connection", (socket) => {
         return;
       }
     }
-    delete usernameToRoom[username]
-    delete socketToUsername[socket.id]
+    // delete usernameToRoom[username]
+    // delete socketToUsername[socket.id]
     socket.to(roomID).emit("leave_room", {
       room: roomID,
       author: socket.id,
