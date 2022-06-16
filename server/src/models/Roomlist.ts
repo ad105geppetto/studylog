@@ -1,14 +1,14 @@
-import db from "../db/index"
+import db from "../db/index";
 
 export default {
   get: (callback: Function) => {
-    const queryString = `SELECT * FROM rooms`
+    const queryString = `SELECT * FROM rooms ORDER BY createdAt DESC`;
     db.query(queryString, (error, result) => {
       if (error) {
-        return callback(error, null)
+        return callback(error, null);
       } else {
-        callback(null, result)
+        callback(null, result);
       }
-    })
-  }
-}
+    });
+  },
+};

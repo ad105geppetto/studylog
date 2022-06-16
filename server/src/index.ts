@@ -67,15 +67,10 @@ let socketToUsername = {};
 // socketId: 채희찬
 // }
 
-
 const maximum = 4;
 
-
 io.on("connection", (socket) => {
-  socket.onAny((event, ...args) => {
-    console.log(`got ${event}`);
-  });
-  console.log(`User connected ${socket.id}`);
+  console.log("접속", socket.id);
 
   socket.on("enterRoom", (room, username) => {
     if (users[room]) {
@@ -89,9 +84,11 @@ io.on("connection", (socket) => {
       users[room] = [{ id: username }];
     }
     usernameToRoom[username] = room;
-    socketToUsername[socket.id] = username
+    socketToUsername[socket.id] = username;
 
+    //방 입장
     socket.join(room);
+    // console.log(users, usernameToRoom, socketToUsername);
 
     // 메세지 && 영상 입장 관련 코드
     socket.to(room).emit("welcome", {
@@ -120,9 +117,14 @@ io.on("connection", (socket) => {
     socket.to(room).emit("candidate", data);
   });
 
+  socket.on("out", (room) => {
+    socket.leave(room);
+    console.log(socket.rooms);
+  });
+
   socket.on("disconnecting", () => {
-    console.log(`[${usernameToRoom[socket.id]}]: ${socket.id} exit`);
-    const username = socketToUsername[socket.id]
+    console.log("접속해제", socket.id);
+    const username = socketToUsername[socket.id];
     const roomID = usernameToRoom[username]; //방 번호 15
     let room = users[roomID]; // 방 배열[이승재, 채희찬]
     if (room) {
