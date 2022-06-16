@@ -11,7 +11,6 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Roomlist from "pages/Roomlist";
 import Nav from "./components/Nav";
 import Findinfo from "pages/Findinfo";
-import { io } from "socket.io-client";
 import { logIn } from "./action/index";
 // import Total from "pages/Roomlist";
 import { useDispatch } from "react-redux";
