@@ -21,7 +21,8 @@ export default {
             const newResult = result.slice();
             const stack = []; // 각 페이지가 보관 될 stack 배열 생성
             const totalPage = Math.ceil(newResult.length / limit); // 배열의 갯수를 limit으로 나누어 전체 페이지 수를 결정!
-
+            const aaa = newResult.filter(result => result.entry > 1)
+            console.log(aaa)
             for (let i = 0; i < totalPage; i++) {
               stack.push(newResult.splice(0, limit));
             }
