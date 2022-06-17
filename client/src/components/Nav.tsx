@@ -4,6 +4,7 @@ import axios, { AxiosError, AxiosResponse } from "axios";
 import { logout } from "action";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
+import Modal from "components/Modal";
 
 // const StyleNav = styled.div`
 //   background-color: #f1f196;
@@ -15,6 +16,8 @@ import styled from "styled-components";
 const SERVER = process.env.REACT_APP_SERVER || "http://localhost:4000";
 
 const Nav = () => {
+  const [modal, setModal] = useState(false);
+
   const userInfo = useSelector((state: any) => state.userInfoReducer.userInfo);
 
   // console.log(userInfo.accessToken);
@@ -30,6 +33,7 @@ const Nav = () => {
     };
   };
 
+  // 로그아웃 함수--------------------------------------------------------
   const onLogOutBtn = () => {
     axios
       .get(`${SERVER}/logout`, {
@@ -45,6 +49,11 @@ const Nav = () => {
         window.location.reload();
       })
       .catch((err: AxiosError) => console.log(err));
+  };
+  // -------------------------------------------------------------------
+
+  const onModalOff = (modal: any) => {
+    setModal((modal) => !modal);
   };
 
   return (
@@ -82,9 +91,40 @@ const Nav = () => {
         </Logobox>
       ) : (
         <Logobox>
-          <Btn type="button" onClick={onLogOutBtn}>
+          <Btn
+            type="button"
+            onClick={() => {
+              setModal(true);
+            }}
+          >
             로그아웃
           </Btn>
+          {modal && (
+            <Modal
+              modal={modal}
+              setModal={setModal}
+              width="300"
+              height="250"
+              element={
+                <BtnContainer>
+                  <div>로그아웃을 하시겠습니까?</div>
+                  <br />
+                  <Buttonbox>
+                    <LogOutBtn style={{ color: "white" }} type="button" onClick={onLogOutBtn}>
+                      확인
+                    </LogOutBtn>
+                    <LogOutBtn
+                      style={{ color: "white" }}
+                      type="button"
+                      onClick={() => onModalOff(modal)}
+                    >
+                      취소
+                    </LogOutBtn>
+                  </Buttonbox>
+                </BtnContainer>
+              }
+            />
+          )}
 
           <Btn type="button" onClick={() => navigate("/mypage")}>
             내정보
@@ -98,7 +138,7 @@ const Nav = () => {
 
 const Container = styled.div`
   /* 상단에 네비바를 고정하는 방법 */
-  /* position: ab; */
+  position: fixed;
   top: 0;
   /* ---------------------------------------------------------------- */
   width: 100%;
@@ -127,7 +167,6 @@ const LinkContainer = styled.div`
   justify-content: center;
   align-items: center;
   border: 2px dashed #4b6587;
-  /* background-color: yellow; */
 `;
 
 const Line = styled.div`
@@ -177,6 +216,34 @@ const Btn = styled.button`
   margin-right: 10px;
   background-color: white;
   /* padding: 10px 10px; */
+`;
+
+const BtnContainer = styled.div`
+  background: #f7f6f2;
+`;
+
+const Buttonbox = styled.div`
+  display: flex;
+  justify-content: center;
+`;
+
+const LogOutBtn = styled.button`
+  font-size: 1rem;
+  text-align: center;
+  font-weight: 500;
+
+  min-width: 6vw;
+  min-height: 5vh;
+  border-radius: 1rem;
+  display: inline-block;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 700;
+  outline: 0;
+  background: #4b6587;
+  color: white;
+  border: 1px solid #f7f6f2;
+  margin: 1vh;
 `;
 
 export default Nav;

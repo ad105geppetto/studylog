@@ -21,6 +21,8 @@ import {
   Label,
 } from "styles/Userpage_style";
 
+import styled from "styled-components";
+
 axios.defaults.withCredentials = true;
 const SERVER = process.env.REACT_APP_SERVER || "http://localhost:4000";
 
@@ -200,6 +202,7 @@ const Mypage = () => {
         console.log(res.data);
         const accessToken = res.data.accessToken;
         dispatch(dropout(accessToken));
+        navigate("/");
       })
       .catch((err: AxiosError) => console.log(err));
     onModalOff();
@@ -267,20 +270,23 @@ const Mypage = () => {
               <Modal
                 modal={modal}
                 setModal={setModal}
-                width="250"
-                height="200"
+                width="300"
+                height="250"
                 // element={<div>회원탈퇴 하시겠습니까?</div>}
                 element={
-                  <div>
-                    회원탈퇴를 하시겠습니까?
+                  <Container>
+                    <div>회원탈퇴를 하시겠습니까?</div>
+                    {/* 회원탈퇴를 하시겠습니까? */}
                     <br />
-                    <button type="button" onClick={onDropOutlBtn}>
-                      확인
-                    </button>
-                    <button type="button" onClick={onModalOff}>
-                      취소
-                    </button>
-                  </div>
+                    <Buttonbox>
+                      <Button type="button" onClick={onDropOutlBtn}>
+                        확인
+                      </Button>
+                      <Button type="button" onClick={onModalOff}>
+                        취소
+                      </Button>
+                    </Buttonbox>
+                  </Container>
                 }
               />
             )}
@@ -290,5 +296,33 @@ const Mypage = () => {
     </div>
   );
 };
+
+const Container = styled.div`
+  background: #f7f6f2;
+`;
+
+const Buttonbox = styled.div`
+  display: flex;
+  justify-content: center;
+`;
+
+const Button = styled.button`
+  font-size: 1rem;
+  text-align: center;
+  font-weight: 500;
+
+  min-width: 6vw;
+  min-height: 5vh;
+  border-radius: 1rem;
+  display: inline-block;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 700;
+  outline: 0;
+  background: #4b6587;
+  color: white;
+  border: 1px solid #f7f6f2;
+  margin: 1vh;
+`;
 
 export default Mypage;

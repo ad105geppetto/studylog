@@ -116,7 +116,6 @@ const Idbox = styled.div`
   font-weight: bold;
   /* margin-top: 5vh; */
   /* margin-bottom: 2vh; */
-
   }
 `;
 
