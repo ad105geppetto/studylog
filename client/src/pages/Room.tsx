@@ -202,7 +202,7 @@ const Room = ({ annoy, roomId }: socketInterface) => {
         message: currentMessage,
         time: new Date(Date.now()).getHours() + ":" + new Date(Date.now()).getMinutes(),
       };
-      console.log("내가 쓴 메세지 보기", messageData);
+      // console.log("내가 쓴 메세지 보기", messageData);
 
       if (!socketRef.current) return;
       console.log("이게뭔데?", socketRef.current);
@@ -229,6 +229,7 @@ const Room = ({ annoy, roomId }: socketInterface) => {
       if (!socketRef.current) return;
       socketRef.current.emit("join_room", {
         room: roomId,
+        username: userInfo.userId ? userInfo.userId : annoy,
       });
     } catch (e) {
       console.log(`getUserMedia error: ${e}`);
@@ -425,6 +426,13 @@ const Room = ({ annoy, roomId }: socketInterface) => {
         { headers: { authorization: `Bearer ${userInfo.accessToken}` } }
       );
     }
+    axios
+      .patch(`${SERVER}/room`, {
+        userId: userInfo.id,
+        roomId,
+        type: "minus",
+      })
+      .then((res) => {});
 
     navigate("/");
   };

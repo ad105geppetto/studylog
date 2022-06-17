@@ -5,7 +5,7 @@ import jwt from "jsonwebtoken";
 export default {
   post: (req: Request, res: Response) => {
     const { title, content } = req.body;
-
+    console.log(title);
     if (!req.headers.authorization) {
       res.status(404).send({ data: null, message: "로그인을 하세요." });
     } else {
@@ -22,10 +22,22 @@ export default {
             console.log(error);
             res.send({ message: "서버에러!" });
           } else {
-            res.send({ id: result.insertId });
+            res.send({ id: result[0].id, message: "입장했습니다." });
           }
         });
       }
     }
+  },
+  patch: (req: Request, res: Response) => {
+    const { userId, roomId, type } = req.body;
+    console.log("type---------------------------------", type);
+    models.patch(Number(userId), Number(roomId), type, (error, result) => {
+      if (error) {
+        console.log(error);
+        res.send({ message: "서버에러!" });
+      } else {
+        res.send({ id: result[0].id, message: "입장했습니다." });
+      }
+    });
   },
 };
