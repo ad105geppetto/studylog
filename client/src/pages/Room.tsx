@@ -4,32 +4,150 @@ import axios, { AxiosError, AxiosResponse } from "axios";
 import { useNavigate, NavLink } from "react-router-dom";
 import Video from "../components/Video";
 import { useSelector } from "react-redux";
-//
 import styled from "styled-components";
+import {
+  BsMic,
+  BsMicMute,
+  BsCameraVideo,
+  BsCameraVideoOff,
+  BsChatSquareText,
+  BsChatSquare,
+  BsDoorOpen,
+} from "react-icons/bs";
 
-const ChatWindow = styled.div`
+const Wrapper = styled.div`
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-flow: column wrap;
+  justify-content: space-between;
+  width: 100vw;
+  height: 100vh;
+  background-color: #393d46;
+`;
+
+const MediaArea = styled.div`
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-between;
+`;
+const ButtonArea = styled.div`
+  display: flex;
+  margin-bottom: 3vh;
+  flex-flow: row wrap;
+  justify-content: space-evenly;
+`;
+
+const VideoArea = styled.div`
+  display: grid;
+  grid-template-columns: repeat(2, 45vh);
+  grid-template-rows: repeat(2, 1fr);
+  justify-content: space-evenly;
+`;
+
+const PersonalScreen = styled.video`
+  border: 0.2rem solid lightgrey;
+  border-radius: 1rem;
+  width: 100%;
+  height: 100%;
+`;
+
+const OtherScreen = styled.div`
+  display: flex;
+  flex-flow: row;
+  background-color: purple;
+`;
+
+const Button = styled.button`
+  all: unset;
+  color: white;
+  font-size: 3vh;
+
+  &:hover {
+    color: lightseagreen;
+  }
+
+  &:active {
+    position: relative;
+    top: 1px;
+  }
+`;
+
+const ChatWindow = styled.div<{ view?: string }>`
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
-  background-color: white;
+  justify-content: space-between;
+  background-color: #f0e5cf;
   width: 20vw;
-  min-height: 100%;
-  max-height: 100%;
+  height: 85vh;
+  margin: 1vw 1vw 0 0;
+  border: 0.3rem solid lightgrey;
+  border-radius: 1rem;
   overflow-y: auto;
+  display: ${(props) => props.view};
 `;
 
-const ChatView = styled(ChatWindow)`
+const ChatView = styled.div`
+  display: flex;
+  margin: 2vh 2vh 2vh 2vh;
+  padding-top: 1rem;
   flex-direction: column;
-  justify-content: flex-end;
-  max-height: 80%;
+  background-color: #f7f6f2;
+  border: 0.2rem solid lightgrey;
+  border-radius: 1rem;
+  height: 70vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background-color: #f7f6f2;
+  word-break: break-all;
 `;
 
-const ChatInput = styled(ChatWindow)`
-  flex-direction: column;
-  justify-content: flex-end;
-  max-height: 20%;
+const ChatInput = styled.div`
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-between;
+  margin: 0 1.5rem 1rem 1rem;
+  height: 9vh;
+  text-indent: 30px;
+
+  textarea {
+    border: none;
+    resize: none;
+    height: 100%;
+    line-height: 100%;
+    border-radius: 1rem;
+    padding: 0 1vw 0 1vw;
+    border: 0.2rem solid lightgrey;
+    width: 90%;
+  }
+
+  button {
+    all: unset;
+    margin-left: -5vw;
+  }
 `;
-//
+
+const ChatInfo = styled.div`
+  display: flex;
+  justify-content: space-between;
+`;
+
+const TimeStamp = styled.div`
+  line-height: 3vh;
+  text-align: center;
+  margin: 0 1vw 0 0;
+  font-size: 1vh;
+`;
+
+const UserName = styled(TimeStamp)`
+  margin: 0 0 0 1vw;
+  font-size: 1.2vh;
+  font-weight: bolder;
+`;
+
+const Message = styled.span`
+  font-size: 1.5vh;
+`;
 
 type WebRTCUser = {
   id: string;
@@ -59,12 +177,9 @@ const SERVER = process.env.REACT_APP_SERVER || "http://localhost:4000";
 const Room = ({ annoy, roomId }: socketInterface) => {
   let start = new Date();
   let startString = `${start.getFullYear()}, ${start.getMonth()}, ${start.getDate()}, ${start.getHours()}, ${start.getMinutes()}, ${start.getSeconds()}`;
-  //
   const userInfo = useSelector((state: any) => state.userInfoReducer.userInfo);
-  //채팅
   const [currentMessage, setCurrentMessage] = useState("");
   const [messageList, setMessageList] = useState<any>([]);
-  //
   const navigate = useNavigate();
   const socketRef = useRef<SocketIOClient.Socket>();
   const pcsRef = useRef<{ [socketId: string]: RTCPeerConnection }>({});
@@ -73,7 +188,8 @@ const Room = ({ annoy, roomId }: socketInterface) => {
   const [users, setUsers] = useState<WebRTCUser[]>([]);
   const [cameraOff, setCameraOff] = useState(false);
   const [mute, setMute] = useState(false);
-
+  const [chat, setChat] = useState(false);
+  const [chatView, setChatView] = useState("none");
   //채팅
   const sendMessage = async () => {
     if (currentMessage !== "") {
@@ -111,7 +227,6 @@ const Room = ({ annoy, roomId }: socketInterface) => {
       if (!socketRef.current) return;
       socketRef.current.emit("join_room", {
         room: roomId,
-        username: userInfo.userId ? userInfo.userId : annoy,
       });
     } catch (e) {
       console.log(`getUserMedia error: ${e}`);
@@ -258,6 +373,9 @@ const Room = ({ annoy, roomId }: socketInterface) => {
     // });
 
     socketRef.current.on("welcome", (data: any) => {
+      if (!data) {
+        return;
+      }
       setMessageList((list: any) => [...list, data]);
     });
 
@@ -304,6 +422,7 @@ const Room = ({ annoy, roomId }: socketInterface) => {
         { headers: { authorization: `Bearer ${userInfo.accessToken}` } }
       );
     }
+
     axios
       .patch(`${SERVER}/room`, {
         userId: userInfo.id,
@@ -312,6 +431,9 @@ const Room = ({ annoy, roomId }: socketInterface) => {
       })
       .then((res) => {});
     console.log();
+
+
+
     navigate("/");
   };
 
@@ -337,62 +459,110 @@ const Room = ({ annoy, roomId }: socketInterface) => {
     }
   };
 
+  const onChatChange = () => {
+    setChat((chat) => !chat);
+  };
+
   return (
-    <div>
-      <video
-        style={{
-          width: 240,
-          height: 240,
-          margin: 5,
-          backgroundColor: "black",
-        }}
-        muted
-        ref={localVideoRef}
-        autoPlay
-      />
-      {users.map((user, index) => (
-        <Video key={index} email={user.email} stream={user.stream} />
-      ))}
-      {/* <Chat userInfo={userInfo} socket={socketRef.current} annoy={annoy} roomId={roomId} /> */}
-      <ChatWindow>
-        <div> Live Chat </div>
-        <ChatView>
-          {messageList.map((messageContent: any, idx: any) => {
-            return (
-              <div
-                key={idx}
-                className="message"
-                id={userInfo.userId === messageContent.author ? "you" : "other"}
-              >
-                <div>
-                  <p>{messageContent.message}</p>
-                  <p id="time">{messageContent.time}</p>
-                  <p id="author">{messageContent.author}</p>
-                </div>
-              </div>
-            );
-          })}
-        </ChatView>
-        <div className="chat-footer">
-          <ChatInput
-            as="input"
-            type="text"
-            value={currentMessage}
-            placeholder="Hey..."
-            onChange={(event: any) => {
-              setCurrentMessage(event.target.value);
-            }}
-            onKeyPress={(event: any) => {
-              event.key === "Enter" && sendMessage();
-            }}
-          />
-          <button onClick={sendMessage}>&#9658;</button>
-        </div>
-      </ChatWindow>
-      <button onClick={cameraHandler}>{cameraOff ? "CameraOn" : "CameraOff"}</button>
-      <button onClick={muteHandler}>{mute ? "Mute" : "Unmute"}</button>
-      <button onClick={exitHandler}>종료</button>
-    </div>
+    <Wrapper>
+      <MediaArea>
+        <VideoArea>
+          <PersonalScreen muted ref={localVideoRef} autoPlay />
+          <OtherScreen>
+            {users.map((user, index) => (
+              <Video key={index} email={user.email} stream={user.stream} />
+            ))}
+          </OtherScreen>
+        </VideoArea>
+        {/* <Chat userInfo={userInfo} socket={socketRef.current} annoy={annoy} roomId={roomId} /> */}
+
+        {/* ------------------------ ---------------------  --------------- */}
+        {chat ? (
+          <ChatWindow>
+            <div> Live Chat </div>
+            <ChatView>
+              {messageList.map((messageContent: any, idx: any) => {
+                return (
+                  <div
+                    key={idx}
+                    className="message"
+                    id={userInfo.userId === messageContent.author ? "you" : "other"}
+                  >
+                    <ChatInfo>
+                      <UserName>{messageContent.author}</UserName>
+                      <TimeStamp>{messageContent.time}</TimeStamp>
+                    </ChatInfo>
+                    <Message>{messageContent.message}</Message>
+                  </div>
+                );
+              })}
+            </ChatView>
+
+            <ChatInput>
+              <textarea
+                value={currentMessage}
+                placeholder="Hey..."
+                onChange={(event: any) => {
+                  setCurrentMessage(event.target.value);
+                }}
+                onKeyPress={(event: any) => {
+                  event.key === "Enter" && sendMessage();
+                }}
+              />
+              <button onClick={sendMessage}>&#9658;</button>
+            </ChatInput>
+          </ChatWindow>
+        ) : (
+          <ChatWindow view={chatView}>
+            <div> Live Chat </div>
+            <ChatView>
+              {messageList.map((messageContent: any, idx: any) => {
+                return (
+                  <div
+                    key={idx}
+                    className="message"
+                    id={userInfo.userId === messageContent.author ? "you" : "other"}
+                  >
+                    <ChatInfo>
+                      <UserName>{messageContent.author}</UserName>
+                      <TimeStamp>{messageContent.time}</TimeStamp>
+                    </ChatInfo>
+                    <Message>{messageContent.message}</Message>
+                  </div>
+                );
+              })}
+            </ChatView>
+
+            <ChatInput>
+              <textarea
+                value={currentMessage}
+                placeholder="Hey..."
+                onChange={(event: any) => {
+                  setCurrentMessage(event.target.value);
+                }}
+                onKeyPress={(event: any) => {
+                  event.key === "Enter" && sendMessage();
+                }}
+              />
+              <button onClick={sendMessage}>&#9658;</button>
+            </ChatInput>
+          </ChatWindow>
+        )}
+      </MediaArea>
+      <ButtonArea>
+        <Button onClick={cameraHandler}>
+          {cameraOff ? <BsCameraVideoOff /> : <BsCameraVideo />}
+        </Button>
+
+        <Button onClick={muteHandler}>{!mute ? <BsMic /> : <BsMicMute />}</Button>
+
+        <Button onClick={onChatChange}>{chat ? <BsChatSquareText /> : <BsChatSquare />}</Button>
+
+        <Button onClick={exitHandler}>
+          <BsDoorOpen />
+        </Button>
+      </ButtonArea>
+    </Wrapper>
   );
 };
 

@@ -1,9 +1,9 @@
-.body {
+/* .body {
   margin: 0;
   padding: 0;
   overflow: scroll;
   font-size: 10px;
-}
+} */
 
 .body::-webkit-scrollbar {
   display: none;
