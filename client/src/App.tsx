@@ -12,7 +12,6 @@ import Roomlist from "pages/Roomlist";
 import Nav from "./components/Nav";
 import Findinfo from "pages/Findinfo";
 import { logIn } from "./action/index";
-// import Total from "pages/Roomlist";
 import { useDispatch } from "react-redux";
 
 const SERVER = process.env.REACT_APP_SERVER || "http://localhost:4000";

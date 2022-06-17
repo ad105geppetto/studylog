@@ -21,9 +21,9 @@ const Idinquiry = () => {
     setUserEmail(e.target.value);
   };
 
-  const onId = (e: any) => {
-    setId(false);
-  };
+  // const onId = (e: any) => {
+  //   setId(false);
+  // };
 
   const onClickFindId = () => {
     axios
@@ -115,6 +115,10 @@ const Idbox = styled.div`
   font-weight: bold;
   /* margin-top: 5vh; */
   /* margin-bottom: 2vh; */
+<<<<<<< HEAD
+  }
+=======
+>>>>>>> 2dfed24cf41c42d56a237f57a6d0fa764d8ab43a
 `;
 
 const Input = styled.input`

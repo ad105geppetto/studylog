@@ -31,7 +31,7 @@ export default {
             } else if (page <= 0) {
               res.status(400).json({ message: "page는 1 이상이어야 합니다." });
             } else {
-              res.status(200).json({ data: stack[page - 1], total: result.length });
+              res.status(200).json({ data: stack[page - 1], total: totalPage });
             }
           }
         }

@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import Nav from "components/Nav";
 import { roomlist } from "action";
 import { useDispatch } from "react-redux";
-import Modal from "../components/Modal";
+import Modal from "components/Modal";
 
 const Root = styled.div`
   width: 100vw;
@@ -92,6 +92,7 @@ const SERVER = process.env.REACT_APP_SERVER || "http://localhost:4000";
 const Roomlist = ({ annoy, roomId, setRoomId }: socketInterface) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [modal, setModal] = useState(false);
 
   // 여기서는 더미데이터, 실제로는 서버에서 받아오는 데이터
   const [posts, setPosts] = useState<IPosts[]>([]);
@@ -100,7 +101,7 @@ const Roomlist = ({ annoy, roomId, setRoomId }: socketInterface) => {
   // 한 페이지당 보여지는 목록의 갯수
   const [limit, setLimit] = useState(6);
   // 서버에서 받아오는 데이터의 총 갯수
-  const [total, setTotal] = useState(0);
+  const [totalPage, setTotalPage] = useState(0);
 
   const [search, setSearch] = useState("");
 
@@ -114,7 +115,7 @@ const Roomlist = ({ annoy, roomId, setRoomId }: socketInterface) => {
   }, [page, limit]);
 
   // 새로고침을 해도 상태값 초기화가 되지 않게해보기.
-  // 서버에서 공부방 데이터를 받아오는 함수--------
+  // 서버에서 공부방 데이터를 받아오는 함수----------------------------------
   const getPageData = (page: number, limit: number) => {
     axios
       .get(`${SERVER}/roomlist?page=${page}&limit=${limit}`, {
@@ -122,22 +123,22 @@ const Roomlist = ({ annoy, roomId, setRoomId }: socketInterface) => {
       })
       .then((res: AxiosResponse) => {
         setPosts(res.data.data);
-        setTotal(res.data.total);
-        console.log(res);
+        setTotalPage(res.data.total);
       })
       .catch((err: AxiosError) => {
         console.log("err:", err);
       });
   };
+  // -----------------------------------------------------------------------
 
-  // 화상대화방 만드는 함수
+  // 화상대화방 들어가는 함수-----------------------------------------------
   const enterRoomHandler = (room: any) => {
     if (room.roomCurrent === 4) {
       alert("꽉참");
       return;
     }
     setRoomId(room.id);
-
+    console.log(room.id);
     axios
       .patch(`${SERVER}/room`, {
         roomId: room.id,
@@ -148,8 +149,10 @@ const Roomlist = ({ annoy, roomId, setRoomId }: socketInterface) => {
         navigate(`/room/${room.id}`);
       });
   };
+  // -----------------------------------------------------------------------
 
-  // 검색어를 띄워주는 함수-------
+  // 검색어를 띄워주는 함수-------------------------------------------------
+  // 검색후에 변수가 초기화가 되는 문제 확인해주세요
   const onSearch = () => {
     axios
       .get(`${SERVER}/search?title=${search}&limit=${limit}&page=${page}`)
@@ -157,19 +160,24 @@ const Roomlist = ({ annoy, roomId, setRoomId }: socketInterface) => {
         setPosts(res.data.data);
         // const posts = setPosts(res.data.data);
         // dispatch(roomlist(posts));
-        setTotal(res.data.total);
+        setTotalPage(res.data.total);
         console.log(res);
       })
       .catch((err: AxiosError) => {
         console.log(err);
       });
   };
+  // -----------------------------------------------------------------------
 
   // rooms가 의미하는 바를 정확하게 모르겠다
 
   const onChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value);
   };
+
+  // const onModalOff = (modal: any) => {
+  //   setModal((modal) => !modal);
+  // };
 
   return (
     <Root>
@@ -190,7 +198,16 @@ const Roomlist = ({ annoy, roomId, setRoomId }: socketInterface) => {
           ? "개설된 방이 없습니다"
           : posts.map((post: any, index: any): any => {
               return (
-                <Post key={index} onClick={() => enterRoomHandler(post)}>
+                // <Post key={index} onClick={() => enterRoomHandler(post)}>
+                <Post
+                  key={index}
+                  // onClick={() => {
+                  //   setModal(true);
+                  // }}
+
+                  onClick={() => enterRoomHandler(post)}
+                  // onClick에 () => setModal(modal)
+                >
                   <div className="title">제목 : {post.title}</div>
                   <div>참여인원 : {post.roomCurrent} / 4</div>
                   <div>내용 : {post.content}</div>
@@ -208,9 +225,37 @@ const Roomlist = ({ annoy, roomId, setRoomId }: socketInterface) => {
         <option value={3}>3</option>
         <option value={9}>9</option>
       </select> */}
-      <Pagenation totalPage={Math.ceil(total / limit)} page={page} setPage={setPage} />
+      <Pagenation totalPage={totalPage} page={page} setPage={setPage} />
     </Root>
   );
 };
+
+const BtnContainer = styled.div`
+  background: #f7f6f2;
+`;
+
+const Buttonbox = styled.div`
+  display: flex;
+  justify-content: center;
+`;
+
+const EnterRoomBtn = styled.button`
+  font-size: 1rem;
+  text-align: center;
+  font-weight: 500;
+
+  min-width: 6vw;
+  min-height: 5vh;
+  border-radius: 1rem;
+  display: inline-block;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 700;
+  outline: 0;
+  background: #4b6587;
+  color: white;
+  border: 1px solid #f7f6f2;
+  margin: 1vh;
+`;
 
 export default Roomlist;
