@@ -311,7 +311,7 @@ const Room = ({ annoy, roomId }: socketInterface) => {
         type: "minus",
       })
       .then((res) => {});
-
+    console.log();
     navigate("/");
   };
 
