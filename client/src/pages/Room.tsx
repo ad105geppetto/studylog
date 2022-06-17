@@ -423,6 +423,17 @@ const Room = ({ annoy, roomId }: socketInterface) => {
       );
     }
 
+    axios
+      .patch(`${SERVER}/room`, {
+        userId: userInfo.id,
+        roomId,
+        type: "minus",
+      })
+      .then((res) => {});
+    console.log();
+
+
+
     navigate("/");
   };
 
