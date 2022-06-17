@@ -18,11 +18,10 @@ export default {
           } else if (limit <= 0) {
             res.status(400).json({ message: "limit은 1 이상이어야 합니다." });
           } else {
-            const newResult = result.slice();
+            const newResult = result.slice().filter(result => result.entry > 1);
             const stack = []; // 각 페이지가 보관 될 stack 배열 생성
             const totalPage = Math.ceil(newResult.length / limit); // 배열의 갯수를 limit으로 나누어 전체 페이지 수를 결정!
-            const aaa = newResult.filter(result => result.entry > 1)
-            console.log(aaa)
+
             for (let i = 0; i < totalPage; i++) {
               stack.push(newResult.splice(0, limit));
             }
