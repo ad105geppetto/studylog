@@ -57,13 +57,13 @@ const Post = styled.div`
     grid-column: span 12;
   }
   /* 태블릿 */
-  @media only screen and (max-width: 768px) {
+  /* @media only screen and (max-width: 768px) {
     grid-column: span 12;
-  }
+  } */
   /* PC */
-  @media only screen and (max-width: 1200px) {
+  /* @media only screen and (max-width: 1200px) {
     grid-column: span 12;
-  }
+  } */
 `;
 
 const Input = styled.input`
@@ -101,7 +101,7 @@ const Roomlist = ({ annoy, roomId, setRoomId }: socketInterface) => {
   // 한 페이지당 보여지는 목록의 갯수
   const [limit, setLimit] = useState(6);
   // 서버에서 받아오는 데이터의 총 갯수
-  const [total, setTotal] = useState(0);
+  const [totalPage, setTotalPage] = useState(0);
 
   const [search, setSearch] = useState("");
 
@@ -123,8 +123,7 @@ const Roomlist = ({ annoy, roomId, setRoomId }: socketInterface) => {
       })
       .then((res: AxiosResponse) => {
         setPosts(res.data.data);
-        setTotal(res.data.total);
-        console.log(res);
+        setTotalPage(res.data.total);
       })
       .catch((err: AxiosError) => {
         console.log("err:", err);
@@ -134,9 +133,21 @@ const Roomlist = ({ annoy, roomId, setRoomId }: socketInterface) => {
 
   // 화상대화방 들어가는 함수-----------------------------------------------
   const enterRoomHandler = (room: any) => {
+    if (room.roomCurrent === 4) {
+      alert("꽉참");
+      return;
+    }
     setRoomId(room.id);
-    // socket.emit("enterRoom", room.id, userInfo.userId ? userInfo.userId : annoy);
-    navigate(`/room/${room.id}`);
+    console.log(room.id);
+    axios
+      .patch(`${SERVER}/room`, {
+        roomId: room.id,
+        userId: userInfo.id,
+        type: "plus",
+      })
+      .then((res) => {
+        navigate(`/room/${room.id}`);
+      });
   };
   // -----------------------------------------------------------------------
 
@@ -149,7 +160,7 @@ const Roomlist = ({ annoy, roomId, setRoomId }: socketInterface) => {
         setPosts(res.data.data);
         // const posts = setPosts(res.data.data);
         // dispatch(roomlist(posts));
-        setTotal(res.data.total);
+        setTotalPage(res.data.total);
         console.log(res);
       })
       .catch((err: AxiosError) => {
@@ -194,45 +205,17 @@ const Roomlist = ({ annoy, roomId, setRoomId }: socketInterface) => {
                   //   setModal(true);
                   // }}
 
-                  onClick={() => {
-                    setModal(true);
-                  }}
+                  onClick={() => enterRoomHandler(post)}
                   // onClick에 () => setModal(modal)
                 >
                   <div className="title">제목 : {post.title}</div>
-                  <div>참여인원 : {post.entry}</div>
+                  <div>참여인원 : {post.roomCurrent} / 4</div>
                   <div>내용 : {post.content}</div>
                 </Post>
               );
             })}
-        {modal && (
-          <Modal
-            modal={modal}
-            setModal={setModal}
-            width="300"
-            height="250"
-            element={
-              <BtnContainer>
-                {/* <div style={{ color: "black", font: "1rem" }}> */}
-                <div style={{ color: "black" }}>공부방에 입장 하시겠습니까?</div>
-                <br />
-                <Buttonbox>
-                  <EnterRoomBtn style={{ color: "white" }} type="button" onClick={enterRoomHandler}>
-                    확인
-                  </EnterRoomBtn>
-                  <EnterRoomBtn
-                    style={{ color: "white" }}
-                    type="button"
-                    onClick={() => setModal(false)}
-                  >
-                    취소
-                  </EnterRoomBtn>
-                </Buttonbox>
-              </BtnContainer>
-            }
-          />
-        )}
       </Container>
+
       {/* <select
         onChange={(e) => {
           setLimit(Number(e.target.value));
@@ -242,7 +225,7 @@ const Roomlist = ({ annoy, roomId, setRoomId }: socketInterface) => {
         <option value={3}>3</option>
         <option value={9}>9</option>
       </select> */}
-      <Pagenation totalPage={Math.ceil(total / limit)} page={page} setPage={setPage} />
+      <Pagenation totalPage={totalPage} page={page} setPage={setPage} />
     </Root>
   );
 };

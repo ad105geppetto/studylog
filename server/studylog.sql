@@ -4,12 +4,7 @@ CREATE TABLE `users` (
   `email` varchar(255) NOT NULL,
   `password` varchar(255),
   `profile` varchar(255),
-  `createdAt` timestamp NOT NULL DEFAULT (now()),
-  `updatedAt` timestamp NOT NULL DEFAULT (now())
-);
-
-CREATE TABLE `token` (
-  `id` int PRIMARY KEY AUTO_INCREMENT,
+  `roomId` int,
   `refreshToken` varchar(255),
   `createdAt` timestamp NOT NULL DEFAULT (now()),
   `updatedAt` timestamp NOT NULL DEFAULT (now())
@@ -18,10 +13,18 @@ CREATE TABLE `token` (
 CREATE TABLE `rooms` (
   `id` int PRIMARY KEY AUTO_INCREMENT,
   `title` varchar(255) NOT NULL,
-  `entry` tinyint NOT NULL,
+  `roomCurrent` tinyint NOT NULL,
   `content` varchar(255) NOT NULL,
   `createdAt` timestamp NOT NULL DEFAULT (now()),
   `updatedAt` timestamp NOT NULL DEFAULT (now())
+);
+
+CREATE TABLE `user_room` (
+  `id` int PRIMARY KEY AUTO_INCREMENT,
+  `userId` int,
+  `roomId` int,
+  `startTime` timestamp NOT NULL DEFAULT (now()),
+  `endTime` timestamp
 );
 
 CREATE TABLE `logs` (
@@ -47,15 +50,6 @@ CREATE TABLE `todos` (
   `updatedAt` timestamp NOT NULL DEFAULT (now())
 );
 
-CREATE TABLE `chats` (
-  `id` int PRIMARY KEY AUTO_INCREMENT,
-  `userId` int NOT NULL,
-  `roomId` int NOT NULL,
-  `message` varchar(255),
-  `createdAt` timestamp NOT NULL DEFAULT (now()),
-  `updatedAt` timestamp NOT NULL DEFAULT (now())
-);
-
 CREATE TABLE `auth` (
   `id` int PRIMARY KEY AUTO_INCREMENT,
   `certNum` varchar(255) NOT NULL,
@@ -64,12 +58,22 @@ CREATE TABLE `auth` (
   `createdAt` timestamp NOT NULL DEFAULT (now())
 );
 
-ALTER TABLE `chats` ADD FOREIGN KEY (`userId`) REFERENCES `users` (`id`);
+ALTER TABLE
+  `user_room`
+ADD
+  FOREIGN KEY (`userId`) REFERENCES `users` (`id`);
 
-ALTER TABLE `chats` ADD FOREIGN KEY (`roomId`) REFERENCES `rooms` (`id`);
+ALTER TABLE
+  `user_room`
+ADD
+  FOREIGN KEY (`roomId`) REFERENCES `rooms` (`id`);
 
-ALTER TABLE `todos` ADD FOREIGN KEY (`userId`) REFERENCES `users` (`id`);
+ALTER TABLE
+  `todos`
+ADD
+  FOREIGN KEY (`userId`) REFERENCES `users` (`id`);
 
-ALTER TABLE `logs` ADD FOREIGN KEY (`id`) REFERENCES `users` (`id`);
-
-ALTER TABLE `token` ADD FOREIGN KEY (`id`) REFERENCES `users` (`id`);
+ALTER TABLE
+  `logs`
+ADD
+  FOREIGN KEY (`id`) REFERENCES `users` (`id`);

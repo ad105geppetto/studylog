@@ -1,6 +1,7 @@
 import express from "express";
 import cookieParser from "cookie-parser";
 import indexRouter from "./routes";
+import db from "./db/index";
 import cors from "cors";
 import http from "http";
 // import { Server } from "socket.io";
@@ -149,12 +150,14 @@ let io = socketio.listen(httpServer, {
 
 let users = {};
 
-let socketToRoom = {};
+let socketToRoom = {}; // {socket.id : 15}
+let socketToName = {}; // {socket.id : kimcoding}
 
 const maximum = process.env.MAXIMUM || 4;
 
 io.on("connection", (socket) => {
   socket.on("join_room", (data) => {
+    //data.username
     if (users[data.room]) {
       const length = users[data.room].length;
       if (length === maximum) {
@@ -166,6 +169,8 @@ io.on("connection", (socket) => {
       users[data.room] = [{ id: socket.id, email: data.email }];
     }
     socketToRoom[socket.id] = data.room;
+    socketToName[socket.id] = data.username;
+
     console.log("users", users);
     console.log("socketToRoom", socketToRoom);
 
@@ -179,10 +184,7 @@ io.on("connection", (socket) => {
     io.sockets.to(socket.id).emit("all_users", usersInThisRoom);
     //채팅
     socket.to(data.room).emit("welcome", {
-      room: data.room,
-      author: socket.id,
-      message: `${socket.id}님이 들어왔습니다.`,
-      time: new Date(Date.now()).getHours() + ":" + new Date(Date.now()).getMinutes(),
+      message: `${data.username}님이 들어왔습니다.`,
     });
   });
 
@@ -224,15 +226,14 @@ io.on("connection", (socket) => {
       users[roomID] = room;
       if (room.length === 0) {
         delete users[roomID];
+        console.log(roomID, "에서 모든 인원이 나갔습니다.");
         return;
       }
     }
-
+    // delete usernameToRoom[username]
+    // delete socketToUsername[socket.id]
     socket.to(roomID).emit("leave_room", {
-      room: roomID,
-      author: socket.id,
-      message: `${socket.id}님이 나갔습니다.`,
-      time: new Date(Date.now()).getHours() + ":" + new Date(Date.now()).getMinutes(),
+      message: `${socketToName[socket.id]}님이 나갔습니다.`,
     });
 
     socket.to(roomID).emit("user_exit", { id: socket.id });

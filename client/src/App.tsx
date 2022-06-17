@@ -13,7 +13,6 @@ import Nav from "./components/Nav";
 import Findinfo from "pages/Findinfo";
 import { logIn } from "./action/index";
 import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
 
 const SERVER = process.env.REACT_APP_SERVER || "http://localhost:4000";
 
@@ -34,6 +33,7 @@ function App() {
     axios
       .post(`${SERVER}/Oauth`, { authorizationCode: authCode })
       .then((res: AxiosResponse) => {
+        console.log("=====Oauth====서버에서 받아옴");
         console.log(res);
         const accessToken = res.data.accessToken;
 
@@ -47,8 +47,6 @@ function App() {
   useEffect(() => {
     sendAuthCode(authCode);
   }, []);
-  // outh 서버로 전송이 안댐 , 뭔가 틀렸을텐데 뭘까
-  // ----------------------------------------
 
   return (
     //------------------------------------------------------------------------------------------------
