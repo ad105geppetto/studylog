@@ -40,10 +40,12 @@ interface Props {
 
 const Video = ({ email, stream, muted }: Props) => {
   const ref = useRef<HTMLVideoElement>(null);
+  const [isMuted, setIsMuted] = useState<boolean>(false);
 
   useEffect(() => {
     if (ref.current) ref.current.srcObject = stream;
-  }, [stream]);
+    if (muted) setIsMuted(muted);
+  }, [stream, muted]);
 
   return (
     <Container>

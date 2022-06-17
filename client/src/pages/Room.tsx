@@ -31,15 +31,6 @@ const MediaArea = styled.div`
   flex-flow: row wrap;
   justify-content: space-between;
 `;
-
-const VideoArea = styled.div`
-  display: flex;
-  flex-flow: column wrap;
-  width: 70vw;
-  height: 70vh;
-  justify-content: space-evenly;
-`;
-
 const ButtonArea = styled.div`
   display: flex;
   margin-bottom: 3vh;
@@ -47,18 +38,24 @@ const ButtonArea = styled.div`
   justify-content: space-evenly;
 `;
 
+const VideoArea = styled.div`
+  display: grid;
+  grid-template-columns: repeat(2, 45vh);
+  grid-template-rows: repeat(2, 1fr);
+  justify-content: space-evenly;
+`;
+
 const PersonalScreen = styled.video`
-  background-color: #f7f6f2;
   border: 0.2rem solid lightgrey;
   border-radius: 1rem;
-  margin: 1vw;
-  width: 45%;
+  width: 100%;
+  height: 100%;
 `;
 
 const OtherScreen = styled.div`
   display: flex;
-  flex-flow: row wrap;
-  background-color: #f7f6f2;
+  flex-flow: row;
+  background-color: purple;
 `;
 
 const Button = styled.button`
@@ -73,47 +70,6 @@ const Button = styled.button`
   &:active {
     position: relative;
     top: 1px;
-  }
-`;
-
-const TimeStamp = styled.div`
-  line-height: 3vh;
-  text-align: center;
-  margin: 0 0 0 5vw;
-  font-size: 1vh;
-`;
-
-const UserName = styled(TimeStamp)`
-  margin: 0 0 0 1vw;
-  font-size: 1.5vh;
-`;
-
-const Message = styled.span`
-  font-size: 1.5vh;
-`;
-
-const ChatInput = styled.div`
-  display: flex;
-  flex-flow: row wrap;
-  justify-content: space-between;
-  margin: 0 1.5rem 1rem 1rem;
-  height: 9vh;
-  text-indent: 30px;
-
-  textarea {
-    border: none;
-    resize: none;
-    height: 100%;
-    line-height: 100%;
-    border-radius: 1rem;
-    padding: 0 1vw 0 1vw;
-    border: 0.2rem solid lightgrey;
-    width: 90%;
-  }
-
-  button {
-    all: unset;
-    margin-left: -5vw;
   }
 `;
 
@@ -146,9 +102,51 @@ const ChatView = styled.div`
   word-break: break-all;
 `;
 
+const ChatInput = styled.div`
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-between;
+  margin: 0 1.5rem 1rem 1rem;
+  height: 9vh;
+  text-indent: 30px;
+
+  textarea {
+    border: none;
+    resize: none;
+    height: 100%;
+    line-height: 100%;
+    border-radius: 1rem;
+    padding: 0 1vw 0 1vw;
+    border: 0.2rem solid lightgrey;
+    width: 90%;
+  }
+
+  button {
+    all: unset;
+    margin-left: -5vw;
+  }
+`;
+
 const ChatInfo = styled.div`
   display: flex;
-  justify-content: flex-start;
+  justify-content: space-between;
+`;
+
+const TimeStamp = styled.div`
+  line-height: 3vh;
+  text-align: center;
+  margin: 0 1vw 0 0;
+  font-size: 1vh;
+`;
+
+const UserName = styled(TimeStamp)`
+  margin: 0 0 0 1vw;
+  font-size: 1.2vh;
+  font-weight: bolder;
+`;
+
+const Message = styled.span`
+  font-size: 1.5vh;
 `;
 
 type WebRTCUser = {
@@ -229,7 +227,6 @@ const Room = ({ annoy, roomId }: socketInterface) => {
       if (!socketRef.current) return;
       socketRef.current.emit("join_room", {
         room: roomId,
-        username: userInfo.userId ? userInfo.userId : annoy,
       });
     } catch (e) {
       console.log(`getUserMedia error: ${e}`);
@@ -405,7 +402,6 @@ const Room = ({ annoy, roomId }: socketInterface) => {
         if (!pcsRef.current[user.id]) return;
         pcsRef.current[user.id].close();
         delete pcsRef.current[user.id];
-        console.log(user);
       });
     };
 
@@ -426,13 +422,6 @@ const Room = ({ annoy, roomId }: socketInterface) => {
         { headers: { authorization: `Bearer ${userInfo.accessToken}` } }
       );
     }
-    axios
-      .patch(`${SERVER}/room`, {
-        userId: userInfo.id,
-        roomId,
-        type: "minus",
-      })
-      .then((res) => {});
 
     navigate("/");
   };
