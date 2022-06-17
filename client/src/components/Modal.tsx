@@ -21,19 +21,23 @@ const View = styled.div<{ width: string; height: string }>`
   }
   position: fixed;
   display: flex;
-  flex-direction: center;
-  left: calc(50vw - ${(props) => props.width}px / 2);
-  top: calc(50vh - ${(props) => props.height}px / 2);
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  left: calc(48.2vw - ${(props) => props.width}px / 2);
+  top: calc(45vh - ${(props) => props.height}px / 2);
   width: ${(props) => props.width}px;
   height: ${(props) => props.height}px;
   padding: 8px;
+  /* 모달창 전체 배경색 */
   background-color: #f7f6f2;
-  border-radius: 8px;
+  border-radius: 5vh;
+  border: 2vh solid lightgrey;
   animation-name: switchModalOn;
   animation-duration: 0.5s;
   z-index: 2000;
   font-size: 20px;
-  /* background-color: black; */
   .exit-wrapper {
     position: absolute;
     top: 4px;
@@ -52,7 +56,6 @@ const Wrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  /* background: black; */
 `;
 
 // 모달창 팝업시 외부 접근방지 배경
