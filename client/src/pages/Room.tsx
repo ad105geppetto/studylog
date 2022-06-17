@@ -1,5 +1,7 @@
 import React, { useState, useRef, useEffect, useCallback } from "react";
 import io from "socket.io-client";
+import axios, { AxiosError, AxiosResponse } from "axios";
+import { useNavigate, NavLink } from "react-router-dom";
 import Video from "../components/Video";
 import { useSelector } from "react-redux";
 //
@@ -52,21 +54,25 @@ const pc_config = {
     },
   ],
 };
-const SOCKET_SERVER_URL = "http://localhost:4000";
+const SERVER = process.env.REACT_APP_SERVER || "http://localhost:4000";
 
 const Room = ({ annoy, roomId }: socketInterface) => {
+  let start = new Date();
+  let startString = `${start.getFullYear()}, ${start.getMonth()}, ${start.getDate()}, ${start.getHours()}, ${start.getMinutes()}, ${start.getSeconds()}`;
   //
   const userInfo = useSelector((state: any) => state.userInfoReducer.userInfo);
   //채팅
   const [currentMessage, setCurrentMessage] = useState("");
   const [messageList, setMessageList] = useState<any>([]);
   //
-
+  const navigate = useNavigate();
   const socketRef = useRef<SocketIOClient.Socket>();
   const pcsRef = useRef<{ [socketId: string]: RTCPeerConnection }>({});
-  const localVideoRef = useRef<HTMLVideoElement>(null);
+  const localVideoRef = useRef<any>(null);
   const localStreamRef = useRef<MediaStream>();
   const [users, setUsers] = useState<WebRTCUser[]>([]);
+  const [cameraOff, setCameraOff] = useState(false);
+  const [mute, setMute] = useState(false);
 
   //채팅
   const sendMessage = async () => {
@@ -160,7 +166,7 @@ const Room = ({ annoy, roomId }: socketInterface) => {
   }, []);
 
   useEffect(() => {
-    socketRef.current = io.connect(SOCKET_SERVER_URL);
+    socketRef.current = io.connect(SERVER);
     getLocalStream();
 
     socketRef.current.on("all_users", (allUsers: Array<{ id: string; email: string }>) => {
@@ -279,8 +285,49 @@ const Room = ({ annoy, roomId }: socketInterface) => {
         delete pcsRef.current[user.id];
       });
     };
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [createPeerConnection, getLocalStream]);
+
+  const exitHandler = () => {
+    let end = new Date();
+    //" (2022 , 5 , 16, 09, 50, 20)"
+    let endString = `${end.getFullYear()}, ${end.getMonth()}, ${end.getDate()}, ${end.getHours()}, ${end.getMinutes()}, ${end.getSeconds()}`;
+    if (userInfo.userId) {
+      axios.post(
+        `${SERVER}/statics`,
+        {
+          start: startString,
+          end: endString,
+        },
+        { headers: { authorization: `Bearer ${userInfo.accessToken}` } }
+      );
+    }
+
+    navigate("/");
+  };
+
+  const cameraHandler = () => {
+    localVideoRef.current.srcObject
+      .getVideoTracks()
+      .forEach((track: any) => (track.enabled = !track.enabled));
+    if (cameraOff) {
+      setCameraOff(!cameraOff);
+    } else {
+      setCameraOff(!cameraOff);
+    }
+  };
+
+  const muteHandler = () => {
+    localVideoRef.current.srcObject
+      .getAudioTracks()
+      .forEach((track: any) => (track.enabled = !track.enabled));
+    if (mute) {
+      setMute(!mute);
+    } else {
+      setMute(!mute);
+    }
+  };
 
   return (
     <div>
@@ -334,6 +381,9 @@ const Room = ({ annoy, roomId }: socketInterface) => {
           <button onClick={sendMessage}>&#9658;</button>
         </div>
       </ChatWindow>
+      <button onClick={cameraHandler}>{cameraOff ? "CameraOn" : "CameraOff"}</button>
+      <button onClick={muteHandler}>{mute ? "Mute" : "Unmute"}</button>
+      <button onClick={exitHandler}>종료</button>
     </div>
   );
 };

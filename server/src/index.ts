@@ -1,6 +1,7 @@
 import express from "express";
 import cookieParser from "cookie-parser";
 import indexRouter from "./routes";
+import db from "./db/index"
 import cors from "cors";
 import http from "http";
 // import { Server } from "socket.io";
@@ -224,10 +225,14 @@ io.on("connection", (socket) => {
       users[roomID] = room;
       if (room.length === 0) {
         delete users[roomID];
+        const queryString = `DELETE FROM rooms WHERE id = ${roomID}`
+        db.query(queryString)
+        console.log(roomID, "에서 모든 인원이 나갔습니다.")
         return;
       }
     }
-
+    // delete usernameToRoom[username]
+    // delete socketToUsername[socket.id]
     socket.to(roomID).emit("leave_room", {
       room: roomID,
       author: socket.id,
