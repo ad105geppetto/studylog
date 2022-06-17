@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import Nav from "components/Nav";
 import { roomlist } from "action";
 import { useDispatch } from "react-redux";
+import Modal from "../components/Modal";
 
 const Root = styled.div`
   width: 100vw;
@@ -131,9 +132,21 @@ const Roomlist = ({ annoy, roomId, setRoomId }: socketInterface) => {
 
   // 화상대화방 만드는 함수
   const enterRoomHandler = (room: any) => {
+    if (room.roomCurrent === 4) {
+      alert("꽉참");
+      return;
+    }
     setRoomId(room.id);
-    // socket.emit("enterRoom", room.id, userInfo.userId ? userInfo.userId : annoy);
-    navigate(`/room/${room.id}`);
+
+    axios
+      .patch(`${SERVER}/room`, {
+        roomId: room.id,
+        userId: userInfo.id,
+        type: "plus",
+      })
+      .then((res) => {
+        navigate(`/room/${room.id}`);
+      });
   };
 
   // 검색어를 띄워주는 함수-------
@@ -179,12 +192,13 @@ const Roomlist = ({ annoy, roomId, setRoomId }: socketInterface) => {
               return (
                 <Post key={index} onClick={() => enterRoomHandler(post)}>
                   <div className="title">제목 : {post.title}</div>
-                  <div>참여인원 : {post.entry}</div>
+                  <div>참여인원 : {post.roomCurrent} / 4</div>
                   <div>내용 : {post.content}</div>
                 </Post>
               );
             })}
       </Container>
+
       {/* <select
         onChange={(e) => {
           setLimit(Number(e.target.value));

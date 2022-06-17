@@ -35,7 +35,6 @@ const Creatingroom = ({ setRoomId }: socketInterface) => {
       )
       .then((res) => {
         setRoomId(res.data.id);
-        // socket.emit("enterRoom", res.data.id, userInfo.userId);
         navigate(`/room/${res.data.id}`);
       })
       .catch((err) => {

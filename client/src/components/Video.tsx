@@ -49,7 +49,7 @@ const Video = ({ email, stream, muted }: Props) => {
 
   return (
     <Container>
-      <PersonalScreen ref={ref} muted={isMuted} autoPlay />
+      <PersonalScreen ref={ref} autoPlay />
       <UserLabel>{email}</UserLabel>
     </Container>
   );
