@@ -11,7 +11,7 @@ export default {
     if (profilePath) {
       //패스워드가 없는 경우는 이메일만 업데이트
       if (!password) {
-        const queryString = `UPDATE users SET email = "${email}", profile = "http:ec2.com/${profilePath}" WHERE id = ${tokenData.id}`;
+        const queryString = `UPDATE users SET email = "${email}", profile = "http://localhost:4000/${profilePath}" WHERE id = ${tokenData.id}`;
         db.query(queryString, (error, result) => {
           const queryString2 = `SELECT * FROM users WHERE id = ${tokenData.id}`;
           db.query(queryString2, (error, result) => {
@@ -20,7 +20,7 @@ export default {
         });
         //이메일이 없는 경우는 패스워드만 업데이트
       } else if (!email) {
-        const queryString = `UPDATE users SET password = "${password}", profile = "http:ec2.com/${profilePath}" WHERE id = ${tokenData.id}`;
+        const queryString = `UPDATE users SET password = "${password}", profile = "http://localhost:4000/${profilePath}" WHERE id = ${tokenData.id}`;
         db.query(queryString, (error, result) => {
           const queryString2 = `SELECT * FROM users WHERE id = ${tokenData.id}`;
           db.query(queryString2, (error, result) => {
@@ -29,7 +29,7 @@ export default {
         });
         //다 있는 경우
       } else {
-        const queryString = `UPDATE users SET email = "${email}", password = "${password}", profile = "http:ec2.com/${profilePath}" WHERE id = ${tokenData.id}`;
+        const queryString = `UPDATE users SET email = "${email}", password = "${password}", profile = "http://localhost:4000/${profilePath}" WHERE id = ${tokenData.id}`;
         db.query(queryString, (error, result) => {
           const queryString2 = `SELECT * FROM users WHERE id = ${tokenData.id}`;
           db.query(queryString2, (error, result) => {
