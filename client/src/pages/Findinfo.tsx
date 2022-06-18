@@ -51,7 +51,7 @@ const Findinfo = () => {
     <Root>
       <Nav />
       <LinkContainer>
-        <Findbox>
+        <Findbox id="findbox">
           <Btn
             style={
               renderingTarget === "id"
@@ -94,7 +94,7 @@ const Findinfo = () => {
 
 const Root = styled.div`
   width: 100vw;
-  height: 100vh;
+  height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -111,24 +111,20 @@ const Root = styled.div`
 const LinkContainer = styled.div`
   width: 60vw;
   height: 10vh;
-  /* display: flex;
-  justify-content: center;
-  align-items: center; */
-  /* border: 2px dashed #4b6587; */
-  /* background: black; */
   margin-top: 1vh;
-  /* margin-bottom: 1vh; */
 `;
 
 const Findbox = styled.div`
+  height: 70vh;
   /* position: relative; */
   /* border-right: 1px dotted black; */
   display: flex;
   justify-content: center;
   align-items: center;
   height: 10vh;
-  flex: 1;
+  /* flex: 1; */
   cursor: pointer;
+  margin-top: -1vh;
 
   .id {
     /* background-color: #f7f6f2; */

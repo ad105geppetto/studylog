@@ -138,13 +138,19 @@ const Nav = () => {
 
 const Container = styled.div`
   /* 상단에 네비바를 고정하는 방법 */
-  position: fixed;
-  top: 0;
+  /* position: fixed; */
+  /* top: 0; */
   /* ---------------------------------------------------------------- */
-  width: 100%;
-  height: 17vh;
+  position: relative;
+  right: 0.5vw;
+  top: -0.5vw;
+  bottom: 0.5vw;
+  width: 100vw;
+  height: 20vh;
   display: flex;
-  justify-content: space-around;
+  /* justify-content: space-around; */
+  justify-content: center;
+
   align-items: center;
   background-color: #f0e5cf;
   button {

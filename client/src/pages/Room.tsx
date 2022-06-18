@@ -48,11 +48,13 @@ const VideoArea = styled.div`
 const PersonalScreen = styled.video`
   border: 0.2rem solid lightgrey;
   border-radius: 1rem;
-  width: 100%;
+  /* width: 100%; */
+  /* grid-columns: span 1; */
   height: 100%;
 `;
 
 const OtherScreen = styled.div`
+  /* grid-columns: span 1; */
   display: flex;
   flex-flow: row;
   background-color: purple;
@@ -432,8 +434,6 @@ const Room = ({ annoy, roomId }: socketInterface) => {
       .then((res) => {});
     console.log();
 
-
-
     navigate("/");
   };
 
@@ -468,11 +468,13 @@ const Room = ({ annoy, roomId }: socketInterface) => {
       <MediaArea>
         <VideoArea>
           <PersonalScreen muted ref={localVideoRef} autoPlay />
-          <OtherScreen>
-            {users.map((user, index) => (
+          {/* <OtherScreen> */}
+          {users.map((user, index) => (
+            <OtherScreen>
               <Video key={index} email={user.email} stream={user.stream} />
-            ))}
-          </OtherScreen>
+            </OtherScreen>
+          ))}
+          {/* </OtherScreen> */}
         </VideoArea>
         {/* <Chat userInfo={userInfo} socket={socketRef.current} annoy={annoy} roomId={roomId} /> */}
 

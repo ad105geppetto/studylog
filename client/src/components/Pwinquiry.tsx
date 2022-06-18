@@ -108,19 +108,16 @@ const Pwinquiry = () => {
 
 const Container = styled.div`
   width: 60vw;
-  height: 50vh;
+  height: 44vh;
   display: flex;
   justify-content: center;
   /* display: grid;
   grid-template-columns: repeat(12, 1fr);
   column-gap: 24px; */
   padding-top: 10vh;
-  /* margin: auto; */
-  margin: auto;
-
   background-color: #f7f6f2;
   margin-bottom: 17vh;
-  margin-top: 1vh;
+
   .cert {
     min-width: 7vw;
     min-height: 4.5vh;
