@@ -305,6 +305,21 @@ const Room = ({ annoy, roomId }: socketInterface) => {
   }, []);
 
   useEffect(() => {
+    const handleTabClose = (event: any) => {
+      event.preventDefault();
+      exitHandler();
+      console.log("beforeunload event triggered");
+
+      // return (event.returnValue = "Are you sure you want to exit?");
+    };
+    window.addEventListener("beforeunload", handleTabClose);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleTabClose);
+    };
+  }, []);
+
+  useEffect(() => {
     socketRef.current = io.connect(SERVER);
     getLocalStream();
 
