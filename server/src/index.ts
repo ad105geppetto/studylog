@@ -20,7 +20,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cookieParser());
 
-app.use(express.static("./public/img"));
+app.use("/public/img", express.static(__dirname + "/../public/img"));
 
 app.use("/", indexRouter);
 
@@ -32,123 +32,7 @@ let io = socketio.listen(httpServer, {
   },
 });
 
-// // socket.io
-// function publicRooms() {
-//   const {
-//     sockets: {
-//       adapter: { sids, rooms },
-//     },
-//   } = io;
-//   // 위의 코드는 아래의 코드와 동등하다.
-//   // const sids = wsServerio.sockets.adapter.sids;
-//   // const rooms = wsServerio.sockets.adapter.rooms;
-//   const publicRooms = [];
-//   rooms.forEach((_, key) => {
-//     if (sids.get(key) === undefined) {
-//       publicRooms.push(key);
-//     }
-//   });
-//   return publicRooms;
-// }
-
-// let users = {};
-// // {
-// // 15: [{id: 이승재}, {id: 채희찬}]
-// // }
-
-// let usernameToRoom = {};
-// // {
-// // 이승재: 15
-// // 채희찬: 15
-// // }
-
-// let socketToUsername = {};
-// // {
-// // socketId: 이승재
-// // socketId: 채희찬
-// // }
-
-// const maximum = 4;
-
-// io.on("connection", (socket) => {
-//   console.log("접속", socket.id);
-
-//   socket.on("enterRoom", (room, username) => {
-//     if (users[room]) {
-//       const length = users[room].length;
-//       if (length === maximum) {
-//         // socket.to(socket.id).emit("room_full");
-//         return;
-//       }
-//       users[room].push({ id: username });
-//     } else {
-//       users[room] = [{ id: username }];
-//     }
-//     usernameToRoom[username] = room;
-//     socketToUsername[socket.id] = username;
-
-//     //방 입장
-//     socket.join(room);
-//     // console.log(users, usernameToRoom, socketToUsername);
-
-//     // 메세지 && 영상 입장 관련 코드
-//     socket.to(room).emit("welcome", {
-//       room: room,
-//       author: username,
-//       message: `${username}님이 들어왔습니다.`,
-//       time: new Date(Date.now()).getHours() + ":" + new Date(Date.now()).getMinutes(),
-//     });
-//   });
-
-//   socket.on("send_message", (data) => {
-//     console.log(data);
-//     socket.to(data.room).emit("receive_message", data);
-//   });
-
-//   socket.on("offer", (room, data) => {
-//     socket.to(room).emit("offer", data);
-//   });
-
-//   socket.on("answer", (room, data) => {
-//     socket.to(room).emit("answer", data);
-//   });
-
-//   socket.on("candidate", (room, data) => {
-//     console.log(data);
-//     socket.to(room).emit("candidate", data);
-//   });
-
-//   console.log(socket.rooms);
-//   socket.on("out", (room) => {
-//     console.log(socket.rooms);
-//     socket.leave(room);
-//   });
-
-//   socket.on("disconnecting", () => {
-//     console.log("접속해제", socket.id);
-//     const username = socketToUsername[socket.id];
-//     const roomID = usernameToRoom[username]; //방 번호 15
-//     let room = users[roomID]; // 방 배열[이승재, 채희찬]
-//     if (room) {
-//       room = room.filter((user) => user.id !== username);
-//       users[roomID] = room; //[채희찬]
-//       if (room.length === 0) {
-//         delete users[roomID];
-//         return;
-//       }
-//     }
-
-//     socket.to(roomID).emit("leave_room", {
-//       room: roomID,
-//       author: username,
-//       message: `${username}님이 나갔습니다.`,
-//       time: new Date(Date.now()).getHours() + ":" + new Date(Date.now()).getMinutes(),
-//     });
-//   });
-// });
-
 let users = {};
-
 let socketToRoom = {}; // {socket.id : 15}
 let socketToName = {}; // {socket.id : kimcoding}
 

@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import models from "../models/Signup";
 import nodemailer from "nodemailer";
+const SERVER = process.env.SERVER || "http://localhost:4000";
 
 export default {
   post: (req: Request, res: Response) => {
@@ -89,7 +90,7 @@ export default {
       subject: "studylog 인증메일입니다.", // 메일 제목
       //내용: 인증번호
       html: `<h1>안녕하세요 studylog입니다. 메일인증을 하시려면 밑에 인증하기를 눌러주세요~</h1>
-            <a href='http://localhost:4000/signup/auth?email=${email}&certNum=${certNum}'>인증하기</a>`,
+            <a href=${SERVER}/signup/auth?email=${email}&certNum=${certNum}'>인증하기</a>`,
     };
   },
 

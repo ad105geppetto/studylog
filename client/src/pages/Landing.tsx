@@ -5,9 +5,6 @@ import React, { useState } from "react";
 
 const Wrapper = styled.div`
   overflow-y: auto;
-  /* &::-webkit-scrollbar {
-    display: none;
-  } */
 `;
 
 const Image = styled.img`

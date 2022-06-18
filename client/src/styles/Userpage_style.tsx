@@ -31,7 +31,7 @@ export const Title = styled.div`
   width: 25vw;
   height: 5.5vh;
   line-height: 5.5vh;
-  font-size: 2vh;
+  font-size: 3vmin;
   font-weight: bolder;
   text-align: center;
   align-items: center;
@@ -110,7 +110,7 @@ export const Button = styled.button`
   border-radius: 1rem;
   display: inline-block;
   cursor: pointer;
-  font-size: 1rem;
+  font-size: 1vim;
   font-weight: 300;
   outline: 0;
   border: 0;
@@ -130,14 +130,14 @@ export const Upload_Button = styled(Button)`
 export const Large_Button = styled(Button)`
   height: 5vh;
   width: 20vw;
-  font-size: 1rem;
+  font-size: 1.7vmin;
   text-align: center;
   font-weight: bold;
   margin-bottom: 2vh;
 `;
 
 export const Small_Button = styled(Button)`
-  font-size: 1rem;
+  font-size: 1.7vmin;
   text-align: center;
   font-weight: bold;
   margin-bottom: 2vh;
@@ -150,9 +150,9 @@ export const InnerButton = styled(Button)`
   min-width: 5vw;
   line-height: 5.5vh;
   text-align: center;
-  font-size: 135%;
+  font-size: 1.5vmin;
   min-height: 5.5vh;
-  margin-left: -6vw;
+  margin-left: -9vw;
 `;
 
 export const Label = styled.label`

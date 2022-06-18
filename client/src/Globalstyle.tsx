@@ -5,11 +5,16 @@ const Globalstyle = createGlobalStyle`
 body{
 
   background-color: #4B6587;
+  margin: 0;
+  padding: 0;
+  overflow: scroll;
+  
+  ::-webkit-scrollbar {
+    display: none;
+  }
 }
 
-Nav{
-  background-color: #F0E5CF;
-}
+
 
 `;
 
