@@ -36,8 +36,10 @@ function App() {
         console.log("=====Oauth====서버에서 받아옴");
         console.log(res);
         const accessToken = res.data.accessToken;
-
-        dispatch(logIn(accessToken, "anony", "anony", "anony@gggg.com", "null"));
+        const userInfo = res.data.userInfo;
+        dispatch(
+          logIn(accessToken, userInfo.id, userInfo.userId, userInfo.email, userInfo.profile)
+        );
       })
       .catch((err: AxiosError) => {
         console.log("err:", err);

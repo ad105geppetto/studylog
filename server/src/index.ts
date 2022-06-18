@@ -1,7 +1,6 @@
 import express from "express";
 import cookieParser from "cookie-parser";
 import indexRouter from "./routes";
-import db from "./db/index";
 import cors from "cors";
 import http from "http";
 // import { Server } from "socket.io";
