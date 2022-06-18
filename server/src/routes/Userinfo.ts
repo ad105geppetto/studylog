@@ -24,6 +24,7 @@ const upload = multer({
 /////////////////////////////////////////////////////////////
 
 router.get("/", controller.get);
+
 // router.post("/", upload.single(`profile`), controller.post);
 router.patch("/", upload.single(`profile`), controller.patch);
 export default router;
