@@ -14,6 +14,13 @@ import {
   SuccessMsg,
   ButtonWrapper,
 } from "styles/Userpage_style";
+import styled from "styled-components";
+
+const Exam = styled.div`
+  display: flex;
+  justify-content: space-between;
+  width: 25vw;
+`;
 
 const SERVER = process.env.REACT_APP_SERVER || "http://localhost:4000";
 
@@ -197,16 +204,18 @@ export const Signup = () => {
             }}
           >
             <div>
-              <Input
-                type="text"
-                placeholder="ID를 입력하세요"
-                onChange={onUserInfo("id")}
-                maxLength={10}
-                required
-              />
-              <InnerButton type="button" onClick={onCheckUserId}>
-                <FiCheckSquare size="1.2rem" color="red" /> 중복체크
-              </InnerButton>
+              <Exam>
+                <Input
+                  type="text"
+                  placeholder="ID를 입력하세요"
+                  onChange={onUserInfo("id")}
+                  maxLength={10}
+                  required
+                />
+                <InnerButton type="button" onClick={onCheckUserId}>
+                  <FiCheckSquare size="2vmin" color="red" /> 중복체크
+                </InnerButton>
+              </Exam>
               <SuccessMsg>{successMsg.idMsg}</SuccessMsg>
               <ErrorMsg>{errMsg.idMsg} </ErrorMsg>
             </div>
@@ -232,15 +241,17 @@ export const Signup = () => {
             </div>
 
             <div>
-              <Input
-                type="text"
-                placeholder="이메일을 입력하세요"
-                onChange={onUserInfo("email")}
-                required
-              />
-              <InnerButton type="button" onClick={onVerifyEmail}>
-                <MdOutlineMarkEmailRead size="1.3rem" color="red" /> 이메일 인증
-              </InnerButton>
+              <Exam>
+                <Input
+                  type="text"
+                  placeholder="이메일을 입력하세요"
+                  onChange={onUserInfo("email")}
+                  required
+                />
+                <InnerButton type="button" onClick={onVerifyEmail}>
+                  <MdOutlineMarkEmailRead size="2vmin" color="red" /> 이메일인증
+                </InnerButton>
+              </Exam>
               <ErrorMsg>{errMsg.emailMsg}</ErrorMsg>
               <SuccessMsg>{successMsg.emailMsg}</SuccessMsg>
             </div>

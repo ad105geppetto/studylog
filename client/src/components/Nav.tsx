@@ -138,7 +138,7 @@ const Nav = () => {
 
 const Container = styled.div`
   /* 상단에 네비바를 고정하는 방법 */
-  position: fixed;
+  position: relative;
   top: 0;
   /* ---------------------------------------------------------------- */
   width: 100%;

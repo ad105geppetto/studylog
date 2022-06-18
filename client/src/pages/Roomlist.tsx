@@ -11,29 +11,34 @@ import Modal from "components/Modal";
 
 const Root = styled.div`
   width: 100vw;
-  height: 100vh;
+  height: 80vh;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: space-around;
   align-items: center;
 `;
 
 const Container = styled.div`
-  width: 80vw;
-  display: grid;
+  display: flex;
+
+  height: 60vh;
+  width: 90vw;
+  justify-content: center;
+  flex-flow: row wrap;
+  /* display: grid;
   grid-template-columns: repeat(12, 1fr);
-  column-gap: 24px;
-  padding-top: 10vh;
+  column-gap: 24px; */
+
   margin-bottom: 1vh;
   /* background-color: white; */
 `;
 
 const Post = styled.div`
   height: 25vh;
-  grid-column: span 4;
+  width: 25vw;
   display: flex;
   flex-direction: column;
-  margin: 3vh 0 1vh 0;
+  margin: 3vh 1vh 1vh 1vh;
   border: 2px dashed white;
   /* 위아래중에 가운데 플렉스 디렉션이 컬럼일 때*/
   justify-content: center;
@@ -180,7 +185,7 @@ const Roomlist = ({ annoy, roomId, setRoomId }: socketInterface) => {
   // };
 
   return (
-    <Root>
+    <div>
       <Nav />
 
       {/* <Input
@@ -192,31 +197,31 @@ const Roomlist = ({ annoy, roomId, setRoomId }: socketInterface) => {
       <Button type="button" onClick={onSearch}>
         검색
       </Button> */}
+      <Root id="root">
+        <Container>
+          {posts.length === 0
+            ? "개설된 방이 없습니다"
+            : posts.map((post: any, index: any): any => {
+                return (
+                  // <Post key={index} onClick={() => enterRoomHandler(post)}>
+                  <Post
+                    key={index}
+                    // onClick={() => {
+                    //   setModal(true);
+                    // }}
 
-      <Container>
-        {posts.length === 0
-          ? "개설된 방이 없습니다"
-          : posts.map((post: any, index: any): any => {
-              return (
-                // <Post key={index} onClick={() => enterRoomHandler(post)}>
-                <Post
-                  key={index}
-                  // onClick={() => {
-                  //   setModal(true);
-                  // }}
+                    onClick={() => enterRoomHandler(post)}
+                    // onClick에 () => setModal(modal)
+                  >
+                    <div className="title">제목 : {post.title}</div>
+                    <div>참여인원 : {post.roomCurrent} / 4</div>
+                    <div>내용 : {post.content}</div>
+                  </Post>
+                );
+              })}
+        </Container>
 
-                  onClick={() => enterRoomHandler(post)}
-                  // onClick에 () => setModal(modal)
-                >
-                  <div className="title">제목 : {post.title}</div>
-                  <div>참여인원 : {post.roomCurrent} / 4</div>
-                  <div>내용 : {post.content}</div>
-                </Post>
-              );
-            })}
-      </Container>
-
-      {/* <select
+        {/* <select
         onChange={(e) => {
           setLimit(Number(e.target.value));
         }}
@@ -225,8 +230,9 @@ const Roomlist = ({ annoy, roomId, setRoomId }: socketInterface) => {
         <option value={3}>3</option>
         <option value={9}>9</option>
       </select> */}
-      <Pagenation totalPage={totalPage} page={page} setPage={setPage} />
-    </Root>
+        <Pagenation totalPage={totalPage} page={page} setPage={setPage} />
+      </Root>
+    </div>
   );
 };
 

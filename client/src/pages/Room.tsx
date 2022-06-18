@@ -19,7 +19,7 @@ const Wrapper = styled.div`
   margin: 0;
   padding: 0;
   display: flex;
-  flex-flow: column wrap;
+  flex-flow: column;
   justify-content: space-between;
   width: 100vw;
   height: 100vh;
@@ -28,7 +28,7 @@ const Wrapper = styled.div`
 
 const MediaArea = styled.div`
   display: flex;
-  flex-flow: row wrap;
+  flex-flow: row;
   justify-content: space-between;
 `;
 const ButtonArea = styled.div`
@@ -38,24 +38,31 @@ const ButtonArea = styled.div`
   justify-content: space-evenly;
 `;
 
-const VideoArea = styled.div`
+const VideoArea = styled.div<{ size?: string }>`
+  margin-top: 1vw;
+  margin-left: 1vw;
+  margin-right: 1vw;
   display: grid;
-  grid-template-columns: repeat(2, 45vh);
-  grid-template-rows: repeat(2, 1fr);
-  justify-content: space-evenly;
+  width: ${(props) => props.size}vw;
+  height: 85vh;
+  grid-template-columns: repeat(2, 50%);
+  grid-template-rows: repeat(2, 50%);
+  place-content: center;
+  place-items: center;
+  grid-gap: 1vh;
+
+  @media only screen and (max-width: 400px) {
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(4, 25%);
+  }
 `;
 
-const PersonalScreen = styled.video`
-  border: 0.2rem solid lightgrey;
+export const PersonalScreen = styled.video<{ width: string; height: string }>`
+  border: 0.3vh solid lightgrey;
   border-radius: 1rem;
-  width: 100%;
-  height: 100%;
-`;
-
-const OtherScreen = styled.div`
-  display: flex;
-  flex-flow: row;
-  background-color: purple;
+  width: ${(props) => props.width}%;
+  height: ${(props) => props.height}%;
+  object-fit: fill;
 `;
 
 const Button = styled.button`
@@ -80,7 +87,7 @@ const ChatWindow = styled.div<{ view?: string }>`
   background-color: #f0e5cf;
   width: 20vw;
   height: 85vh;
-  margin: 1vw 1vw 0 0;
+  margin: 1vw 1.5vw 0 0;
   border: 0.3rem solid lightgrey;
   border-radius: 1rem;
   overflow-y: auto;
@@ -97,7 +104,6 @@ const ChatView = styled.div`
   border-radius: 1rem;
   height: 70vh;
   overflow-y: auto;
-  overflow-x: hidden;
   background-color: #f7f6f2;
   word-break: break-all;
 `;
@@ -114,11 +120,18 @@ const ChatInput = styled.div`
     border: none;
     resize: none;
     height: 100%;
-    line-height: 100%;
+
     border-radius: 1rem;
     padding: 0 1vw 0 1vw;
     border: 0.2rem solid lightgrey;
     width: 90%;
+    ::-webkit-input-placeholder {
+      line-height: 9vh;
+      text-align: center;
+    }
+    ::-webkit-scrollbar {
+      display: none;
+    }
   }
 
   button {
@@ -191,6 +204,9 @@ const Room = ({ annoy, roomId }: socketInterface) => {
   const [chat, setChat] = useState(false);
   const [chatView, setChatView] = useState("none");
   //채팅
+
+  const onScrollMove = useRef;
+
   const sendMessage = async () => {
     if (currentMessage !== "") {
       const messageData = {
@@ -210,6 +226,7 @@ const Room = ({ annoy, roomId }: socketInterface) => {
       setMessageList((list: any) => [...list, messageData]);
       setCurrentMessage("");
     }
+    onScrollMove();
   };
   //
 
@@ -432,8 +449,6 @@ const Room = ({ annoy, roomId }: socketInterface) => {
       .then((res) => {});
     console.log();
 
-
-
     navigate("/");
   };
 
@@ -464,21 +479,29 @@ const Room = ({ annoy, roomId }: socketInterface) => {
   };
 
   return (
-    <Wrapper>
-      <MediaArea>
-        <VideoArea>
-          <PersonalScreen muted ref={localVideoRef} autoPlay />
-          <OtherScreen>
+    <Wrapper id="Wrapper">
+      <MediaArea id="MediaArea">
+        {chat ? (
+          <VideoArea size="75" id="VideoArea">
+            <PersonalScreen width="100" height="100" muted ref={localVideoRef} autoPlay />
             {users.map((user, index) => (
-              <Video key={index} email={user.email} stream={user.stream} />
+              <Video width="100" height="100" key={index} email={user.email} stream={user.stream} />
             ))}
-          </OtherScreen>
-        </VideoArea>
+          </VideoArea>
+        ) : (
+          <VideoArea size="100" id="VideoArea">
+            <PersonalScreen width="100" height="100" muted ref={localVideoRef} autoPlay />
+            {users.map((user, index) => (
+              <Video width="100" height="100" key={index} email={user.email} stream={user.stream} />
+            ))}
+          </VideoArea>
+        )}
+
         {/* <Chat userInfo={userInfo} socket={socketRef.current} annoy={annoy} roomId={roomId} /> */}
 
         {/* ------------------------ ---------------------  --------------- */}
         {chat ? (
-          <ChatWindow>
+          <ChatWindow id="Chat">
             <div> Live Chat </div>
             <ChatView>
               {messageList.map((messageContent: any, idx: any) => {
@@ -501,7 +524,7 @@ const Room = ({ annoy, roomId }: socketInterface) => {
             <ChatInput>
               <textarea
                 value={currentMessage}
-                placeholder="Hey..."
+                placeholder="Message를 입력해주세요."
                 onChange={(event: any) => {
                   setCurrentMessage(event.target.value);
                 }}
@@ -513,40 +536,7 @@ const Room = ({ annoy, roomId }: socketInterface) => {
             </ChatInput>
           </ChatWindow>
         ) : (
-          <ChatWindow view={chatView}>
-            <div> Live Chat </div>
-            <ChatView>
-              {messageList.map((messageContent: any, idx: any) => {
-                return (
-                  <div
-                    key={idx}
-                    className="message"
-                    id={userInfo.userId === messageContent.author ? "you" : "other"}
-                  >
-                    <ChatInfo>
-                      <UserName>{messageContent.author}</UserName>
-                      <TimeStamp>{messageContent.time}</TimeStamp>
-                    </ChatInfo>
-                    <Message>{messageContent.message}</Message>
-                  </div>
-                );
-              })}
-            </ChatView>
-
-            <ChatInput>
-              <textarea
-                value={currentMessage}
-                placeholder="Hey..."
-                onChange={(event: any) => {
-                  setCurrentMessage(event.target.value);
-                }}
-                onKeyPress={(event: any) => {
-                  event.key === "Enter" && sendMessage();
-                }}
-              />
-              <button onClick={sendMessage}>&#9658;</button>
-            </ChatInput>
-          </ChatWindow>
+          <ChatWindow view={chatView} id="Chat"></ChatWindow>
         )}
       </MediaArea>
       <ButtonArea>

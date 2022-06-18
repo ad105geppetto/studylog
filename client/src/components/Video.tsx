@@ -1,12 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
+import { PersonalScreen } from "pages/Room";
 import styled from "styled-components";
 
 const Container = styled.div`
-  width: 30%;
-  height: 30%;
-  /* display: flex;
+  display: flex;
   flex-flow: column wrap;
-  justify-content: space-evenly; */
+  justify-content: space-evenly;
+  background-color: red;
 `;
 
 const VideoArea = styled.div`
@@ -24,21 +24,15 @@ const UserLabel = styled.p`
   left: 0px;
 `;
 
-const PersonalScreen = styled.video`
-  background-color: #f7f6f2;
-  border: 0.2rem solid lightgrey;
-  border-radius: 1rem;
-  margin: 1vw;
-  width: 100%;
-`;
-
 interface Props {
+  width: string;
+  height: string;
   email: string;
   stream: MediaStream;
   muted?: boolean;
 }
 
-const Video = ({ email, stream, muted }: Props) => {
+const Video = ({ width, height, email, stream, muted }: Props) => {
   const ref = useRef<HTMLVideoElement>(null);
   const [isMuted, setIsMuted] = useState<boolean>(false);
 
@@ -47,11 +41,7 @@ const Video = ({ email, stream, muted }: Props) => {
     if (muted) setIsMuted(muted);
   }, [stream, muted]);
 
-  return (
-    <Container>
-      <PersonalScreen ref={ref} autoPlay />
-    </Container>
-  );
+  return <PersonalScreen width={width} height={height} ref={ref} autoPlay />;
 };
 
 export default Video;

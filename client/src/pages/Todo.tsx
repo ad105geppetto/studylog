@@ -3,10 +3,14 @@ import Boards from "components/Boards";
 import { useSelector } from "react-redux";
 import Nav from "components/Nav";
 import { Wrapper, Menubar, Content, TextButton, Line } from "styles/Todo_style";
-import { Hidden } from "styles/Userpage_style";
-
 import React, { useEffect, useState } from "react";
+import styled from "styled-components";
 // 로그인시 저장 된 userInfo 가지고 오기
+
+const Page = styled.div`
+  width: 100vw;
+  height: 100vh;
+`;
 
 const Todo = () => {
   const userInfo = useSelector((state: any) => state.userInfoReducer.userInfo);
@@ -33,7 +37,7 @@ const Todo = () => {
   }, []);
 
   return (
-    <div>
+    <Page>
       <Nav />
       <Wrapper>
         <Menubar>
@@ -57,7 +61,7 @@ const Todo = () => {
           )}
         </Content>
       </Wrapper>
-    </div>
+    </Page>
   );
 };
 
