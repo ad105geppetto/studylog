@@ -168,7 +168,13 @@ const pc_config = {
     //   'username': '[USERNAME]'
     // },
     {
-      urls: "stun:stun.l.google.com:1902",
+      urls: [
+        "stun:stun.l.google.com:19302",
+        "stun:stun1.l.google.com:19302",
+        "stun:stun2.l.google.com:19302",
+        "stun:stun3.l.google.com:19302",
+        "stun:stun4.l.google.com:19302",
+      ],
     },
   ],
 };
@@ -431,8 +437,6 @@ const Room = ({ annoy, roomId }: socketInterface) => {
       })
       .then((res) => {});
     console.log();
-
-
 
     navigate("/");
   };
