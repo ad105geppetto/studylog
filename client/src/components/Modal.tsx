@@ -25,7 +25,7 @@ const View = styled.div<{ width: string; height: string }>`
   justify-content: center;
   align-items: center;
 
-  left: calc(48.2vw - ${(props) => props.width}px / 2);
+  left: calc(48.9vw - ${(props) => props.width}px / 2);
   top: calc(45vh - ${(props) => props.height}px / 2);
   width: ${(props) => props.width}px;
   height: ${(props) => props.height}px;

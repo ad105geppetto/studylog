@@ -4,6 +4,8 @@ import styled from "styled-components";
 const Container = styled.div`
   width: 30%;
   height: 30%;
+  /* width: 100%;
+  height: 100%; */
   /* display: flex;
   flex-flow: column wrap;
   justify-content: space-evenly; */

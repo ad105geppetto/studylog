@@ -73,7 +73,7 @@ const Creatingroom = ({ setRoomId }: socketInterface) => {
 
 const Root = styled.div`
   width: 100vw;
-  height: 100vh;
+  height: 80%;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -152,22 +152,3 @@ const Button = styled.button`
 `;
 
 export default Creatingroom;
-{
-  /* <div>
-      <div>
-        <Nav />
-      </div>
-      <div>
-        <div>
-          <label htmlFor="roomName">방제목</label>
-          <input type="text" id="roomName" />
-        </div>
-        <div>
-          <label htmlFor="content">내용</label>
-          <input type="text" id="content" />
-        </div>
-        <button type="button" onClick={onCreateRoom}>
-          확인
-        </button>
-      </div> */
-}

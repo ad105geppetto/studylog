@@ -9,23 +9,24 @@ import { roomlist } from "action";
 import { useDispatch } from "react-redux";
 import Modal from "components/Modal";
 
+const Container = styled.div`
+  width: 80%;
+  height: 100%;
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  column-gap: 24px;
+  /* padding-top: 10vh; */
+  /* margin-bottom: 1vh; */
+  /* background-color: white; */
+`;
+
 const Root = styled.div`
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: 65vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-`;
-
-const Container = styled.div`
-  width: 80vw;
-  display: grid;
-  grid-template-columns: repeat(12, 1fr);
-  column-gap: 24px;
-  padding-top: 10vh;
-  margin-bottom: 1vh;
-  /* background-color: white; */
 `;
 
 const Post = styled.div`
@@ -33,6 +34,8 @@ const Post = styled.div`
   grid-column: span 4;
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  align-items: center;
   margin: 3vh 0 1vh 0;
   border: 2px dashed white;
   /* 위아래중에 가운데 플렉스 디렉션이 컬럼일 때*/
@@ -44,6 +47,9 @@ const Post = styled.div`
   .title {
     margin-bottom: 5vh;
     font-size: 1rem;
+  }
+
+  .content {
   }
 
   div {
@@ -72,6 +78,34 @@ const Input = styled.input`
 
 const Button = styled.button`
   z-index: 99;
+`;
+
+const BtnContainer = styled.div`
+  background: #f7f6f2;
+`;
+
+const Buttonbox = styled.div`
+  display: flex;
+  justify-content: center;
+`;
+
+const EnterRoomBtn = styled.button`
+  font-size: 1rem;
+  text-align: center;
+  font-weight: 500;
+
+  min-width: 6vw;
+  min-height: 5vh;
+  border-radius: 1rem;
+  display: inline-block;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 700;
+  outline: 0;
+  background: #4b6587;
+  color: white;
+  border: 1px solid #f7f6f2;
+  margin: 1vh;
 `;
 
 interface IPosts {
@@ -180,9 +214,8 @@ const Roomlist = ({ annoy, roomId, setRoomId }: socketInterface) => {
   // };
 
   return (
-    <Root>
+    <div style={{ width: "100vw", height: "100vh" }}>
       <Nav />
-
       {/* <Input
         type="text"
         onChange={onChangeHandler}
@@ -192,29 +225,37 @@ const Roomlist = ({ annoy, roomId, setRoomId }: socketInterface) => {
       <Button type="button" onClick={onSearch}>
         검색
       </Button> */}
+      <Root>
+        <Container>
+          {posts.length === 0
+            ? "개설된 방이 없습니다"
+            : posts.map((post: any, index: any): any => {
+                return (
+                  // <Post key={index} onClick={() => enterRoomHandler(post)}>
+                  <Post
+                    key={index}
+                    // onClick={() => {
+                    //   setModal(true);
+                    // }}
 
-      <Container>
-        {posts.length === 0
-          ? "개설된 방이 없습니다"
-          : posts.map((post: any, index: any): any => {
-              return (
-                // <Post key={index} onClick={() => enterRoomHandler(post)}>
-                <Post
-                  key={index}
-                  // onClick={() => {
-                  //   setModal(true);
-                  // }}
-
-                  onClick={() => enterRoomHandler(post)}
-                  // onClick에 () => setModal(modal)
-                >
-                  <div className="title">제목 : {post.title}</div>
-                  <div>참여인원 : {post.roomCurrent} / 4</div>
-                  <div>내용 : {post.content}</div>
-                </Post>
-              );
-            })}
-      </Container>
+                    onClick={() => enterRoomHandler(post)}
+                    // onClick에 () => setModal(modal)
+                  >
+                    <div>
+                      제목 : {post.title.length < 13 ? post.title : post.title.slice(0, 10) + "..."}
+                    </div>
+                    <br />
+                    <div>
+                      내용 :
+                      {post.content.length < 13 ? post.content : post.content.slice(0, 10) + "..."}
+                    </div>
+                    <br />
+                    <div className="current">참여인원 : {post.roomCurrent} / 4</div>
+                  </Post>
+                );
+              })}
+        </Container>
+      </Root>
 
       {/* <select
         onChange={(e) => {
@@ -226,36 +267,8 @@ const Roomlist = ({ annoy, roomId, setRoomId }: socketInterface) => {
         <option value={9}>9</option>
       </select> */}
       <Pagenation totalPage={totalPage} page={page} setPage={setPage} />
-    </Root>
+    </div>
   );
 };
-
-const BtnContainer = styled.div`
-  background: #f7f6f2;
-`;
-
-const Buttonbox = styled.div`
-  display: flex;
-  justify-content: center;
-`;
-
-const EnterRoomBtn = styled.button`
-  font-size: 1rem;
-  text-align: center;
-  font-weight: 500;
-
-  min-width: 6vw;
-  min-height: 5vh;
-  border-radius: 1rem;
-  display: inline-block;
-  cursor: pointer;
-  font-size: 1rem;
-  font-weight: 700;
-  outline: 0;
-  background: #4b6587;
-  color: white;
-  border: 1px solid #f7f6f2;
-  margin: 1vh;
-`;
 
 export default Roomlist;
