@@ -31,7 +31,6 @@ const Root = styled.div`
 
 const Post = styled.div`
   height: 25vh;
-  width: 25vw;
   display: flex;
   flex-direction: column;
   justify-content: center;
