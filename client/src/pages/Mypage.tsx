@@ -191,8 +191,9 @@ const Mypage = () => {
         }
         navigate("/");
       })
-      .catch((err: AxiosError) => {
-        switch (err.message) {
+      .catch((err: any) => {
+        console.log(err.response.data.message);
+        switch (err.response.data.message) {
           case "이메일 인증버튼을 눌러주세요.":
             setErrMsg({ ...errMsg, emailMsg: "이메일 인증이 필요합니다." });
             break;
