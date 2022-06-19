@@ -9,6 +9,7 @@ const clientSecret = process.env.GOOGLE_CLIENT_SECRET;
 export default {
   post: (req, res) => {
     const code = req.body.authorizationCode;
+    console.log(code);
     axios
       .post(`https://oauth2.googleapis.com/token`, {
         code: code,
@@ -18,10 +19,11 @@ export default {
         grant_type: "authorization_code",
       })
       .then(async (response) => {
+        console.log("!!!");
         const accessToken = response.data.access_token;
-        const data = await googleOauth.verify(accessToken)
+        const data = await googleOauth.verify(accessToken);
         const email = data.email;
-        const profile = data.picture
+        const profile = data.picture;
         let refreshToken = response.data.refresh_token;
         if (refreshToken === undefined) {
           // refreshToken 데이터베이스에서 가져오기
@@ -54,7 +56,7 @@ export default {
               res.status(500).json({ message: "Internal Sever Error" });
             } else {
               console.log("최초 로그인 맞음");
-              console.log(result[0])
+              console.log(result[0]);
               const payload = {
                 id: result[0].id,
                 userId: result[0].userId,
@@ -73,7 +75,6 @@ export default {
             }
           });
         }
-
       })
       .catch((e) => {
         res.status(404);
