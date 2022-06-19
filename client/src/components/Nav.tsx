@@ -52,9 +52,9 @@ const Nav = () => {
   };
   // -------------------------------------------------------------------
 
-  const onModalOff = (modal: any) => {
-    setModal((modal) => !modal);
-  };
+  // const onModalOff = (modal: any) => {
+  //   setModal((modal) => !modal);
+  // };
 
   return (
     <Container>
@@ -63,7 +63,7 @@ const Nav = () => {
       </Logobox>
       <LinkContainer>
         <LinkBox onClick={() => navigate("/roomlist")}>
-          <button type="button">Study List</button>
+          <button type="button">공부방 목록</button>
           <Line></Line>
         </LinkBox>
         <LinkBox onClick={() => navigate("/todos")}>
@@ -71,21 +71,15 @@ const Nav = () => {
           <Line></Line>
         </LinkBox>
         <LinkBox onClick={() => navigate("/Creatingroom")}>
-          <button type="button">방 만들기</button>
+          <button type="button">공부방 만들기</button>
         </LinkBox>
       </LinkContainer>
       {!token ? (
         <Logobox>
           <Btn type="button" onClick={() => navigate("/login")}>
-            {/* <button type="button" onClick={() => navigate("/login")}> */}
-            {/* 로그인 */}
-            {/* </button> */}
             로그인
           </Btn>
           <Btn type="button" onClick={() => navigate("/signup")}>
-            {/* <button type="button" onClick={() => navigate("/signup")}>
-              회원가입
-            </button> */}
             회원가입
           </Btn>
         </Logobox>
@@ -116,7 +110,8 @@ const Nav = () => {
                     <LogOutBtn
                       style={{ color: "white" }}
                       type="button"
-                      onClick={() => onModalOff(modal)}
+                      // onClick={() => onModalOff(modal)}
+                      onClick={() => setModal(false)}
                     >
                       취소
                     </LogOutBtn>
@@ -131,14 +126,14 @@ const Nav = () => {
           </Btn>
         </Logobox>
       )}
-      <hr />
+      <hr></hr>
     </Container>
   );
 };
 
 const Container = styled.div`
   position: relative;
-  right: 0.5vw;
+  /* left */
   top: -0.5vw;
   bottom: 0.5vw;
   width: 100vw;
@@ -174,7 +169,7 @@ const Line = styled.div`
   width: 1px;
   height: 5vh;
   /* color: pink; */
-  border-right: 1px dashed #4b6587;
+  border-right: 2px dashed #4b6587;
   position: absolute;
   top: 18px;
   right: -1px;

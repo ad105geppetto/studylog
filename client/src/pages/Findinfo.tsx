@@ -76,8 +76,6 @@ const Findinfo = () => {
           >
             비밀번호 찾기
           </Btn>
-          {/* <button onClick={onChangeRender("id")}> 아이디 찾기 </button> */}
-          {/* <button onClick={onChangeRender("pwd")}> 비밀번호 찾기 </button> */}
         </Findbox>
       </LinkContainer>
 

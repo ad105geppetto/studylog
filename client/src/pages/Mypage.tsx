@@ -154,7 +154,7 @@ const Mypage = () => {
     if (profile) {
       formData.append("email", email);
       formData.append("password", pwd);
-      formData.append("profile", profile[0], profile[0].name);
+      formData.append("profile", profile[0]);
     } else {
       formData.append("email", email);
       formData.append("password", pwd);
