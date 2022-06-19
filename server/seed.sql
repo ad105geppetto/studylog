@@ -14,31 +14,31 @@ VALUES
         "kimcoding",
         "kimcoding@naver.com",
         "1234",
-        "/img/사진0.jpg"
+        Null
     ),
     (
         "cheacoding",
         "cheacoding@google.com",
         "1234",
-        "/img/사진1.jpg"
+        Null
     ),
     (
         "choecoding",
         "choecoding@naver.com",
         "1234",
-        "/img/사진2.jpg"
+        Null
     ),
     (
         "leecoding",
         "dhrjdn@naver.com",
         "1234",
-        "/img/사진3.jpg"
+        Null
     ),
     (
         "joecoding",
         "hdhj1026@naver.net",
         "1234",
-        "/img/사진4.jpg"
+        Null
     );
 
 INSERT INTO

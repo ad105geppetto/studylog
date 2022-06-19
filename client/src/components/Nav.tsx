@@ -138,7 +138,7 @@ const Nav = () => {
 
 const Container = styled.div`
   position: relative;
-  right: 0.5vw;
+
   top: -0.5vw;
   bottom: 0.5vw;
   width: 100vw;

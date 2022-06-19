@@ -14,6 +14,7 @@ import {
   BsChatSquare,
   BsDoorOpen,
 } from "react-icons/bs";
+import { BiMailSend } from "react-icons/bi";
 
 const Wrapper = styled.div`
   margin: 0;
@@ -84,7 +85,7 @@ const ChatWindow = styled.div<{ view?: string }>`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  background-color: #f0e5cf;
+  background-color: #4b6587;
   width: 20vw;
   height: 85vh;
   margin: 1vw 1.5vw 0 0;
@@ -103,6 +104,7 @@ const ChatView = styled.div`
   border: 0.2rem solid lightgrey;
   border-radius: 1rem;
   height: 70vh;
+
   overflow-y: auto;
   background-color: #f7f6f2;
   word-break: break-all;
@@ -112,19 +114,16 @@ const ChatInput = styled.div`
   display: flex;
   flex-flow: row wrap;
   justify-content: space-between;
-  margin: 0 1.5rem 1rem 1rem;
+  margin: 0 1.8rem 2rem 1.3rem;
   height: 9vh;
-  text-indent: 30px;
 
   textarea {
     border: none;
     resize: none;
     height: 100%;
-
     border-radius: 1rem;
-    padding: 0 1vw 0 1vw;
     border: 0.2rem solid lightgrey;
-    width: 90%;
+    width: 100%;
     ::-webkit-input-placeholder {
       line-height: 9vh;
       text-align: center;
@@ -153,13 +152,13 @@ const TimeStamp = styled.div`
 `;
 
 const UserName = styled(TimeStamp)`
-  margin: 0 0 0 1vw;
   font-size: 1.2vh;
   font-weight: bolder;
 `;
 
-const Message = styled.span`
+const Message = styled.div`
   font-size: 1.5vh;
+  margin-bottom: 0.5vh;
 `;
 
 type WebRTCUser = {
@@ -211,7 +210,17 @@ const Room = ({ annoy, roomId }: socketInterface) => {
   const [chatView, setChatView] = useState("none");
   //채팅
 
-  const onScrollMove = useRef;
+  const messageBoxRef = useRef<any>();
+
+  const scrollToBottom = () => {
+    if (messageBoxRef.current) {
+      messageBoxRef.current.scrollTop = messageBoxRef.current.scrollHeight;
+    }
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messageList]);
 
   const sendMessage = async () => {
     if (currentMessage !== "") {
@@ -232,7 +241,7 @@ const Room = ({ annoy, roomId }: socketInterface) => {
       setMessageList((list: any) => [...list, messageData]);
       setCurrentMessage("");
     }
-    onScrollMove();
+    // onScrollMove();
   };
   //
 
@@ -523,8 +532,18 @@ const Room = ({ annoy, roomId }: socketInterface) => {
         {/* ------------------------ ---------------------  --------------- */}
         {chat ? (
           <ChatWindow id="Chat">
-            <div> Live Chat </div>
-            <ChatView>
+            <div
+              style={{
+                marginTop: "1vw",
+                textAlign: "center",
+                fontWeight: "bolder",
+                fontSize: "1.7vh",
+                color: "white",
+              }}
+            >
+              Live Chat
+            </div>
+            <ChatView ref={messageBoxRef}>
               {messageList.map((messageContent: any, idx: any) => {
                 return (
                   <div
@@ -551,13 +570,62 @@ const Room = ({ annoy, roomId }: socketInterface) => {
                 }}
                 onKeyPress={(event: any) => {
                   event.key === "Enter" && sendMessage();
+                  console.log(event);
                 }}
               />
-              <button onClick={sendMessage}>&#9658;</button>
+              <button onClick={sendMessage}>
+                <BiMailSend size="2rem" color="#393D46" />
+              </button>
             </ChatInput>
           </ChatWindow>
         ) : (
-          <ChatWindow view={chatView} id="Chat"></ChatWindow>
+          <ChatWindow view={chatView} id="Chat">
+            <div
+              style={{
+                marginTop: "1vw",
+                textAlign: "center",
+                fontWeight: "bolder",
+                fontSize: "1.7vh",
+                color: "white",
+              }}
+            >
+              Live Chat
+            </div>
+            <ChatView id="chatwindow">
+              {messageList.map((messageContent: any, idx: any) => {
+                return (
+                  <div
+                    key={idx}
+                    className="message"
+                    id={userInfo.userId === messageContent.author ? "you" : "other"}
+                  >
+                    <ChatInfo>
+                      <UserName>{messageContent.author}</UserName>
+                      <TimeStamp>{messageContent.time}</TimeStamp>
+                    </ChatInfo>
+                    <Message>{messageContent.message}</Message>
+                  </div>
+                );
+              })}
+            </ChatView>
+
+            <ChatInput>
+              <textarea
+                value={currentMessage}
+                placeholder="Message를 입력해주세요."
+                onChange={(event: any) => {
+                  setCurrentMessage(event.target.value);
+                }}
+                onKeyPress={(event: any) => {
+                  event.key === "Enter" && sendMessage();
+                  console.log(event);
+                }}
+              />
+              <button onClick={sendMessage}>
+                <BiMailSend size="2rem" color="#393D46" />
+              </button>
+            </ChatInput>
+          </ChatWindow>
         )}
       </MediaArea>
       <ButtonArea>

@@ -19,9 +19,9 @@ export default {
       })
       .then(async (response) => {
         const accessToken = response.data.access_token;
-        const data = await googleOauth.verify(accessToken)
+        const data = await googleOauth.verify(accessToken);
         const email = data.email;
-        const profile = data.picture
+        const profile = data.picture;
         let refreshToken = response.data.refresh_token;
         if (refreshToken === undefined) {
           // refreshToken 데이터베이스에서 가져오기
@@ -34,6 +34,7 @@ export default {
                 id: result[0].id,
                 userId: result[0].userId,
                 email: result[0].email,
+                profile: result[0].profile,
               };
               res
                 .status(200)
@@ -54,7 +55,7 @@ export default {
               res.status(500).json({ message: "Internal Sever Error" });
             } else {
               console.log("최초 로그인 맞음");
-              console.log(result[0])
+              console.log(result[0]);
               const payload = {
                 id: result[0].id,
                 userId: result[0].userId,
@@ -73,7 +74,6 @@ export default {
             }
           });
         }
-
       })
       .catch((e) => {
         res.status(404);
