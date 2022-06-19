@@ -99,6 +99,7 @@ const Mypage = () => {
           setErrMsg({ ...errMsg, pwdMsg: "비밀번호는 5글자 이상 15글자 미만 입니다." });
           setValidCheck({ ...validCheck, pwd: false });
         } else if (value === modifiedUserInfo.pwdCheck) {
+          setErrMsg({ ...errMsg, pwdMsg: "" });
           setErrMsg({ ...errMsg, pwdCheckMsg: "" });
         } else {
           setErrMsg({ ...errMsg, pwdMsg: "" });
@@ -191,7 +192,19 @@ const Mypage = () => {
         }
         navigate("/");
       })
-      .catch((err: AxiosError) => console.log(err));
+      .catch((err: AxiosError) => {
+        switch (err.message) {
+          case "이메일 인증버튼을 눌러주세요.":
+            setErrMsg({ ...errMsg, emailMsg: "이메일 인증이 필요합니다." });
+            break;
+          case "이메일에서 인증버튼을 눌러주세요.":
+            setErrMsg({ ...errMsg, emailMsg: "요청하신 메일에서 인증을 완료해주세요." });
+            break;
+          case "회원 정보가 존재하지않습니다.":
+            setErrMsg({ ...errMsg, emailMsg: "올바르지 못 한 접근입니다." });
+            break;
+        }
+      });
   };
   // ---------------------------------------------------------------------------
 

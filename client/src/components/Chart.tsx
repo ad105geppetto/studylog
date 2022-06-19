@@ -48,9 +48,9 @@ interface Chartinterface {
 }
 
 const Chart = ({ userInfo }: Chartinterface) => {
-  const [data, setData] = useState([]);
   const [totalTime, setTotaltime] = useState(0);
   const [weekSummary, setWeekSummary] = useState(0);
+
   const dummyData = [
     { name: "월", 시간: 3 },
     { name: "화", 시간: 3.4 },
@@ -60,16 +60,6 @@ const Chart = ({ userInfo }: Chartinterface) => {
     { name: "토", 시간: 6 },
     { name: "일", 시간: 2 },
   ];
-
-  const [studyTime, setStudyTime] = useState([
-    { name: "월", 시간: 0 },
-    { name: "화", 시간: 0 },
-    { name: "수", 시간: 0 },
-    { name: "목", 시간: 0 },
-    { name: "금", 시간: 0 },
-    { name: "토", 시간: 0 },
-    { name: "일", 시간: 0 },
-  ]);
 
   const onLoadingData = () => {
     axios
@@ -90,7 +80,6 @@ const Chart = ({ userInfo }: Chartinterface) => {
   return (
     <Wrapper>
       <h2 style={{ color: "white" }}> 이번 주 나의 공부시간 {weekSummary} 시간 </h2>
-
       <div style={{ width: "100%", height: "100%" }}>
         <ResponsiveContainer>
           <BarChart data={dummyData}>
