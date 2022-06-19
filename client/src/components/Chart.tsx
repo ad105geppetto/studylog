@@ -1,8 +1,6 @@
 import {
   ResponsiveContainer,
   ComposedChart,
-  LineChart,
-  Line,
   CartesianGrid,
   XAxis,
   YAxis,
@@ -20,7 +18,7 @@ axios.defaults.withCredentials = true;
 const SERVER = process.env.REACT_APP_SERVER || "http://localhost:4000";
 
 const Wrapper = styled.div`
-  background: linear-gradient(to bottom, white, #f7f6f2);
+  background: #4b6587;
   display: flex;
   flex-direction: column;
   justify-content: space-around;
@@ -91,22 +89,36 @@ const Chart = ({ userInfo }: Chartinterface) => {
 
   return (
     <Wrapper>
-      <h1> 나는 {totalTime} 시간을 공부했습니다. </h1>
+      <h2 style={{ color: "white" }}> 이번 주 나의 공부시간 {weekSummary} 시간 </h2>
 
-      <div style={{ width: "70%", height: "70%" }}>
+      <div style={{ width: "100%", height: "100%" }}>
         <ResponsiveContainer>
-          <ComposedChart data={dummyData}>
-            <CartesianGrid strokeDasharray="5 3" />
-            <XAxis dataKey="name" />
-            <YAxis />
+          <BarChart data={dummyData}>
+            <CartesianGrid vertical={false} strokeDasharray="5" />
+            <defs>
+              <linearGradient id="colorPv" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="30%" stopColor="#F0E4CF" stopOpacity={1} />
+                <stop offset="70%" stopColor="#ffffff" stopOpacity={1} />
+              </linearGradient>
+            </defs>
+            <XAxis dataKey="name" stroke="white" />
+            <YAxis stroke="white" />
             <Tooltip />
             <Legend />
-            <Bar dataKey="시간" fill="#8884d8" />
-          </ComposedChart>
+
+            <Bar
+              animationBegin={100}
+              animationDuration={800}
+              animationEasing={"ease-in-out"}
+              legendType="none"
+              maxBarSize={75}
+              dataKey="시간"
+              fillOpacity={1}
+              fill="url(#colorPv)"
+            />
+          </BarChart>
         </ResponsiveContainer>
       </div>
-
-      <h2> 이번 주 나의 공부시간 {weekSummary} 시간 </h2>
     </Wrapper>
   );
 };
@@ -138,4 +150,4 @@ axios.get
           <Tooltip />
         </LineChart>
         
-*/
+        */

@@ -37,7 +37,9 @@ const View = styled.div<{ width: string; height: string }>`
   animation-name: switchModalOn;
   animation-duration: 0.5s;
   z-index: 2000;
-  font-size: 20px;
+  font-size: 25px;
+  font-weight: 700;
+  color: grey;
   .exit-wrapper {
     position: absolute;
     top: 4px;
@@ -68,7 +70,7 @@ const Canvas = styled.div`
   background-color: rgba(0, 0, 0, 0.4);
   z-index: 53;
   animation-name: switchModalOn;
-  animation-duration: 0.5s;
+  animation-duration: 1s;
 `;
 const Modal = ({ width, height, element, modal, setModal }: Props) => {
   const modalOff = () => {

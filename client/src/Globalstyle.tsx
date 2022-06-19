@@ -8,6 +8,7 @@ body{
   margin: 0;
   padding: 0;
   overflow: scroll;
+  font-family: Arial, Helvetica, sans-serif;
   
   ::-webkit-scrollbar {
     display: none;

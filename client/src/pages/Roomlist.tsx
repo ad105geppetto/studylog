@@ -15,9 +15,6 @@ const Container = styled.div`
   display: grid;
   grid-template-columns: repeat(12, 1fr);
   column-gap: 24px;
-  /* padding-top: 10vh; */
-  /* margin-bottom: 1vh; */
-  /* background-color: white; */
 `;
 
 const Root = styled.div`
@@ -47,9 +44,6 @@ const Post = styled.div`
   .title {
     margin-bottom: 5vh;
     font-size: 1rem;
-  }
-
-  .content {
   }
 
   div {
@@ -125,10 +119,10 @@ const SERVER = process.env.REACT_APP_SERVER || "http://localhost:4000";
 
 const Roomlist = ({ annoy, roomId, setRoomId }: socketInterface) => {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
   const [modal, setModal] = useState(false);
 
-  // 여기서는 더미데이터, 실제로는 서버에서 받아오는 데이터
+  // 실제로 서버에서 받아오는 데이터
   const [posts, setPosts] = useState<IPosts[]>([]);
   // 페이지네이션에서 보여지는 페이지
   const [page, setPage] = useState<any>(1);
@@ -148,7 +142,6 @@ const Roomlist = ({ annoy, roomId, setRoomId }: socketInterface) => {
     getPageData(page, limit);
   }, [page, limit]);
 
-  // 새로고침을 해도 상태값 초기화가 되지 않게해보기.
   // 서버에서 공부방 데이터를 받아오는 함수----------------------------------
   const getPageData = (page: number, limit: number) => {
     axios
@@ -168,17 +161,18 @@ const Roomlist = ({ annoy, roomId, setRoomId }: socketInterface) => {
   // 화상대화방 들어가는 함수-----------------------------------------------
   const enterRoomHandler = (room: any) => {
     if (room.roomCurrent === 4) {
-      alert("꽉참");
+      alert("들어갈 수 있는 인원이 찼습니다.");
       return;
     }
     setRoomId(room.id);
-    console.log(room.id);
+    console.log(roomId);
     axios
       .patch(`${SERVER}/room`, {
         roomId: room.id,
         userId: userInfo.id,
         type: "plus",
       })
+
       .then((res) => {
         navigate(`/room/${room.id}`);
       });
@@ -192,6 +186,7 @@ const Roomlist = ({ annoy, roomId, setRoomId }: socketInterface) => {
       .get(`${SERVER}/search?title=${search}&limit=${limit}&page=${page}`)
       .then((res: AxiosResponse) => {
         setPosts(res.data.data);
+        // posts를 리덕스에 저장하는 법
         // const posts = setPosts(res.data.data);
         // dispatch(roomlist(posts));
         setTotalPage(res.data.total);
@@ -209,10 +204,6 @@ const Roomlist = ({ annoy, roomId, setRoomId }: socketInterface) => {
     setSearch(e.target.value);
   };
 
-  // const onModalOff = (modal: any) => {
-  //   setModal((modal) => !modal);
-  // };
-
   return (
     <div style={{ width: "100vw", height: "100vh" }}>
       <Nav />
@@ -227,33 +218,36 @@ const Roomlist = ({ annoy, roomId, setRoomId }: socketInterface) => {
       </Button> */}
       <Root>
         <Container>
-          {posts.length === 0
-            ? "개설된 방이 없습니다"
-            : posts.map((post: any, index: any): any => {
-                return (
-                  // <Post key={index} onClick={() => enterRoomHandler(post)}>
-                  <Post
-                    key={index}
-                    // onClick={() => {
-                    //   setModal(true);
-                    // }}
-
-                    onClick={() => enterRoomHandler(post)}
-                    // onClick에 () => setModal(modal)
-                  >
-                    <div>
-                      제목 : {post.title.length < 13 ? post.title : post.title.slice(0, 10) + "..."}
-                    </div>
-                    <br />
-                    <div>
-                      내용 :
-                      {post.content.length < 13 ? post.content : post.content.slice(0, 10) + "..."}
-                    </div>
-                    <br />
-                    <div className="current">참여인원 : {post.roomCurrent} / 4</div>
-                  </Post>
-                );
-              })}
+          {posts.length === 0 ? (
+            <div>개설된 방이 없습니다</div>
+          ) : (
+            posts.map((post: any, index: any): any => {
+              return (
+                <Post
+                  key={index}
+                  // onClick={() => {
+                  //   setModal(true);
+                  // }}
+                  onClick={() => enterRoomHandler(post)}
+                  style={{ backgroundColor: "" }}
+                >
+                  <div>
+                    제목 : {post.title.length < 13 ? post.title : post.title.slice(0, 10) + "..."}
+                  </div>
+                  <br />
+                  <div>
+                    내용 :
+                    {post.content.length < 13
+                      ? " " + post.content
+                      : " " + post.content.slice(0, 10) + "..."}
+                  </div>
+                  <br />
+                  <div className="current">참여인원 : {post.roomCurrent} / 4</div>
+                  <div className=""></div>
+                </Post>
+              );
+            })
+          )}
         </Container>
       </Root>
 
@@ -271,4 +265,57 @@ const Roomlist = ({ annoy, roomId, setRoomId }: socketInterface) => {
   );
 };
 
+const LogOutBtn = styled.button`
+  font-size: 1rem;
+  text-align: center;
+  font-weight: 500;
+
+  min-width: 6vw;
+  min-height: 5vh;
+  border-radius: 1rem;
+  display: inline-block;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 700;
+  outline: 0;
+  background: #4b6587;
+  color: white;
+  border: 1px solid #f7f6f2;
+  margin: 1vh;
+`;
+
 export default Roomlist;
+
+// {modal && (
+//   <Modal
+//     enterRoomHandler={enterRoomHandler}
+//     roomId={roomId}
+//     modal={modal}
+//     setModal={setModal}
+//     width="300"
+//     height="250"
+//     element={
+//       <BtnContainer>
+//         <div>공부방에 입장 하시겠습니까?</div>
+//         <br />
+//         <Buttonbox>
+//           <LogOutBtn
+//             style={{ color: "white" }}
+//             type="button"
+//             onClick={() => enterRoomHandler(roomId)}
+//           >
+//             확인
+//           </LogOutBtn>
+//           <LogOutBtn
+//             style={{ color: "white" }}
+//             type="button"
+//             // onClick={() => onModalOff(modal)}
+//             onClick={() => setModal(false)}
+//           >
+//             취소
+//           </LogOutBtn>
+//         </Buttonbox>
+//       </BtnContainer>
+//     }
+//   />
+// )}
