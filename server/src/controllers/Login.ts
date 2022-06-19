@@ -19,6 +19,7 @@ export default {
             id: result[0].id,
             userId: result[0].userId,
             email: result[0].email,
+            profile: result[0].profile,
           };
 
           const accessToken = jwt.sign(payload, process.env.ACCESS_SECRET, { expiresIn: "6h" });
