@@ -12,7 +12,16 @@ export default {
       if (error) {
         console.log(error);
       } else {
-        // console.log(result);
+        res.status(200).send({
+          total: result[0].totalTime,
+          mon: result[0].mon,
+          tue: result[0].tue,
+          wed: result[0].wed,
+          thu: result[0].thu,
+          fri: result[0].fri,
+          sat: result[0].sat,
+          sun: result[0].sun,
+        });
       }
     });
   },
