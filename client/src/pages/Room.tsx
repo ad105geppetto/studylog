@@ -194,7 +194,15 @@ const SERVER = process.env.REACT_APP_SERVER || "http://localhost:4000";
 
 const Room = ({ annoy, roomId }: socketInterface) => {
   let start = new Date();
-  let startString = `${start.getFullYear()}, ${start.getMonth()}, ${start.getDate()}, ${start.getHours()}, ${start.getMinutes()}, ${start.getSeconds()}`;
+  let startObject = {
+    year: start.getFullYear(),
+    month: start.getMonth(),
+    date: start.getDate(),
+    hour: start.getHours(),
+    minute: start.getMinutes(),
+    second: start.getSeconds(),
+  };
+
   const userInfo = useSelector((state: any) => state.userInfoReducer.userInfo);
   const [currentMessage, setCurrentMessage] = useState("");
   const [messageList, setMessageList] = useState<any>([]);
@@ -259,6 +267,7 @@ const Room = ({ annoy, roomId }: socketInterface) => {
       if (!socketRef.current) return;
       socketRef.current.emit("join_room", {
         room: roomId,
+        username: userInfo.userId ? userInfo.userId : annoy,
       });
     } catch (e) {
       console.log(`getUserMedia error: ${e}`);
@@ -458,13 +467,20 @@ const Room = ({ annoy, roomId }: socketInterface) => {
   const exitHandler = () => {
     let end = new Date();
     //" (2022 , 5 , 16, 09, 50, 20)"
-    let endString = `${end.getFullYear()}, ${end.getMonth()}, ${end.getDate()}, ${end.getHours()}, ${end.getMinutes()}, ${end.getSeconds()}`;
+    let endObject = {
+      year: end.getFullYear(),
+      month: end.getMonth(),
+      date: end.getDate(),
+      hour: end.getHours(),
+      minute: end.getMinutes(),
+      second: end.getSeconds(),
+    };
     if (userInfo.userId) {
       axios.post(
         `${SERVER}/statics`,
         {
-          start: startString,
-          end: endString,
+          startObject: startObject,
+          endObject: endObject,
         },
         { headers: { authorization: `Bearer ${userInfo.accessToken}` } }
       );

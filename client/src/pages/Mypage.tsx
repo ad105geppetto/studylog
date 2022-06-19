@@ -5,10 +5,9 @@ import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { useNavigate, NavLink } from "react-router-dom";
 import { dropout } from "../action/index";
+import { logIn } from "../action/index";
 import { MdOutlineMarkEmailRead } from "react-icons/md";
 import { BiImageAdd } from "react-icons/bi";
-
-import { logIn } from "../action/index";
 import {
   Wrapper,
   ImageSection,

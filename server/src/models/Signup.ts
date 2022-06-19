@@ -41,15 +41,9 @@ export default {
   },
 
   auth: (email: string, certNum: string, callback: Function) => {
-    const queryString = `SELECT * FROM auth WHERE email="${email}" AND certNum = "${certNum}"`;
+    const queryString = `UPDATE auth SET verification = 1 WHERE email = "${email}" ORDER BY createdAt DESC LIMIT 1`;
     db.query(queryString, (error, result) => {
-      const queryString2 = `UPDATE auth SET verification = 1 WHERE certNum = "${certNum}" ORDER BY createdAt DESC LIMIT 1`;
-      if (error) {
-      } else {
-        db.query(queryString2, (error, result) => {
-          callback(error, result);
-        });
-      }
+      callback(error, result);
     });
   },
 };
