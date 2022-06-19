@@ -97,26 +97,36 @@ const Pwinquiry = () => {
           </div>
         </div>
       ) : (
-        <div>
-          <span>비밀번호</span>
-          <p>{userPwd}</p>
-        </div>
+        <FindPwd
+          className="showPwd fadein"
+          style={{
+            display: "flex",
+            // flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "70%",
+            color: "#4b6587",
+            fontSize: "5vh",
+          }}
+        >
+          비밀번호는 {userPwd} 입니다
+        </FindPwd>
       )}
     </Container>
   );
 };
 
 const Container = styled.div`
+  /* display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  column-gap: 24px; */
+  /* margin-bottom: 17vh; */
   width: 60vw;
   height: 44vh;
   display: flex;
   justify-content: center;
-  /* display: grid;
-  grid-template-columns: repeat(12, 1fr);
-  column-gap: 24px; */
   padding-top: 10vh;
   background-color: #f7f6f2;
-  margin-bottom: 17vh;
 
   .cert {
     min-width: 7vw;
@@ -141,8 +151,6 @@ const Container = styled.div`
     border-radius: 1rem;
     display: inline-block;
     justify-content: center;
-    /* display: inline-block;
-    align-items: center; */
     cursor: pointer;
     font-size: 1rem;
     font-weight: 700;
@@ -166,6 +174,8 @@ const Input = styled.input`
   border-radius: 1vh;
   margin-bottom: 5vh;
 `;
+
+const FindPwd = styled.div``;
 
 const Button = styled.button`
   /* .find {

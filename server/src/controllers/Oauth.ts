@@ -9,6 +9,7 @@ const clientSecret = process.env.GOOGLE_CLIENT_SECRET;
 export default {
   post: (req, res) => {
     const code = req.body.authorizationCode;
+    console.log(code);
     axios
       .post(`https://oauth2.googleapis.com/token`, {
         code: code,
@@ -18,6 +19,7 @@ export default {
         grant_type: "authorization_code",
       })
       .then(async (response) => {
+        console.log("!!!");
         const accessToken = response.data.access_token;
         const data = await googleOauth.verify(accessToken);
         const email = data.email;
