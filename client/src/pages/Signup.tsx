@@ -13,6 +13,8 @@ import {
   InnerButton,
   SuccessMsg,
   ButtonWrapper,
+  Separation,
+  Form,
 } from "styles/Userpage_style";
 import styled from "styled-components";
 
@@ -198,66 +200,72 @@ export const Signup = () => {
       <Wrapper>
         <div>
           <Title> 회 원 가 입 </Title>
-          <form
+          <Form
             onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
               e.preventDefault();
             }}
           >
-            <div>
-              <Exam>
-                <Input
-                  type="text"
-                  placeholder="ID를 입력하세요"
-                  onChange={onUserInfo("id")}
-                  maxLength={10}
-                  required
-                />
-                <InnerButton type="button" onClick={onCheckUserId}>
-                  <FiCheckSquare size="2vmin" color="red" /> 중복체크
-                </InnerButton>
-              </Exam>
-              <SuccessMsg>{successMsg.idMsg}</SuccessMsg>
-              <ErrorMsg>{errMsg.idMsg} </ErrorMsg>
-            </div>
-
-            <div>
+            {/* <Section> */}
+            {/* <SubTitle> 아이디 </SubTitle> */}
+            <Separation>
               <Input
-                type="password"
-                placeholder="비밀번호를 입력하세요"
-                onChange={onUserInfo("pwd")}
-                maxLength={15}
+                type="text"
+                placeholder="ID를 입력하세요"
+                onChange={onUserInfo("id")}
+                maxLength={10}
                 required
               />
-              <ErrorMsg>{errMsg.pwdMsg} </ErrorMsg>
+              <InnerButton type="button" onClick={onCheckUserId}>
+                <FiCheckSquare size="2rem" /> 중복체크
+              </InnerButton>
+            </Separation>
+            {/* </Section> */}
+            <SuccessMsg>{successMsg.idMsg}</SuccessMsg>
+            <ErrorMsg>{errMsg.idMsg} </ErrorMsg>
 
+            {/* <Section> */}
+            {/* <SubTitle> 비밀번호 </SubTitle> */}
+            <Input
+              type="password"
+              placeholder="비밀번호를 입력하세요"
+              onChange={onUserInfo("pwd")}
+              maxLength={15}
+              required
+            />
+            {/* </Section> */}
+            <ErrorMsg>{errMsg.pwdMsg} </ErrorMsg>
+            {/* <Section> */}
+            {/* <SubTitle> 비밀번호 확인</SubTitle> */}
+            <Input
+              type="password"
+              placeholder="비밀번호를 다시 입력하세요"
+              onChange={onUserInfo("pwdCheck")}
+              maxLength={15}
+              required
+            />
+            {/* </Section> */}
+            <ErrorMsg>{errMsg.pwdCheckMsg}</ErrorMsg>
+
+            {/* <Section> */}
+            {/* <SubTitle> 이메일 </SubTitle> */}
+            <Separation>
               <Input
-                type="password"
-                placeholder="비밀번호를 다시 입력하세요"
-                onChange={onUserInfo("pwdCheck")}
-                maxLength={15}
+                type="text"
+                placeholder="이메일을 입력하세요"
+                onChange={onUserInfo("email")}
                 required
               />
-              <ErrorMsg>{errMsg.pwdCheckMsg}</ErrorMsg>
-            </div>
-
-            <div>
-              <Exam>
-                <Input
-                  type="text"
-                  placeholder="이메일을 입력하세요"
-                  onChange={onUserInfo("email")}
-                  required
-                />
-                <InnerButton type="button" onClick={onVerifyEmail}>
-                  <MdOutlineMarkEmailRead size="2vmin" color="red" /> 이메일인증
-                </InnerButton>
-              </Exam>
-              <ErrorMsg>{errMsg.emailMsg}</ErrorMsg>
-              <SuccessMsg>{successMsg.emailMsg}</SuccessMsg>
-            </div>
+              <InnerButton type="button" onClick={onVerifyEmail}>
+                <MdOutlineMarkEmailRead size="2rem" /> 이메일인증
+              </InnerButton>
+            </Separation>
+            {/* </Section> */}
+            <ErrorMsg>{errMsg.emailMsg}</ErrorMsg>
+            <SuccessMsg>{successMsg.emailMsg}</SuccessMsg>
 
             <ButtonWrapper>
               <Large_Button
+                style={{ margin: "1vh 0 5vh 0" }}
                 disabled={
                   validCheck.email && validCheck.id && validCheck.pwd && validCheck.pwdCheck
                     ? false
@@ -265,10 +273,10 @@ export const Signup = () => {
                 }
                 onClick={onSingup}
               >
-                가입
+                회 원 가 입
               </Large_Button>
             </ButtonWrapper>
-          </form>
+          </Form>
         </div>
       </Wrapper>
     </div>

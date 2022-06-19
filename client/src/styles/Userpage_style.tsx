@@ -6,23 +6,31 @@ export const Logo = styled.img`
 `;
 
 export const Wrapper = styled.div`
-  margin-top: -5vh;
-  width: 100vw;
+  margin-top: -7vh;
+
+  box-sizing: border-box;
+  width: 100%;
   height: 80vh;
   display: flex;
-  justify-content: space-between;
-  flex-flow: column wrap;
-  align-content: space-around;
+  justify-content: center;
+  flex-flow: column;
+  align-items: center;
+
+  @media only screen and (max-width: 800px) {
+    width: 100%;
+    margin: 0;
+  }
 `;
 
 export const ButtonWrapper = styled.div`
   display: flex;
-  /* grid-template-columns: 1fr 1fr; */
-  flex-flow: row wrap;
-  justify-content: space-evenly;
+  flex-flow: row nowrap;
+  justify-content: space-between;
 `;
 
-export const ButtonWrapper2 = styled(ButtonWrapper)`
+export const ButtonWrapper2 = styled.div`
+  display: flex;
+  margin-top: 3vh;
   flex-flow: column;
   align-items: center;
 `;
@@ -31,7 +39,7 @@ export const Title = styled.div`
   width: 25vw;
   height: 5.5vh;
   line-height: 5.5vh;
-  font-size: 3vmin;
+  font-size: 2rem;
   font-weight: bolder;
   text-align: center;
   align-items: center;
@@ -39,43 +47,92 @@ export const Title = styled.div`
   border: 2px dashed white;
   border-radius: 1vh;
   margin-bottom: 5vh;
+
+  @media only screen and (max-width: 800px) {
+    width: 80%;
+    margin-bottom: 1rem;
+  }
+
+  @media only screen and (max-width: 500px) {
+    width: 100%;
+    margin-bottom: 1rem;
+  }
+`;
+
+export const Form = styled.form`
+  box-sizing: content-box;
+  width: 25vw;
+  @media only screen and (max-width: 800px) {
+    width: 80%;
+    margin: 0;
+  }
+
+  @media only screen and (max-width: 500px) {
+    width: 100%;
+    margin: 0;
+  }
+`;
+
+// export const Section = styled.div`
+//   display: flex;
+//   width: 27vw;
+//   justify-content: space-between;
+
+//   @media only screen and (max-width: 800px) {
+//     width: 100%;
+//     flex-direction: column;
+//     justify-content: center;
+//   }
+// `;
+
+export const ImageSection = styled.div`
+  width: 100%;
+  display: flex;
+  flex-flow: column wrap;
+  align-content: center;
+`;
+
+export const Separation = styled.div`
+  width: 100%;
+  display: flex;
+  flex-flow: column wrap;
+  justify-content: space-betwee;
+`;
+
+export const SubTitle = styled.div`
+  color: white;
+  font-size: 1.5;
+  align-self: center;
+  align-items: center;
 `;
 
 export const Input = styled.input`
-  width: 25vw;
+  width: 100%;
+  box-sizing: border-box;
   height: 5.5vh;
+  text-indent: 1vw;
   font-size: 1rem;
-
   align-items: center;
   background-color: white;
-  border: 0.2rem solid lightgrey;
+
+  border: 2px solid lightgrey;
+
   border-radius: 1vh;
+
+  @media only screen and (max-width: 800px) {
+    width: 100%;
+    text-align: center;
+    margin: 0;
+  }
 `;
-
-export const Hidden = styled.input`
-  display: none;
-`;
-
-export const LoginInput = styled(Input)`
-  margin-bottom: 3vh;
-`;
-
-// const fadeOut = keyframes`
-//   from {
-//     color: red;
-//   }
-
-//   to {
-//    color : #4B6587;
-//   }
-// `;
 
 export const ErrorMsg = styled.div`
   color: red;
   font-weight: bolder;
+  text-align: center;
   font-size: 0.8rem;
-  margin-top: 2vh;
-  margin-bottom: 2vh;
+  margin-top: 3vh;
+  margin-bottom: 3vh;
 `;
 
 export const SuccessMsg = styled(ErrorMsg)`
@@ -83,29 +140,24 @@ export const SuccessMsg = styled(ErrorMsg)`
 `;
 
 export const LoginErrorMsg = styled(ErrorMsg)`
-  color: red;
   text-align: center;
   font-size: 1rem;
 `;
 
 export const ImageBoard = styled(Logo)`
   height: 15vh;
-  width: 15vw;
+  width: 75%;
   border: 0.2rem solid lightgrey;
   border-radius: 1rem;
   background-color: white;
-  margin-bottom: 2vh;
-`;
-
-export const Div = styled.div`
-  width: auto;
-  align-items: center;
+  margin-top: 2vh;
+  align-self: flex-end;
 `;
 
 //! 버튼
 export const Button = styled.button`
-  min-width: 7vw;
-  min-height: 5.5vh;
+  min-width: 12vw;
+  height: 5.5vh;
   line-height: 5.5vh;
   border-radius: 1rem;
   display: inline-block;
@@ -121,43 +173,51 @@ export const Button = styled.button`
   }
 `;
 
-export const Upload_Button = styled(Button)`
-  margin-left: -9vw;
-  margin-bottom: 1vw;
-  border: 0.1rem solid red;
-`;
-
 export const Large_Button = styled(Button)`
+  display: flex;
   height: 5vh;
-  width: 20vw;
-  font-size: 1.7vmin;
-  text-align: center;
+  width: 100%;
+  font-size: 1rem;
+  align-items: center;
+  justify-content: center;
   font-weight: bold;
   margin-bottom: 2vh;
 `;
 
 export const Small_Button = styled(Button)`
-  font-size: 1.7vmin;
+  font-size: 1.7vh;
   text-align: center;
   font-weight: bold;
-  margin-bottom: 2vh;
+  margin-top: 2vh;
+
+  @media only screen and (max-width: 800px) {
+    width: 100%;
+    text-align: center;
+    margin-top: 2vh;
+  }
 `;
 
 //! 버튼
 
 export const InnerButton = styled(Button)`
-  all: unset;
-  min-width: 5vw;
-  line-height: 5.5vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: black;
+  font-weight: bold;
+  background-color: white;
   text-align: center;
-  font-size: 1.5vmin;
-  min-height: 5.5vh;
-  margin-left: -9vw;
-`;
+  align-self: flex-end;
+  font-size: rem;
+  width: 50%;
+  height: 3vh;
+  margin-top: 1vh;
+  font-size: 0.9rem;
+  line-height: 3vh;
+  border-radius: 1vh;
 
-export const Label = styled.label`
-  font-size: 1rem;
-  margin-left: -5vw;
-  margin-top: -3vw;
-  cursor: pointer;
+  @media only screen and (max-width: 800px) {
+    width: 100%;
+    text-align: center;
+  }
 `;

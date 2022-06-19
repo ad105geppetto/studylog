@@ -1,8 +1,5 @@
 import {
   ResponsiveContainer,
-  ComposedChart,
-  LineChart,
-  Line,
   CartesianGrid,
   XAxis,
   YAxis,
@@ -20,7 +17,7 @@ axios.defaults.withCredentials = true;
 const SERVER = process.env.REACT_APP_SERVER || "http://localhost:4000";
 
 const Wrapper = styled.div`
-  background: linear-gradient(to bottom, white, #f7f6f2);
+  background: #4b6587;
   display: flex;
   flex-direction: column;
   justify-content: space-around;
@@ -50,20 +47,8 @@ interface Chartinterface {
 }
 
 const Chart = ({ userInfo }: Chartinterface) => {
-  const [data, setData] = useState([]);
-  const [totalTime, setTotaltime] = useState(0);
   const [weekSummary, setWeekSummary] = useState(0);
-  const dummyData = [
-    { name: "월", 시간: 3 },
-    { name: "화", 시간: 3.4 },
-    { name: "수", 시간: 4 },
-    { name: "목", 시간: 1 },
-    { name: "금", 시간: 3.4 },
-    { name: "토", 시간: 6 },
-    { name: "일", 시간: 2 },
-  ];
-
-  const [studyTime, setStudyTime] = useState([
+  const [timeTable, setTimeTable] = useState([
     { name: "월", 시간: 0 },
     { name: "화", 시간: 0 },
     { name: "수", 시간: 0 },
@@ -77,6 +62,21 @@ const Chart = ({ userInfo }: Chartinterface) => {
     axios
       .get(`${SERVER}/statics`, { headers: { authorization: `Bearer ${userInfo.accessToken}` } })
       .then((res: AxiosResponse) => {
+        console.log(res);
+
+        const { mon, tue, wed, thu, fri, sat, sun, total } = res.data;
+        setTimeTable([
+          { name: "월", 시간: mon },
+          { name: "화", 시간: tue },
+          { name: "수", 시간: wed },
+          { name: "목", 시간: thu },
+          { name: "금", 시간: fri },
+          { name: "토", 시간: sat },
+          { name: "일", 시간: sun },
+        ]);
+
+        setWeekSummary(total);
+
         /*
         요일별 데이터 불러오기,
         데이터 불러오고 난 후 각 일자별로 데이터 뿌리기, 
@@ -91,51 +91,37 @@ const Chart = ({ userInfo }: Chartinterface) => {
 
   return (
     <Wrapper>
-      <h1> 나는 {totalTime} 시간을 공부했습니다. </h1>
-
-      <div style={{ width: "70%", height: "70%" }}>
+      <h2 style={{ color: "white" }}> 이번 주 나의 공부시간 {weekSummary} 시간 </h2>
+      <div style={{ width: "100%", height: "100%" }}>
         <ResponsiveContainer>
-          <ComposedChart data={dummyData}>
-            <CartesianGrid strokeDasharray="5 3" />
-            <XAxis dataKey="name" />
-            <YAxis />
+          <BarChart data={timeTable}>
+            <CartesianGrid vertical={false} strokeDasharray="5" />
+            <defs>
+              <linearGradient id="colorPv" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="30%" stopColor="#F0E4CF" stopOpacity={1} />
+                <stop offset="70%" stopColor="#ffffff" stopOpacity={1} />
+              </linearGradient>
+            </defs>
+            <XAxis dataKey="name" stroke="white" />
+            <YAxis stroke="white" />
             <Tooltip />
             <Legend />
-            <Bar dataKey="시간" fill="#8884d8" />
-          </ComposedChart>
+
+            <Bar
+              animationBegin={100}
+              animationDuration={800}
+              animationEasing={"ease-in-out"}
+              legendType="none"
+              maxBarSize={75}
+              dataKey="시간"
+              fillOpacity={1}
+              fill="url(#colorPv)"
+            />
+          </BarChart>
         </ResponsiveContainer>
       </div>
-
-      <h2> 이번 주 나의 공부시간 {weekSummary} 시간 </h2>
     </Wrapper>
   );
 };
 
 export default Chart;
-
-/*
-
-
-axios.get 
-`${SERVER}/statics`
-
- data:{totalTime:"totalTime", mon:"1", tue:"2", wed:"3", 
-          thu:"4", fri:"5", sat:"6", sun:"7"}
-}
-
-
-
-        <LineChart
-          width={600}
-          height={300}
-          data={dummyData}
-          margin={{ top: 5, right: 20, bottom: 5, left: 0 }}
-        >
-          <Line type="monotone" dataKey="시간" stroke="#8884d8" />
-          <CartesianGrid stroke="#ccc" strokeDasharray="5 5" />
-          <XAxis dataKey="name" />
-          <YAxis />
-          <Tooltip />
-        </LineChart>
-        
-*/

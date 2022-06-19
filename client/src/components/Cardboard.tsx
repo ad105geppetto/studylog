@@ -33,20 +33,21 @@ const Form = styled.form`
     border: none;
     resize: none;
     overflow: hidden;
-    margin: 0.5vw 0.5vw 0.5vw 0.65vw;
-    padding: 0 2vw 0 0;
-    width: 14.5vw;
+    margin-left: 0.5vw;
+    width: 100%;
+    min-height: 3.5vh;
+    line-height: 3.5vh;
   }
 
   button {
     display: inline-block;
     all: unset;
-    color: green;
+    margin-left: 0.5vw;
+    color: #4b6587;
     align-self: center;
-    margin-left: -2vw;
-    padding-right: 1vw;
+
+    padding-right: 0.4vw;
     font-size: 1rem;
-    line-height: 100%;
 
     &:hover {
       color: red;
@@ -97,7 +98,7 @@ const Cardboard = ({ toDos, boardId, onAddToDos, onAddText, onDeleteToDos }: Car
       <Form onSubmit={(e: React.FormEvent<HTMLFormElement>) => e.preventDefault()}>
         <input onChange={onAddText} placeholder={`${boardId} 를 추가하세요`} />
         <button type="submit" id="inputbutton" onClick={onAddToDos(boardId)}>
-          <MdAddCircle />
+          <MdAddCircle size="3.5vh" />
         </button>
       </Form>
 
