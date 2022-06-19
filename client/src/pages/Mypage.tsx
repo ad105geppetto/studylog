@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { useNavigate, NavLink } from "react-router-dom";
 import { dropout } from "../action/index";
+import { logIn } from "../action/index";
 import { MdOutlineMarkEmailRead } from "react-icons/md";
 import {
   Wrapper,
@@ -154,7 +155,7 @@ const Mypage = () => {
     if (profile) {
       formData.append("email", email);
       formData.append("password", pwd);
-      formData.append("profile", profile[0], profile[0].name);
+      formData.append("profile", profile[0]);
     } else {
       formData.append("email", email);
       formData.append("password", pwd);
@@ -172,15 +173,15 @@ const Mypage = () => {
         switch (res.status) {
           case 200:
             alert("정상적으로 변경 완료 되었습니다.");
-            // dispatch(
-            //   logIn(
-            //     res.data.accessToken,
-            //     res.data.userInfo.id,
-            //     res.data.userInfo.userId,
-            //     res.data.userInfo.email,
-            //     res.data.userInfo.profile
-            //   )
-            // );
+            dispatch(
+              logIn(
+                res.data.accessToken,
+                res.data.userInfo.id,
+                res.data.userInfo.userId,
+                res.data.userInfo.email,
+                res.data.userInfo.profile
+              )
+            );
             break;
         }
         navigate("/");

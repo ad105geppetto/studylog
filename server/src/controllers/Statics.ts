@@ -27,6 +27,8 @@ export default {
 
     // const { start, end } = req.body;
     // console.log(Date.parse(start));
+    //"(2022, 5 ,16, 09, 50, 20)"
+    const { start, end } = req.body;
     console.log(req.body);
 
     //   let start = new Date(2022, 5, 6, 21, 0, 0);
