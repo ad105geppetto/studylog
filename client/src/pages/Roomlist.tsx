@@ -256,11 +256,13 @@ const Roomlist = ({ annoy, roomId, setRoomId }: socketInterface) => {
           <Modal
             modal={modal}
             setModal={setModal}
-            width="300"
-            height="250"
+            width="350"
+            height="300"
             element={
               <BtnContainer>
-                <div>공부방에 입장 하시겠습니까?</div>
+                <div style={{ fontSize: "1.5rem", textAlign: "center" }}>
+                  공부방에 입장 하시겠습니까?
+                </div>
                 <br />
                 <Buttonbox>
                   <EnterRoomBtn
