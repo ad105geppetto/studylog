@@ -5,7 +5,7 @@ require("dotenv").config();
 
 const clientID = process.env.GOOGLE_CLIENT_ID;
 const clientSecret = process.env.GOOGLE_CLIENT_SECRET;
-
+const CLIENT = process.env.CLIENT || "http://localhost:3000";
 export default {
   post: (req, res) => {
     const code = req.body.authorizationCode;
@@ -15,7 +15,7 @@ export default {
         code: code,
         client_id: clientID,
         client_secret: clientSecret,
-        redirect_uri: "http://localhost:3000",
+        redirect_uri: CLIENT,
         grant_type: "authorization_code",
       })
       .then(async (response) => {
