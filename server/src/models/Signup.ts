@@ -31,6 +31,11 @@ export default {
         }
       }
     );
+    db.query(`SET foreign_key_checks = 0`);
+    db.query(
+      `INSERT INTO logs (mon, tue, wed, thu, fri, sat, sun, totalTime) VALUES (0,0,0,0,0,0,0,0)`
+    );
+    db.query(`SET foreign_key_checks =1`);
   },
   //회원가입인증메일
   save: (email: string, certNum: string, callback: Function) => {

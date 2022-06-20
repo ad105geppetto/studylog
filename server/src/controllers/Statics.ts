@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import models from "../models/Statics";
 import jwt from "jsonwebtoken";
+import googleOauth from "./tokenFunction/GoogleOauth";
 
 export default {
   get: (req: Request, res: Response) => {
@@ -26,10 +27,15 @@ export default {
     });
   },
 
-  post: (req: Request, res: Response) => {
+  post: async (req: Request, res: Response) => {
     const authorization = req.headers["authorization"];
     const token = authorization.split(" ")[1];
-    const tokenData = jwt.verify(token, process.env.ACCESS_SECRET);
+    let tokenData;
+    if (token.slice(0, 4) === "ya29") {
+      tokenData = await googleOauth.verify(token);
+    } else {
+      tokenData = jwt.verify(token, process.env.ACCESS_SECRET);
+    }
 
     //클라에서 시작시간, 종료시간 보내줌
     //이걸로 계산해서 db에 기록
@@ -37,7 +43,7 @@ export default {
     // const { start, end } = req.body;
     // console.log(Date.parse(start));
     //"(2022, 5 ,16, 09, 50, 20)"
-    const { startObject, endObject } = req.body;
+    const { startObject, endObject, userId } = req.body;
     console.log(req.body);
 
     let start = new Date(
@@ -107,7 +113,7 @@ export default {
       let time = Math.ceil((end.getTime() - start.getTime()) / 1000);
 
       //
-      models.post1(day, time, tokenData, (error, result) => {
+      models.post1(userId, day, time, tokenData, (error, result) => {
         if (error) {
           res.send({ message: "서버에러!" });
         } else {
@@ -124,7 +130,7 @@ export default {
       );
 
       //
-      models.post2(today, NextDay, todayTime, NextDayTime, tokenData, (error, result) => {
+      models.post2(userId, today, NextDay, todayTime, NextDayTime, tokenData, (error, result) => {
         if (error) {
           res.send({ message: "서버에러!" });
         } else {
