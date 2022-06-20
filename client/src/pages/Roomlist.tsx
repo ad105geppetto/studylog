@@ -152,7 +152,9 @@ const Roomlist = ({ annoy, roomId, setRoomId }: socketInterface) => {
   // const pageInfo = useSelector((state: any) => state.pageInfoReducer.pageInfo);
 
   useEffect(() => {
-    getPageData(page, limit);
+    setTimeout(() => {
+      getPageData(page, limit);
+    }, 1000);
   }, [page, limit]);
 
   // 서버에서 공부방 데이터를 받아오는 함수----------------------------------

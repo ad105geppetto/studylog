@@ -67,7 +67,7 @@ const Nav = () => {
           <Line></Line>
         </LinkBox>
         <LinkBox onClick={() => navigate("/todos")}>
-          <button type="button">Study Log</button>
+          <button type="button">공부 기록</button>
           <Line></Line>
         </LinkBox>
         <LinkBox onClick={() => navigate("/Creatingroom")}>
@@ -163,6 +163,9 @@ const LinkContainer = styled.div`
   justify-content: center;
   align-items: center;
   border: 2px dashed #4b6587;
+  button {
+    font-size: 1.5rem;
+  }
 `;
 
 const Line = styled.div`
