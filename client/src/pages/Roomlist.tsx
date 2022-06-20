@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { Pagenation } from "../components/Pagenation";
 import axios, { AxiosError, AxiosResponse } from "axios";
@@ -118,6 +118,8 @@ interface socketInterface {
 const SERVER = process.env.REACT_APP_SERVER || "http://localhost:4000";
 
 const Roomlist = ({ annoy, roomId, setRoomId }: socketInterface) => {
+  const selectedRoom = useRef(null);
+
   const navigate = useNavigate();
   // const dispatch = useDispatch();
   const [modal, setModal] = useState(false);
@@ -132,8 +134,6 @@ const Roomlist = ({ annoy, roomId, setRoomId }: socketInterface) => {
   const [totalPage, setTotalPage] = useState(0);
 
   const [search, setSearch] = useState("");
-
-  // const [rooms, setRooms] = useState([]);
 
   const userInfo = useSelector((state: any) => state.userInfoReducer.userInfo);
   // const pageInfo = useSelector((state: any) => state.pageInfoReducer.pageInfo);
@@ -219,17 +219,20 @@ const Roomlist = ({ annoy, roomId, setRoomId }: socketInterface) => {
       <Root>
         <Container>
           {posts.length === 0 ? (
-            <div>개설된 방이 없습니다</div>
+            <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+              개설된 방이 없습니다
+            </div>
           ) : (
             posts.map((post: any, index: any): any => {
               return (
                 <Post
                   key={index}
-                  // onClick={() => {
-                  //   setModal(true);
-                  // }}
-                  onClick={() => enterRoomHandler(post)}
-                  style={{ backgroundColor: "" }}
+                  onClick={() => {
+                    setModal(true);
+                    selectedRoom.current = post;
+                  }}
+                  // style={{ backgroundColor: "" }}
+                  // onClick={() => enterRoomHandler(post)}
                 >
                   <div>
                     제목 : {post.title.length < 13 ? post.title : post.title.slice(0, 10) + "..."}
@@ -249,6 +252,37 @@ const Roomlist = ({ annoy, roomId, setRoomId }: socketInterface) => {
             })
           )}
         </Container>
+        {modal && (
+          <Modal
+            modal={modal}
+            setModal={setModal}
+            width="300"
+            height="250"
+            element={
+              <BtnContainer>
+                <div>공부방에 입장 하시겠습니까?</div>
+                <br />
+                <Buttonbox>
+                  <EnterRoomBtn
+                    style={{ color: "white" }}
+                    type="button"
+                    onClick={() => enterRoomHandler(selectedRoom.current)}
+                    // onClick={() => enterRoomHandler(post)}
+                  >
+                    확인
+                  </EnterRoomBtn>
+                  <EnterRoomBtn
+                    style={{ color: "white" }}
+                    type="button"
+                    onClick={() => setModal(false)}
+                  >
+                    취소
+                  </EnterRoomBtn>
+                </Buttonbox>
+              </BtnContainer>
+            }
+          />
+        )}
       </Root>
 
       {/* <select
@@ -260,62 +294,123 @@ const Roomlist = ({ annoy, roomId, setRoomId }: socketInterface) => {
         <option value={3}>3</option>
         <option value={9}>9</option>
       </select> */}
+
       <Pagenation totalPage={totalPage} page={page} setPage={setPage} />
     </div>
   );
 };
 
-const LogOutBtn = styled.button`
-  font-size: 1rem;
-  text-align: center;
-  font-weight: 500;
+{
+  /* 스프린트 모달--------------------------------------------------------------- */
+}
+{
+  /* <ModalContainer>
+          <ModalBtn onClick={openModalHandler}>
+              {isOpen === false ? "Open Modal" : "Opened!"}
+            </ModalBtn>
+          {isOpen === true ? (
+            <ModalBackdrop>
+              <ModalView onClick={(e) => e.stopPropagation()}>
+                <div className="desc">공부방에 입장 하시겠습니까?</div>
+                <button onClick={() => enterRoomHandler(post)}>확인</button>
+                <button
+                  onClick={() => {
+                    setIsOpen(false);
+                  }}
+                >
+                  취소
+                </button>
+              </ModalView>
+            </ModalBackdrop>
+          ) : null}
+        </ModalContainer> */
+}
 
-  min-width: 6vw;
-  min-height: 5vh;
-  border-radius: 1rem;
-  display: inline-block;
-  cursor: pointer;
-  font-size: 1rem;
-  font-weight: 700;
-  outline: 0;
-  background: #4b6587;
-  color: white;
-  border: 1px solid #f7f6f2;
-  margin: 1vh;
-`;
+// 스프린트 모달 css---------------------------------------------------------------
+// export const ModalBackdrop = styled.div`
+//   position: fixed;
+//   z-index: 999;
+//   top: 0;
+//   left: 0;
+//   bottom: 0;
+//   right: 0;
+//   background-color: rgba(0, 0, 0, 0.7);
+//   display: grid;
+//   place-items: center;
+// `;
+
+// export const ModalContainer = styled.div`
+//   height: 15rem;
+//   text-align: center;
+//   margin: 120px auto;
+// `;
+
+// export const ModalBtn = styled.button`
+//   background-color: black;
+//   /* #4000c7; */
+//   text-decoration: none;
+//   border: none;
+//   padding: 20px;
+//   color: white;
+//   border-radius: 30px;
+//   cursor: grab;
+// `;
+
+// export const ModalView = styled.div.attrs((post) => ({
+//   // attrs 메소드를 이용해서 아래와 같이 div 엘리먼트에 속성을 추가할 수 있다.
+//   role: "dialog",
+// }))`
+//   border-radius: 10px;
+//   background-color: #ffffff;
+//   width: 300px;
+//   height: 100px;
+
+//   > span.close-btn {
+//     margin-top: 5px;
+//     cursor: pointer;
+//   }
+//   /* 모달 눌렀을 때 보여지는 창의 글씨 */
+//   > div.desc {
+//     margin-top: 25px;
+//     color: black;
+//   }
+// `;
+// ---------------------------------------------------------------------------------------
 
 export default Roomlist;
 
-// {modal && (
-//   <Modal
-//     enterRoomHandler={enterRoomHandler}
-//     roomId={roomId}
-//     modal={modal}
-//     setModal={setModal}
-//     width="300"
-//     height="250"
-//     element={
-//       <BtnContainer>
-//         <div>공부방에 입장 하시겠습니까?</div>
-//         <br />
-//         <Buttonbox>
-//           <LogOutBtn
-//             style={{ color: "white" }}
-//             type="button"
-//             onClick={() => enterRoomHandler(roomId)}
-//           >
-//             확인
-//           </LogOutBtn>
-//           <LogOutBtn
-//             style={{ color: "white" }}
-//             type="button"
-//             // onClick={() => onModalOff(modal)}
-//             onClick={() => setModal(false)}
-//           >
-//             취소
-//           </LogOutBtn>
-//         </Buttonbox>
-//       </BtnContainer>
-//     }
-//   />
-// )}
+// {
+//   modal && (
+//     <Modal
+//       enterRoomHandler={enterRoomHandler}
+//       roomId={roomId}
+//       modal={modal}
+//       setModal={setModal}
+//       width="300"
+//       height="250"
+//       element={
+//         <BtnContainer>
+//           <div>공부방에 입장 하시겠습니까?</div>
+//           <br />
+//           <Buttonbox>
+//             <LogOutBtn
+//               style={{ color: "white" }}
+//               type="button"
+//               onClick={() => enterRoomHandler(roomId)}
+//             >
+//               확인
+//             </LogOutBtn>
+//             <LogOutBtn
+//               style={{ color: "white" }}
+//               type="button"
+//               // onClick={() => onModalOff(modal)}
+//               onClick={() => setModal(false)}
+//             >
+//               취소
+//             </LogOutBtn>
+//           </Buttonbox>
+//         </BtnContainer>
+//       }
+//     />
+//   );
+// }
