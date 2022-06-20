@@ -47,7 +47,7 @@ interface Chartinterface {
 }
 
 const Chart = ({ userInfo }: Chartinterface) => {
-  const [weekSummary, setWeekSummary] = useState(0);
+  const [weekSummary, setWeekSummary] = useState<any>("이번 주 공부 시간은 0 시간 입니다.");
   const [timeTable, setTimeTable] = useState([
     { name: "월", 시간: 0 },
     { name: "화", 시간: 0 },
@@ -65,17 +65,34 @@ const Chart = ({ userInfo }: Chartinterface) => {
         console.log(res);
 
         const { mon, tue, wed, thu, fri, sat, sun, total } = res.data;
+
+        function timeHandler(data: number) {
+          let hour = (data / 3600).toFixed(2);
+          return Number(hour);
+        }
+
         setTimeTable([
-          { name: "월", 시간: mon },
-          { name: "화", 시간: tue },
-          { name: "수", 시간: wed },
-          { name: "목", 시간: thu },
-          { name: "금", 시간: fri },
-          { name: "토", 시간: sat },
-          { name: "일", 시간: sun },
+          { name: "월", 시간: timeHandler(mon) },
+          { name: "화", 시간: timeHandler(tue) },
+          { name: "수", 시간: timeHandler(wed) },
+          { name: "목", 시간: timeHandler(thu) },
+          { name: "금", 시간: timeHandler(fri) },
+          { name: "토", 시간: timeHandler(sat) },
+          { name: "일", 시간: timeHandler(sun) },
         ]);
 
-        setWeekSummary(total);
+        function totalHandler(total: number) {
+          let hour = Math.floor(total / 3600);
+          let minute = Math.floor((total % 3600) / 60);
+
+          if (hour === 0) {
+            return ` 이번 주 공부 시간은 ${minute} 분 입니다.`;
+          } else {
+            return `이번주 공부 시간은 ${hour}시간 ${minute}분 입니다.`;
+          }
+        }
+
+        setWeekSummary(totalHandler(total));
 
         /*
         요일별 데이터 불러오기,
@@ -89,9 +106,11 @@ const Chart = ({ userInfo }: Chartinterface) => {
     onLoadingData();
   }, []);
 
+  // const DetailView = ({ payload, label, active }) => {};
+
   return (
     <Wrapper>
-      <h2 style={{ color: "white" }}> 이번 주 나의 공부시간 {weekSummary} 시간 </h2>
+      <h2 style={{ color: "white" }}> {weekSummary} </h2>
       <div style={{ width: "100%", height: "100%" }}>
         <ResponsiveContainer>
           <BarChart data={timeTable}>
