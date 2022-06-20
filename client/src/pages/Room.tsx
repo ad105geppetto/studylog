@@ -479,6 +479,7 @@ const Room = ({ annoy, roomId }: socketInterface) => {
       axios.post(
         `${SERVER}/statics`,
         {
+          userId: userInfo.id,
           startObject: startObject,
           endObject: endObject,
         },
