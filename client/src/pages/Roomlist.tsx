@@ -15,6 +15,17 @@ const Container = styled.div`
   display: grid;
   grid-template-columns: repeat(12, 1fr);
   column-gap: 24px;
+  .noroom {
+    width: 80vw;
+    height: 60vh;
+    display: flex;
+    flexdirection: column;
+    justify-content: center;
+    alignitems: center;
+    color: white;
+    font-size: 3rem;
+    margin-bottom: 5vh;
+  }
 `;
 
 const Root = styled.div`
@@ -118,6 +129,8 @@ interface socketInterface {
 const SERVER = process.env.REACT_APP_SERVER || "http://localhost:4000";
 
 const Roomlist = ({ annoy, roomId, setRoomId }: socketInterface) => {
+  const [isLoading, setIsLoading] = useState(true);
+
   const selectedRoom = useRef(null);
 
   const navigate = useNavigate();
@@ -139,7 +152,9 @@ const Roomlist = ({ annoy, roomId, setRoomId }: socketInterface) => {
   // const pageInfo = useSelector((state: any) => state.pageInfoReducer.pageInfo);
 
   useEffect(() => {
-    getPageData(page, limit);
+    setTimeout(() => {
+      getPageData(page, limit);
+    }, 1000);
   }, [page, limit]);
 
   // 서버에서 공부방 데이터를 받아오는 함수----------------------------------
@@ -151,6 +166,7 @@ const Roomlist = ({ annoy, roomId, setRoomId }: socketInterface) => {
       .then((res: AxiosResponse) => {
         setPosts(res.data.data);
         setTotalPage(res.data.total);
+        setIsLoading(false);
       })
       .catch((err: AxiosError) => {
         console.log("err:", err);
@@ -216,76 +232,93 @@ const Roomlist = ({ annoy, roomId, setRoomId }: socketInterface) => {
       <Button type="button" onClick={onSearch}>
         검색
       </Button> */}
-      <Root>
-        <Container>
-          {posts.length === 0 ? (
-            <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-              개설된 방이 없습니다
-            </div>
-          ) : (
-            posts.map((post: any, index: any): any => {
-              return (
-                <Post
-                  key={index}
-                  onClick={() => {
-                    setModal(true);
-                    selectedRoom.current = post;
-                  }}
-                  // style={{ backgroundColor: "" }}
-                  // onClick={() => enterRoomHandler(post)}
-                >
-                  <div>
-                    제목 : {post.title.length < 13 ? post.title : post.title.slice(0, 10) + "..."}
-                  </div>
-                  <br />
-                  <div>
-                    내용 :
-                    {post.content.length < 13
-                      ? " " + post.content
-                      : " " + post.content.slice(0, 10) + "..."}
-                  </div>
-                  <br />
-                  <div className="current">참여인원 : {post.roomCurrent} / 4</div>
-                  <div className=""></div>
-                </Post>
-              );
-            })
-          )}
-        </Container>
-        {modal && (
-          <Modal
-            modal={modal}
-            setModal={setModal}
-            width="350"
-            height="300"
-            element={
-              <BtnContainer>
-                <div style={{ fontSize: "1.5rem", textAlign: "center" }}>
-                  공부방에 입장 하시겠습니까?
-                </div>
-                <br />
-                <Buttonbox>
-                  <EnterRoomBtn
-                    style={{ color: "white" }}
-                    type="button"
-                    onClick={() => enterRoomHandler(selectedRoom.current)}
-                    // onClick={() => enterRoomHandler(post)}
-                  >
-                    확인
-                  </EnterRoomBtn>
-                  <EnterRoomBtn
-                    style={{ color: "white" }}
-                    type="button"
-                    onClick={() => setModal(false)}
-                  >
-                    취소
-                  </EnterRoomBtn>
-                </Buttonbox>
-              </BtnContainer>
-            }
+
+      {isLoading ? (
+        <Root>
+          <img
+            style={{ marginTop: "15vh", height: "35vh", width: "50vh" }}
+            alt="studylog"
+            src="asset/cat.gif"
           />
-        )}
-      </Root>
+          <div style={{ color: "white", fontSize: "10vh" }}>Loading...</div>
+        </Root>
+      ) : (
+        <div>
+          <Root>
+            <Container className="container" style={{}}>
+              {posts.length === 0 ? (
+                <div
+                  className="noroom"
+                  style={{ display: "flex", flexDirection: "column", alignItems: "center" }}
+                >
+                  <div>개설된 방이 없습니다</div>
+                </div>
+              ) : (
+                posts.map((post: any, index: any): any => {
+                  return (
+                    <Post
+                      key={index}
+                      onClick={() => {
+                        setModal(true);
+                        selectedRoom.current = post;
+                      }}
+                      // style={{ backgroundColor: "" }}
+                      // onClick={() => enterRoomHandler(post)}
+                    >
+                      <div>
+                        제목 :{" "}
+                        {post.title.length < 13 ? post.title : post.title.slice(0, 10) + "..."}
+                      </div>
+                      <br />
+                      <div>
+                        내용 :
+                        {post.content.length < 13
+                          ? " " + post.content
+                          : " " + post.content.slice(0, 10) + "..."}
+                      </div>
+                      <br />
+                      <div className="current">참여인원 : {post.roomCurrent} / 4</div>
+                      <div className=""></div>
+                    </Post>
+                  );
+                })
+              )}
+            </Container>
+            {modal && (
+              <Modal
+                modal={modal}
+                setModal={setModal}
+                width="300"
+                height="250"
+                element={
+                  <BtnContainer>
+                    <div>공부방에 입장 하시겠습니까?</div>
+                    <br />
+                    <Buttonbox>
+                      <EnterRoomBtn
+                        style={{ color: "white" }}
+                        type="button"
+                        onClick={() => enterRoomHandler(selectedRoom.current)}
+                        // onClick={() => enterRoomHandler(post)}
+                      >
+                        확인
+                      </EnterRoomBtn>
+                      <EnterRoomBtn
+                        style={{ color: "white" }}
+                        type="button"
+                        onClick={() => setModal(false)}
+                      >
+                        취소
+                      </EnterRoomBtn>
+                    </Buttonbox>
+                  </BtnContainer>
+                }
+              />
+            )}
+          </Root>
+          <Pagenation totalPage={totalPage} page={page} setPage={setPage} />
+        </div>
+      )}
 
       {/* <select
         onChange={(e) => {
@@ -297,7 +330,7 @@ const Roomlist = ({ annoy, roomId, setRoomId }: socketInterface) => {
         <option value={9}>9</option>
       </select> */}
 
-      <Pagenation totalPage={totalPage} page={page} setPage={setPage} />
+      {/* <Pagenation totalPage={totalPage} page={page} setPage={setPage} /> */}
     </div>
   );
 };
