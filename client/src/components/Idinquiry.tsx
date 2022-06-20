@@ -142,7 +142,7 @@ const Button = styled.button`
 
 const Idbox = styled.div`
   /* /* .find { */
-    /* height: 7vh;
+  /* height: 7vh;
     margin-top: 4vw;
     display: flex;
     justify-content: center;
@@ -154,7 +154,7 @@ const Idbox = styled.div`
   font-weight: bold; */
   /* margin-top: 5vh; */
   /* margin-bottom: 2vh; */
-  }
+  /* } */
 `;
 
 const Input = styled.input`
@@ -170,30 +170,12 @@ const Input = styled.input`
 
 const FindId = styled.div`
   /* display: flex; */
-  alignitems: center; */
-  .fadein{
-  font-size: medium;
-  position: relative;
-  overflow: hidden;
-  animation: fadein 2s ease-in-out;
-
-
-}
-
-
-@keyframes fadein{
-  0% {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  100% {
-    opacity: 1;
-    transform: none;
-  }
-
-  .id {
-  }
-  .showId {
+  /* alignitems: center; */
+  .fadein {
+    font-size: medium;
+    position: relative;
+    overflow: hidden;
+    animation: fadein 2s ease-in-out;
   }
 `;
 

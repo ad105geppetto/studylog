@@ -3,9 +3,10 @@ import axios, { AxiosError, AxiosResponse } from "axios";
 import { useNavigate, NavLink } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { logIn } from "../action/index";
+import { FcGoogle } from "react-icons/fc";
 import {
   Wrapper,
-  LoginInput,
+  Input,
   Large_Button,
   Small_Button,
   Title,
@@ -13,6 +14,7 @@ import {
   ButtonWrapper,
   LoginErrorMsg,
   ButtonWrapper2,
+  Form,
 } from "styles/Userpage_style";
 
 const CLIENT = process.env.REACT_APP_CLIENT || "http://localhost:3000";
@@ -44,12 +46,13 @@ const Login = () => {
         // { type: "application/json" }
       )
       .then((res: AxiosResponse) => {
+        console.log(res);
         const accessToken = res.data.accessToken;
         const id = res.data.userInfo.id;
         const userId = res.data.userInfo.userId;
         const email = res.data.userInfo.email;
         const profile = res.data.userInfo.profile;
-
+        console.log(res.data);
         dispatch(logIn(accessToken, id, userId, email, profile));
 
         navigate("/roomlist");
@@ -76,52 +79,47 @@ const Login = () => {
         <Logo alt="LOGO" src="asset/white_logo.png" object-fit="cover" />
       </NavLink>
       <Wrapper>
-        <div>
-          <Title>로그인</Title>
-          <form
-            onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
-              e.preventDefault();
-            }}
-          >
-            <div>
-              <LoginInput
-                type="text"
-                onChange={onUserInfo("id")}
-                placeholder="아이디를 입력해주세요"
-              />
-            </div>
-            <div>
-              <LoginInput
-                type="password"
-                onChange={onUserInfo("pwd")}
-                placeholder="비밀번호를 입력해주세요"
-              />
-            </div>
-            <LoginErrorMsg> {errMsg}</LoginErrorMsg>
-            <ButtonWrapper>
-              <div>
-                <Small_Button onClick={onClickLoginBtn}>로그인</Small_Button>
-              </div>
-              <div>
-                <Small_Button type="button" onClick={onNavigate("/signup")}>
-                  회원가입
-                </Small_Button>
-              </div>
-            </ButtonWrapper>
-            <ButtonWrapper2>
-              <div>
-                <Large_Button type="button" onClick={onNavigate("/findinfo")}>
-                  아이디/비밀번호 찾기
-                </Large_Button>
-              </div>
-              <div>
-                <Large_Button type="button" onClick={oauthPath}>
-                  GOOGLE 계정 로그인
-                </Large_Button>
-              </div>
-            </ButtonWrapper2>
-          </form>
-        </div>
+        <Title>로그인</Title>
+        <Form
+          onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
+            e.preventDefault();
+          }}
+        >
+          {/* <Section> */}
+          {/* <SubTitle> 아이디 </SubTitle> */}
+          <Input
+            style={{ marginBottom: "2vh" }}
+            type="text"
+            onChange={onUserInfo("id")}
+            placeholder="아이디를 입력해주세요"
+          />
+          {/* </Section> */}
+          {/* <Section> */}
+          {/* <SubTitle> 비밀번호 </SubTitle> */}
+          <Input
+            type="password"
+            onChange={onUserInfo("pwd")}
+            placeholder="비밀번호를 입력해주세요"
+          />
+          {/* </Section> */}
+          <LoginErrorMsg> {errMsg}</LoginErrorMsg>
+          <ButtonWrapper>
+            <Small_Button onClick={onClickLoginBtn}>로그인</Small_Button>
+
+            <Small_Button type="button" onClick={onNavigate("/signup")}>
+              회원가입
+            </Small_Button>
+          </ButtonWrapper>
+          <ButtonWrapper2>
+            <Large_Button type="button" onClick={onNavigate("/findinfo")}>
+              아이디/비밀번호 찾기
+            </Large_Button>
+
+            <Large_Button type="button" onClick={oauthPath}>
+              <FcGoogle size="2rem" /> 구글 로그인
+            </Large_Button>
+          </ButtonWrapper2>
+        </Form>
       </Wrapper>
     </div>
   );

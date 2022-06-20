@@ -7,10 +7,10 @@ import axios, { AxiosError, AxiosResponse } from "axios";
 const SERVER = process.env.REACT_APP_SERVER || "http://localhost:4000";
 
 const Wrapper = styled.div`
-  background: linear-gradient(to bottom, white, #f7f6f2);
+  background: #4b6587;
   display: flex;
   flex-direction: column;
-  justify-content: space-evenly;
+  justify-content: space-between;
   height: 70vh;
   width: 70vw;
   margin: 0;
@@ -27,10 +27,12 @@ const BackBoard = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-evenly;
-  min-height: 40vh;
-  max-height: 50vh;
+
+  min-height: 55vh;
+  max-height: 65vh;
   width: 70vw;
   gap: 2vw;
+  margin-bottom: 5vh;
 
   @media only screen and (max-width: 400px) {
     flex-direction: column;
@@ -205,7 +207,7 @@ const Boards = ({ userInfo }: any) => {
 
   return (
     <Wrapper>
-      <h1> 간단한 메모와 함께 오늘 할 일을 체크해보세요</h1>
+      <h1 style={{ color: "white" }}> 간단한 메모와 함께 오늘 할 일을 체크해보세요</h1>
       <DragDropContext onDragEnd={onDragEnd}>
         <BackBoard>
           {Object.keys(toDos).map((boardId) => (

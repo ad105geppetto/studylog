@@ -14,31 +14,31 @@ VALUES
         "kimcoding",
         "kimcoding@naver.com",
         "1234",
-        "/img/사진0.jpg"
+        Null
     ),
     (
         "cheacoding",
         "cheacoding@google.com",
         "1234",
-        "/img/사진1.jpg"
+        Null
     ),
     (
         "choecoding",
         "choecoding@naver.com",
         "1234",
-        "/img/사진2.jpg"
+        Null
     ),
     (
         "leecoding",
         "dhrjdn@naver.com",
         "1234",
-        "/img/사진3.jpg"
+        Null
     ),
     (
         "joecoding",
         "hdhj1026@naver.net",
         "1234",
-        "/img/사진4.jpg"
+        Null
     );
 
 INSERT INTO
@@ -91,11 +91,11 @@ INSERT INTO
         `totalTime`
     )
 VALUES
-    (1, 2, 3, 4, 5, 4, 6, 345),
-    (3, 5, 1, 2, 1, 3, 4, 145),
-    (6, 2, 3, 4, 2, 6, 9, 425),
-    (2, 1, 1, 4, 3, 3, 7, 745),
-    (3, 2, 3, 4, 5, 6, 7, 335);
+    (1, 2, 3, 4, 5, 4, 6, 25),
+    (3, 5, 1, 2, 1, 3, 4, 19),
+    (6, 2, 3, 4, 2, 6, 9, 32),
+    (2, 1, 1, 4, 3, 3, 7, 21),
+    (3, 2, 3, 4, 5, 6, 7, 30);
 
 INSERT INTO
     `todos` (`userId`, `type`, `content`)

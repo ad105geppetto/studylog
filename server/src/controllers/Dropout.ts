@@ -19,7 +19,7 @@ export default {
         res.clearCookie("refreshToken");
         res.status(200).send({
           accessToken: null,
-          refreshToken: null,
+          // refreshToken: null,
           message: "회원탈퇴되었습니다.",
         });
       }

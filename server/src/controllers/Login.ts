@@ -22,8 +22,8 @@ export default {
             profile: result[0].profile,
           };
 
-          const accessToken = jwt.sign(payload, process.env.ACCESS_SECRET, { expiresIn: "6h" });
-          const refreshToken = jwt.sign(payload, process.env.REFRESH_SECRET, { expiresIn: "24h" });
+          const accessToken = jwt.sign(payload, process.env.ACCESS_SECRET, { expiresIn: "1d" });
+          const refreshToken = jwt.sign(payload, process.env.REFRESH_SECRET, { expiresIn: "2d" });
 
           res
             .status(200)

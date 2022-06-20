@@ -76,44 +76,98 @@ export default {
     const token = authorization.split(" ")[1];
     const tokenData = jwt.verify(token, process.env.ACCESS_SECRET);
 
-    models.patch(tokenData, password, email, profilePath, (error, result) => {
-      if (error) {
-        return res.status(500).send({ message: "서버에러!" });
-      } else {
-        if (result.length === 0) {
-          res.status(404).send({ data: null, message: "회원 정보가 존재하지않습니다." });
+    if (email !== tokenData.email) {
+      models.check(email, (error, result) => {
+        if (error) {
+          return res.status(500).send({ message: "서버에러!" });
         } else {
-          const payload = {
-            id: result[0].id,
-            userId: result[0].userId,
-            email: result[0].email,
-            //ec2의 public/img에 저장되있는 파일의 주소를 넣어줌????
-            profile: result[0].profile,
-          };
+          if (result.length === 0) {
+            res.status(404).send({ message: "이메일 인증버튼을 눌러주세요." });
+          } else if (result[0].verification === 0) {
+            res.status(404).send({ message: "이메일에서 인증버튼을 눌러주세요." });
+          } else if (result[0].verification === 1) {
+            models.patch(tokenData, password, email, profilePath, (error, result) => {
+              if (error) {
+                return res.status(500).send({ message: "서버에러!" });
+              } else {
+                if (result.length === 0) {
+                  res.status(404).send({ data: null, message: "회원 정보가 존재하지않습니다." });
+                } else {
+                  const payload = {
+                    id: result[0].id,
+                    userId: result[0].userId,
+                    email: result[0].email,
+                    //ec2의 public/img에 저장되있는 파일의 주소를 넣어줌????
+                    profile: result[0].profile,
+                  };
 
-          const accessToken = jwt.sign(payload, process.env.ACCESS_SECRET, {
-            expiresIn: "1d",
-          });
-          const refreshToken = jwt.sign(payload, process.env.REFRESH_SECRET, {
-            expiresIn: "2d",
-          });
+                  const accessToken = jwt.sign(payload, process.env.ACCESS_SECRET, {
+                    expiresIn: "1d",
+                  });
+                  const refreshToken = jwt.sign(payload, process.env.REFRESH_SECRET, {
+                    expiresIn: "2d",
+                  });
 
-          //리프레쉬토큰 쿠키로
-          res.cookie("refreshToken", refreshToken);
+                  //리프레쉬토큰 쿠키로
+                  res.cookie("refreshToken", refreshToken);
 
-          res.status(200).send({
-            accessToken: accessToken,
-            refreshToken: refreshToken,
-            userInfo: {
+                  res.status(200).send({
+                    accessToken: accessToken,
+                    // refreshToken: refreshToken,
+                    userInfo: {
+                      id: result[0].id,
+                      userId: result[0].userId,
+                      email: result[0].email,
+                      profile: result[0].profile,
+                    },
+                    message: "회원 정보가 수정되었습니다.",
+                  });
+                }
+              }
+            });
+          }
+        }
+      });
+    } else if (email === tokenData.email) {
+      models.patch(tokenData, password, email, profilePath, (error, result) => {
+        if (error) {
+          return res.status(500).send({ message: "서버에러!" });
+        } else {
+          if (result.length === 0) {
+            res.status(404).send({ data: null, message: "회원 정보가 존재하지않습니다." });
+          } else {
+            const payload = {
               id: result[0].id,
               userId: result[0].userId,
               email: result[0].email,
+              //ec2의 public/img에 저장되있는 파일의 주소를 넣어줌????
               profile: result[0].profile,
-            },
-            message: "회원 정보가 수정되었습니다.",
-          });
+            };
+
+            const accessToken = jwt.sign(payload, process.env.ACCESS_SECRET, {
+              expiresIn: "1d",
+            });
+            const refreshToken = jwt.sign(payload, process.env.REFRESH_SECRET, {
+              expiresIn: "2d",
+            });
+
+            //리프레쉬토큰 쿠키로
+            res.cookie("refreshToken", refreshToken);
+
+            res.status(200).send({
+              accessToken: accessToken,
+              // refreshToken: refreshToken,
+              userInfo: {
+                id: result[0].id,
+                userId: result[0].userId,
+                email: result[0].email,
+                profile: result[0].profile,
+              },
+              message: "회원 정보가 수정되었습니다.",
+            });
+          }
         }
-      }
-    });
+      });
+    }
   },
 };

@@ -1,24 +1,27 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Modal from "components/Modal";
 import axios, { AxiosError, AxiosResponse } from "axios";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { useNavigate, NavLink } from "react-router-dom";
 import { dropout } from "../action/index";
+import { logIn } from "../action/index";
 import { MdOutlineMarkEmailRead } from "react-icons/md";
+import { BiImageAdd } from "react-icons/bi";
 import {
   Wrapper,
+  ImageSection,
   Title,
-  LoginInput,
   Small_Button,
   Logo,
   Input,
   ButtonWrapper,
   ErrorMsg,
   ImageBoard,
-  Hidden,
   InnerButton,
-  Label,
+  Separation,
+  SuccessMsg,
+  Form,
 } from "styles/Userpage_style";
 
 import styled from "styled-components";
@@ -27,15 +30,10 @@ axios.defaults.withCredentials = true;
 const SERVER = process.env.REACT_APP_SERVER || "http://localhost:4000";
 
 const Mypage = () => {
-  const userInfo = useSelector((state: any) => state.userInfoReducer.userInfo);
-  // 로그인시 저장 된 userInfo 가지고 오기
-
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
+  const userInfo = useSelector((state: any) => state.userInfoReducer.userInfo);
   const [modal, setModal] = useState(false);
-
-  const [drop, setDrop] = useState("");
   const [preview, setPreview] = useState("");
   const [imageFile, setImageFile] = useState();
   const [errMsg, setErrMsg] = useState({
@@ -43,19 +41,26 @@ const Mypage = () => {
     pwdCheckMsg: "",
     emailMsg: "",
   });
-
+  const [sucessMsg, setSucessMsg] = useState({
+    pwdMsg: "",
+    pwdCheckMsg: "",
+    emailMsg: "",
+  });
   const [modifiedUserInfo, setModifiedUserInfo] = useState({
     pwd: "",
     pwdCheck: "",
     email: userInfo.email,
-    profile: userInfo.profile, // 프로필의 초기값은 무엇일까? 기본 이미지가 되겠지?
+    profile: userInfo.profile,
   });
-
   const [validCheck, setValidCheck] = useState({
     pwd: false,
     pwdCheck: false,
     email: false,
   });
+
+  useEffect(() => {
+    console.log(userInfo);
+  }, []);
 
   // ------------------------- 이미지 업로드 ----------------------
 
@@ -93,6 +98,7 @@ const Mypage = () => {
           setErrMsg({ ...errMsg, pwdMsg: "비밀번호는 5글자 이상 15글자 미만 입니다." });
           setValidCheck({ ...validCheck, pwd: false });
         } else if (value === modifiedUserInfo.pwdCheck) {
+          setErrMsg({ ...errMsg, pwdMsg: "" });
           setErrMsg({ ...errMsg, pwdCheckMsg: "" });
         } else {
           setErrMsg({ ...errMsg, pwdMsg: "" });
@@ -113,6 +119,7 @@ const Mypage = () => {
           /([\w-.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
         if (!emailRegex.test(value)) {
           setErrMsg({ ...errMsg, emailMsg: "올바르지 못 한 이메일 형식입니다." });
+          setSucessMsg({ ...errMsg, emailMsg: "" });
         } else {
           setErrMsg({ ...errMsg, emailMsg: "" });
         }
@@ -122,10 +129,10 @@ const Mypage = () => {
 
   //  ------------------------------ 인증메일 전송 ----------------------------
   const onVerifyEmail = () => {
-    console.log("기존메일 : ", userInfo.email);
-    console.log("변경메일 : ", modifiedUserInfo.email);
     if (userInfo.email === modifiedUserInfo.email) {
       setValidCheck({ ...validCheck, email: true });
+      setSucessMsg({ ...errMsg, emailMsg: "이미 인증 된 이메일입니다." });
+      setErrMsg({ ...errMsg, emailMsg: "" });
       return;
     } else {
       axios
@@ -138,19 +145,18 @@ const Mypage = () => {
         });
     }
   };
+  //  -----------------------------------------------------------------------
 
   const onModalOff = () => {
     setModal((value) => !value);
-  }; //  -----------------------------------------------------------------------
+  };
 
   // ---------------------------------- 정보 수정 요청 전송  --------------------
   const onModify = () => {
     const { email, pwd, profile } = modifiedUserInfo;
     console.log(profile);
     console.log(modifiedUserInfo);
-
     let formData = new FormData();
-
     if (profile) {
       formData.append("email", email);
       formData.append("password", pwd);
@@ -171,27 +177,37 @@ const Mypage = () => {
         console.log(res);
         switch (res.status) {
           case 200:
-            alert("정상적으로 변경 완료 되었습니다.");
-            // dispatch(
-            //   logIn(
-            //     res.data.accessToken,
-            //     res.data.userInfo.id,
-            //     res.data.userInfo.userId,
-            //     res.data.userInfo.email,
-            //     res.data.userInfo.profile
-            //   )
-            // );
+            // alert("정상적으로 변경 완료 되었습니다.");
+            dispatch(
+              logIn(
+                res.data.accessToken,
+                res.data.userInfo.id,
+                res.data.userInfo.userId,
+                res.data.userInfo.email,
+                res.data.userInfo.profile
+              )
+            );
             break;
         }
         navigate("/");
       })
-      .catch((err: AxiosError) => console.log(err));
+      .catch((err: any) => {
+        console.log(err.response.data.message);
+        switch (err.response.data.message) {
+          case "이메일 인증버튼을 눌러주세요.":
+            setErrMsg({ ...errMsg, emailMsg: "이메일 인증이 필요합니다." });
+            break;
+          case "이메일에서 인증버튼을 눌러주세요.":
+            setErrMsg({ ...errMsg, emailMsg: "요청하신 메일에서 인증을 완료해주세요." });
+            break;
+          case "회원 정보가 존재하지않습니다.":
+            setErrMsg({ ...errMsg, emailMsg: "올바르지 못 한 접근입니다." });
+            break;
+        }
+      });
   };
   // ---------------------------------------------------------------------------
 
-  const dropOut = () => {
-    setDrop("drop");
-  };
   // -------------------회원탈퇴 버튼 함수-------------------------
   const onDropOutlBtn = () => {
     axios
@@ -199,17 +215,17 @@ const Mypage = () => {
         headers: { authorization: `Bearer ${userInfo.accessToken}` },
       })
       .then((res: AxiosResponse) => {
-        console.log(res.data);
         const accessToken = res.data.accessToken;
         dispatch(dropout(accessToken));
         navigate("/");
       })
       .catch((err: AxiosError) => console.log(err));
     onModalOff();
-  }; // ----------------------------------------------
+  };
+  // ----------------------------------------------
 
   const onErrorImg = (event: React.SyntheticEvent<HTMLImageElement, Event>) => {
-    event.currentTarget.src = "asset/dark_logo.png";
+    event.currentTarget.src = userInfo.profile || "asset/dark_logo.png";
   };
 
   return (
@@ -218,80 +234,107 @@ const Mypage = () => {
         <Logo alt="LOGO" src="asset/white_logo.png" object-fit="cover" />
       </NavLink>
       <Wrapper>
-        <div>
-          <Title>회원정보</Title>
-          <form onSubmit={(e: React.FormEvent<HTMLFormElement>) => e.preventDefault()}>
-            <div>
-              <LoginInput type="text" value={userInfo.userId} disabled />
-            </div>
-            <div>
-              <ImageBoard src={preview} onError={onErrorImg} />
-              <Hidden id="fileupload" type="file" accept=".jpg, .png" onChange={onUploadImage} />
-              <Label htmlFor="fileupload">이미지 업로드</Label>
-            </div>
-            <Input type="password" onChange={onModifyUserInfo("pwd")} />
-            <ErrorMsg> {errMsg.pwdMsg} </ErrorMsg>
-            <Input type="password" onChange={onModifyUserInfo("pwdCheck")} />
-            <ErrorMsg> {errMsg.pwdCheckMsg} </ErrorMsg>
-            <div>
-              <Input
-                type="eamil"
-                onChange={onModifyUserInfo("email")}
-                defaultValue={userInfo.email}
-              />
-              <InnerButton id="verify_mail" type="button" onClick={onVerifyEmail}>
-                <MdOutlineMarkEmailRead size="1.3rem" color="red" /> 이메일 인증
-              </InnerButton>
+        <Title>회원정보</Title>
+        <Form onSubmit={(e: React.FormEvent<HTMLFormElement>) => e.preventDefault()}>
+          {/* <Section> */}
+          {/* <SubTitle>아이디</SubTitle> */}
+          <Input type="text" value={userInfo.userId} disabled />
+          {/* </Section> */}
+          <ImageSection>
+            <ImageBoard src={preview} onError={onErrorImg} />
+            <input
+              style={{ display: "none" }}
+              id="fileupload"
+              type="file"
+              accept=".jpg, .png"
+              onChange={onUploadImage}
+            />
+            <InnerButton style={{ marginBottom: "1vh" }} as="label" htmlFor="fileupload">
+              <BiImageAdd size="2rem" />
+              프로필 이미지 변경
+            </InnerButton>
+          </ImageSection>
+          {/* <Section> */}
+          {/* <SubTitle>비밀번호</SubTitle> */}
+          <Input
+            type="password"
+            placeholder="비밀번호를 입력해주세요"
+            onChange={onModifyUserInfo("pwd")}
+          />
+          {/* </Section> */}
+          <ErrorMsg> {errMsg.pwdMsg} </ErrorMsg>
+          {/* <Section> */}
+          {/* <SubTitle> 비밀번호 확인</SubTitle> */}
+          <Input
+            type="password"
+            placeholder="비밀번호를 확인 해주세요"
+            onChange={onModifyUserInfo("pwdCheck")}
+          />
+          {/* </Section> */}
+          <ErrorMsg> {errMsg.pwdCheckMsg} </ErrorMsg>
 
-              <ErrorMsg>{errMsg.emailMsg}</ErrorMsg>
-            </div>
+          {/* <Section> */}
+          {/* <SubTitle>이메일</SubTitle> */}
+          <Separation>
+            <Input
+              type="eamil"
+              onChange={onModifyUserInfo("email")}
+              defaultValue={userInfo.email}
+            />
+            <InnerButton id="verify_mail" type="button" onClick={onVerifyEmail}>
+              <MdOutlineMarkEmailRead size="2rem" /> 이메일 인증
+            </InnerButton>
+          </Separation>
+          {/* </Section> */}
 
-            <ButtonWrapper>
-              <div>
-                <Small_Button
-                  type="submit"
-                  onClick={onModify}
-                  disabled={validCheck.pwd === true && validCheck.pwdCheck === true ? false : true}
-                >
-                  회원정보 수정
-                </Small_Button>
-              </div>
-              <div>
-                <Small_Button
-                  onClick={() => {
-                    setModal(true);
-                  }}
-                >
-                  회원탈퇴
-                </Small_Button>
-              </div>
-            </ButtonWrapper>
-            {modal && (
-              <Modal
-                modal={modal}
-                setModal={setModal}
-                width="300"
-                height="250"
-                // element={<div>회원탈퇴 하시겠습니까?</div>}
-                element={
-                  <Container>
-                    <div>회원탈퇴를 하시겠습니까?</div>
-                    {/* 회원탈퇴를 하시겠습니까? */}
-                    <br />
-                    <Buttonbox>
-                      <Button type="button" onClick={onDropOutlBtn}>
-                        확인
-                      </Button>
-                      <Button type="button" onClick={onModalOff}>
-                        취소
-                      </Button>
-                    </Buttonbox>
-                  </Container>
-                }
-              />
-            )}
-          </form>
-        </div>
+          <ErrorMsg>{errMsg.emailMsg}</ErrorMsg>
+          <SuccessMsg> {sucessMsg.emailMsg}</SuccessMsg>
+
+          <ButtonWrapper>
+            <div>
+              <Small_Button
+                type="submit"
+                onClick={onModify}
+                disabled={validCheck.pwd === true && validCheck.pwdCheck === true ? false : true}
+              >
+                회원정보 수정
+              </Small_Button>
+            </div>
+            <div>
+              <Small_Button
+                onClick={() => {
+                  setModal(true);
+                }}
+              >
+                회원탈퇴
+              </Small_Button>
+            </div>
+          </ButtonWrapper>
+          {modal && (
+            <Modal
+              modal={modal}
+              setModal={setModal}
+              width="300"
+              height="250"
+              // element={<div>회원탈퇴 하시겠습니까?</div>}
+              element={
+                <Container>
+                  <div>회원탈퇴를 하시겠습니까?</div>
+                  {/* 회원탈퇴를 하시겠습니까? */}
+                  <br />
+                  <Buttonbox>
+                    <Button type="button" onClick={onDropOutlBtn}>
+                      확인
+                    </Button>
+                    <Button type="button" onClick={onModalOff}>
+                      취소
+                    </Button>
+                  </Buttonbox>
+                </Container>
+              }
+            />
+          )}
+        </Form>
       </Wrapper>
     </div>
   );
