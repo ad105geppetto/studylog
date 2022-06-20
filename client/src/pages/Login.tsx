@@ -52,7 +52,7 @@ const Login = () => {
         const userId = res.data.userInfo.userId;
         const email = res.data.userInfo.email;
         const profile = res.data.userInfo.profile;
-
+        console.log(res.data);
         dispatch(logIn(accessToken, id, userId, email, profile));
 
         navigate("/roomlist");
