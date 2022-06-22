@@ -57,7 +57,7 @@ const Todo = () => {
               <Chart userInfo={userInfo} />
             )
           ) : (
-            <div> 로그인 해주세요 </div>
+            <div style={{ fontSize: "2rem" }}> 로그인 후 이용 가능 한 서비스 입니다. </div>
           )}
         </Content>
       </Wrapper>

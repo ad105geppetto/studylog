@@ -64,6 +64,9 @@ export const PersonalScreen = styled.video<{ width: string; height: string }>`
   width: ${(props) => props.width}%;
   height: ${(props) => props.height}%;
   object-fit: fill;
+  transform: scaleY(180deg);
+  -webkit-transform: rotateY(180deg);
+  -moz-transform: rotateY(180deg);
 `;
 
 const Button = styled.button`
@@ -496,7 +499,7 @@ const Room = ({ annoy, roomId }: socketInterface) => {
       .then((res) => {});
     console.log();
 
-    navigate("/");
+    navigate("/roomlist");
   };
 
   const cameraHandler = () => {

@@ -178,7 +178,7 @@ const Input = styled.input`
 const FindPwd = styled.div``;
 
 const Button = styled.button`
-  /* .find {
+  /*.find {
     min-width: 7vw;
     min-height: 5.5vh;
     line-height: 5.5vh;
@@ -190,12 +190,11 @@ const Button = styled.button`
     outline: 0;
     border: 0;
     background: white;
-
-    &:active {
-      position: relative;
-      top: 1px;
-    }
-  } */
+*/
+  &:active {
+    position: relative;
+    top: 1px;
+  }
 `;
 
 export default Pwinquiry;

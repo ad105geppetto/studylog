@@ -177,7 +177,6 @@ const Mypage = () => {
         console.log(res);
         switch (res.status) {
           case 200:
-            // alert("정상적으로 변경 완료 되었습니다.");
             dispatch(
               logIn(
                 res.data.accessToken,
@@ -189,7 +188,8 @@ const Mypage = () => {
             );
             break;
         }
-        navigate("/");
+        alert("정상적으로 변경 완료 되었습니다.");
+        navigate("/roomlist");
       })
       .catch((err: any) => {
         console.log(err.response.data.message);
