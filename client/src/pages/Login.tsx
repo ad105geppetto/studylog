@@ -73,6 +73,19 @@ const Login = () => {
     navigate(url);
   }; //  ----------------------------------------------------------------------
 
+  // ----------------------------- 카카오 OAUTH 요청 -----------------------
+  const kakaoOauthHandler = () => {
+    axios
+      .get(`http://localhost:4000/kakaoOauth`)
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+  // --------------------------------------------------------------
+
   return (
     <div>
       <NavLink to="/roomlist">
@@ -117,6 +130,9 @@ const Login = () => {
 
             <Large_Button type="button" onClick={oauthPath}>
               <FcGoogle size="2rem" /> 구글 로그인
+            </Large_Button>
+            <Large_Button type="button" onClick={kakaoOauthHandler}>
+              <FcGoogle size="2rem" />
             </Large_Button>
           </ButtonWrapper2>
         </Form>
