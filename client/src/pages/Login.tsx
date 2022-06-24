@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import axios, { AxiosError, AxiosResponse } from "axios";
 import { useNavigate, NavLink } from "react-router-dom";
 import { useDispatch } from "react-redux";
@@ -25,6 +25,7 @@ const OAUTH_URL = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${OAUT
 const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const newWindow = useRef<any>(window);
 
   const [userInfo, setUserInfo] = useState({
     id: "",
@@ -77,7 +78,8 @@ const Login = () => {
   const kakaoOauthHandler = () => {
     axios
       .get(`http://localhost:4000/kakaoOauth`)
-      .then((res) => {
+      .then((res: any) => {
+        // window.location.assign(res);
         console.log(res);
       })
       .catch((err) => {
