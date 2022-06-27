@@ -9,7 +9,7 @@ const CLIENT = process.env.CLIENT || "http://localhost:3000";
 export default {
   post: (req, res) => {
     const code = req.body.authorizationCode;
-    console.log(code);
+    console.log(`google OAuth authorizationCode ==========`, code);
     axios
       .post(`https://oauth2.googleapis.com/token`, {
         code: code,

@@ -21,6 +21,9 @@ const CLIENT = process.env.REACT_APP_CLIENT || "http://localhost:3000";
 const SERVER = process.env.REACT_APP_SERVER || "http://localhost:4000";
 const OAUTH_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID;
 const OAUTH_URL = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${OAUTH_ID}&redirect_uri=${CLIENT}&response_type=code&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile%20openid&access_type=offline&`;
+// const REST_API_KEY = process.env.KAKAO_CLIENT_ID;
+// const REDIRECT_URI = process.env.SERVER || `http://localhost:3000`;
+// const KAKAO_OAUTH_URL = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}`;
 
 const Login = () => {
   const dispatch = useDispatch();
@@ -78,9 +81,8 @@ const Login = () => {
   const kakaoOauthHandler = () => {
     axios
       .get(`http://localhost:4000/kakaoOauth`)
-      .then((res: any) => {
-        // window.location.assign(res);
-        console.log(res);
+      .then((res: AxiosResponse) => {
+        window.location.assign(res.data.data);
       })
       .catch((err) => {
         console.log(err);
@@ -129,13 +131,10 @@ const Login = () => {
             <Large_Button type="button" onClick={onNavigate("/findinfo")}>
               아이디/비밀번호 찾기
             </Large_Button>
-
             <Large_Button type="button" onClick={oauthPath}>
               <FcGoogle size="2rem" /> 구글 로그인
             </Large_Button>
-            <Large_Button type="button" onClick={kakaoOauthHandler}>
-              <FcGoogle size="2rem" />
-            </Large_Button>
+            <button onClick={kakaoOauthHandler}>카카오 로그인</button>
           </ButtonWrapper2>
         </Form>
       </Wrapper>
