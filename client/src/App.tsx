@@ -46,8 +46,21 @@ function App() {
       });
   };
 
+  const sendKakaoAuthCode = (authCode: any) => {
+    axios
+      .post(`${SERVER}/kakaoOauth/redirect`, { authorizationCode: authCode })
+      .then((data) => {
+        console.log("=====kakaoOauth====서버에서 받아옴");
+        console.log(data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   useEffect(() => {
     sendAuthCode(authCode);
+    sendKakaoAuthCode(authCode);
   }, []);
 
   return (

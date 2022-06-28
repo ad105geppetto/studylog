@@ -19,7 +19,6 @@ export default {
         grant_type: "authorization_code",
       })
       .then(async (response) => {
-        console.log("!!!");
         const accessToken = response.data.access_token;
         const data = await googleOauth.verify(accessToken);
         const email = data.email;
@@ -81,6 +80,5 @@ export default {
       .catch((e) => {
         res.status(404);
       });
-    // res.send(req.body.authorizationCode);
   },
 };

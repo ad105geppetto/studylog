@@ -11,12 +11,8 @@ export default {
         `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}`
       )
       .then((data: any) => {
-        // console.log(data);
         console.log(`data.config.url ===========`, data.config.url)
-        // console.log("/////");
-        // window.location.assign(data);
         res.json({ data: data.config.url })
-
       })
       .catch((err) => {
         console.log(err);
@@ -24,29 +20,25 @@ export default {
       });
   },
   redirect: (req, res) => {
-    console.log(`res.req.url ========`, res.req.url)
     const responsedLocation = res.req.url
-    console.log(`responsedLocation ========`, responsedLocation)
-    const authorizedCode = res.req.query.code
-    console.log(typeof authorizedCode)
+    // const authorizedCode = res.req.query.code
+    const authorizedCode: string = res.req.body.authorizationCode
     console.log(`authorizedCode ==========`, authorizedCode)
-    axios.post(`https://kauth.kakao.com/oauth/token${responsedLocation}`, {
-      grant_type: "authorization_code",
-      client_id: REST_API_KEY,
-      redirect_uri: `http://localhost:3000`,
-      code: authorizedCode,
-      client_secret: process.env.KAKAO_CLIENT_SECRET
-    }, {
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-    })
-      .then(data => {
-        console.log(data)
-        res.send("OK~!!")
+    axios.post(`https://kauth.kakao.com/oauth/token?grant_type=authorization_code&client_id=${process.env.KAKAO_CLIENT_ID}&redirect_uri=${REDIRECT_URI}&code=${authorizedCode}`)
+      .then(async (data: any) => {
+        console.log(data.data)
+        await axios.get(`https://kapi.kakao.com/v2/user/me`, { headers: { Authorization: `Bearer ${data.data.access_token}` } })
+          .then(async (userInfo: any) => {
+            console.log(await userInfo.data)
+            res.end()
+          })
+          .catch(err => {
+            console.log(err)
+          })
+        res.json({ data: data.data })
       })
       .catch(err => {
-        console.log(err)
-        res.send("err")
+        res.status(404);
       })
-    // res.end()
   }
 }
