@@ -1,4 +1,5 @@
-import KakaoOauth from "../models/KakaoOauth"
+import models from "../models/KakaoOauth"
+import { generateAccessToken, generateRefreshToken } from "./tokenFunction/Token";
 import axios from "axios"
 
 const REST_API_KEY = process.env.KAKAO_CLIENT_ID;
@@ -20,22 +21,46 @@ export default {
       });
   },
   redirect: (req, res) => {
-    const responsedLocation = res.req.url
+    // const responsedLocation = res.req.url
     // const authorizedCode = res.req.query.code
     const authorizedCode: string = res.req.body.authorizationCode
-    console.log(`authorizedCode ==========`, authorizedCode)
+    console.log(`kakao OAuth authorizedCode ==========`, authorizedCode)
     axios.post(`https://kauth.kakao.com/oauth/token?grant_type=authorization_code&client_id=${process.env.KAKAO_CLIENT_ID}&redirect_uri=${REDIRECT_URI}&code=${authorizedCode}`)
       .then(async (data: any) => {
-        console.log(data.data)
         await axios.get(`https://kapi.kakao.com/v2/user/me`, { headers: { Authorization: `Bearer ${data.data.access_token}` } })
           .then(async (userInfo: any) => {
-            console.log(await userInfo.data)
-            res.end()
+            const email = userInfo.data.kakao_account.email;
+            const profile = userInfo.data.kakao_account.profile.thumbnail_image_url;
+            models.post(email, profile, (error, result) => {
+              if (error) {
+                res.status(500).json({ message: "Internal Sever Error" });
+              } else {
+                const payload = {
+                  id: result[0].id,
+                  userId: result[0].userId,
+                  email: result[0].email,
+                  profile: result[0].profile,
+                };
+
+                const accessToken = generateAccessToken(payload);
+                const refreshToken = generateRefreshToken(payload);
+
+                res
+                  .status(200)
+                  .cookie("refreshToken", refreshToken, {
+                    domain: "localhost",
+                    path: "/",
+                    sameSite: "none",
+                    httpOnly: true,
+                    secure: true,
+                  })
+                  .json({ accessToken: accessToken, userInfo: payload, message: "ok" });
+              }
+            })
           })
           .catch(err => {
             console.log(err)
           })
-        res.json({ data: data.data })
       })
       .catch(err => {
         res.status(404);

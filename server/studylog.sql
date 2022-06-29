@@ -5,7 +5,6 @@ CREATE TABLE `users` (
   `password` varchar(255),
   `profile` varchar(255),
   `roomId` int,
-  `refreshToken` varchar(255),
   `createdAt` timestamp NOT NULL DEFAULT (now()),
   `updatedAt` timestamp NOT NULL DEFAULT (now())
 );

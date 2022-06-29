@@ -1,5 +1,5 @@
 import express from "express";
-import jwt from "jsonwebtoken";
+import { generateAccessToken, generateRefreshToken } from "./tokenFunction/Token";
 import dotenv from "dotenv";
 import models from "../models/Login";
 dotenv.config();
@@ -22,8 +22,8 @@ export default {
             profile: result[0].profile,
           };
 
-          const accessToken = jwt.sign(payload, process.env.ACCESS_SECRET, { expiresIn: "1d" });
-          const refreshToken = jwt.sign(payload, process.env.REFRESH_SECRET, { expiresIn: "2d" });
+          const accessToken = generateAccessToken(payload);
+          const refreshToken = generateRefreshToken(payload);
 
           res
             .status(200)
