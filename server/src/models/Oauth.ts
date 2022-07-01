@@ -1,7 +1,7 @@
 import db from "../db";
 
 export default {
-  post: (email, profile, callback) => {
+  post: (email: string, profile: string, callback: Function) => {
     const queryString = `SELECT * FROM users WHERE userId = "${email}"`;
     db.query(queryString, (error, result) => {
       if (error) {

@@ -1,11 +1,11 @@
-import express from "express";
+import { Request, Response } from "express";
 import { generateAccessToken, generateRefreshToken } from "./tokenFunction/Token";
 import dotenv from "dotenv";
 import models from "../models/Login";
 dotenv.config();
 
 export default {
-  post: (req: express.Request, res: express.Response) => {
+  post: (req: Request, res: Response) => {
     const { userId, password } = req.body;
     models.post(userId, password, (error, result) => {
       if (error) {
@@ -14,7 +14,6 @@ export default {
         if (result.length === 0) {
           return res.status(400).send({ message: "아이디와 비밀번호를 확인해주세요." });
         } else {
-          console.log(result);
           const payload = {
             id: result[0].id,
             userId: result[0].userId,
@@ -28,8 +27,6 @@ export default {
           res
             .status(200)
             .cookie("refreshToken", refreshToken, {
-              domain: "localhost",
-              path: "/",
               sameSite: "none",
               httpOnly: true,
               secure: true,

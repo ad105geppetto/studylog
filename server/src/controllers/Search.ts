@@ -1,7 +1,8 @@
+import { Request, Response } from "express";
 import models from "../models/Search"
 
 export default {
-  get: (req, res) => {
+  get: (req: Request, res: Response) => {
     models.get((error, result) => {
       if (error) {
         res.status(500).json({ message: "Internal Sever Error" })

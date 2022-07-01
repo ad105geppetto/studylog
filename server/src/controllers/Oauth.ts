@@ -20,10 +20,10 @@ export default {
         grant_type: "authorization_code",
       })
       .then(async (response) => {
-        const accessToken = response.data.access_token;
-        const data = await googleOauth.verify(accessToken);
-        const email = data.email;
-        const profile = data.picture;
+        const googleAccessToken = response.data.access_token;
+        const userData = await googleOauth.verify(googleAccessToken);
+        const email = userData.email;
+        const profile = userData.picture;
         models.post(email, profile, (error, result) => {
           if (error) {
             res.status(500).json({ message: "Internal Sever Error" });
@@ -41,8 +41,6 @@ export default {
             res
               .status(200)
               .cookie("refreshToken", refreshToken, {
-                domain: "localhost",
-                path: "/",
                 sameSite: "none",
                 httpOnly: true,
                 secure: true,

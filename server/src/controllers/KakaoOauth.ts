@@ -1,3 +1,4 @@
+import { Request, Response } from "express";
 import models from "../models/KakaoOauth"
 import { generateAccessToken, generateRefreshToken } from "./tokenFunction/Token";
 import axios from "axios"
@@ -6,7 +7,7 @@ const REST_API_KEY = process.env.KAKAO_CLIENT_ID;
 const REDIRECT_URI = process.env.SERVER || `http://localhost:3000`
 
 export default {
-  get: (req, res) => {
+  get: (req: Request, res: Response) => {
     axios
       .get(
         `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}`
@@ -20,14 +21,16 @@ export default {
         res.json("errr")
       });
   },
-  redirect: (req, res) => {
+  redirect: (req: Request, res: Response) => {
     // const responsedLocation = res.req.url
     // const authorizedCode = res.req.query.code
     const authorizedCode: string = res.req.body.authorizationCode
     console.log(`kakao OAuth authorizedCode ==========`, authorizedCode)
     axios.post(`https://kauth.kakao.com/oauth/token?grant_type=authorization_code&client_id=${process.env.KAKAO_CLIENT_ID}&redirect_uri=${REDIRECT_URI}&code=${authorizedCode}`)
       .then(async (data: any) => {
-        await axios.get(`https://kapi.kakao.com/v2/user/me`, { headers: { Authorization: `Bearer ${data.data.access_token}` } })
+        const kakaoAccessToken = data.data.access_token
+
+        await axios.get(`https://kapi.kakao.com/v2/user/me`, { headers: { Authorization: `Bearer ${kakaoAccessToken}` } })
           .then(async (userInfo: any) => {
             const email = userInfo.data.kakao_account.email;
             const profile = userInfo.data.kakao_account.profile.thumbnail_image_url;
@@ -48,8 +51,6 @@ export default {
                 res
                   .status(200)
                   .cookie("refreshToken", refreshToken, {
-                    domain: "localhost",
-                    path: "/",
                     sameSite: "none",
                     httpOnly: true,
                     secure: true,

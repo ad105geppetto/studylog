@@ -1,7 +1,8 @@
+import { Request, Response } from "express";
 import models from "../models/Roomlist";
 
 export default {
-  get: (req, res) => {
+  get: (req: Request, res: Response) => {
     const { page, limit } = req.query;
     models.get((error, result) => {
       if (error) {
@@ -38,7 +39,7 @@ export default {
       }
     });
   },
-  delete: (req, res) => {
+  delete: (req: Request, res: Response) => {
     const { roomId } = req.query;
     models.delete(Number(roomId), (error, result) => {
       if (error) {
