@@ -12,6 +12,7 @@ export default {
         return res.status(500).json({ message: "Internal Sever Error" });
       } else {
         if (result.length === 0) {
+          // DB에서 결과값이 없는 경우
           return res.status(400).send({ message: "아이디와 비밀번호를 확인해주세요." });
         } else {
           const payload = {
