@@ -8,11 +8,12 @@ export default {
         callback(error, null);
       } else {
         if (result.length === 0) {
+          // 구글 최초 로그인시
           db.query(`SET foreign_key_checks = 0`);
           db.query(
             `INSERT INTO logs (mon, tue, wed, thu, fri, sat, sun, totalTime) VALUES (0,0,0,0,0,0,0,0)`
           );
-          db.query(`SET foreign_key_checks =1`);
+          db.query(`SET foreign_key_checks = 1`);
 
           const queryString2 = `INSERT INTO users (userId, email, profile) VALUES ("${email}", "${email}", "${profile}")`;
           db.query(queryString2, (error, result) => {
