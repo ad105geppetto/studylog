@@ -134,7 +134,10 @@ const Login = () => {
             <Large_Button type="button" onClick={oauthPath}>
               <FcGoogle size="2rem" /> 구글 로그인
             </Large_Button>
-            <button onClick={kakaoOauthHandler}>카카오 로그인</button>
+            <Large_Button type="button" onClick={kakaoOauthHandler}>
+              <FcGoogle size="2rem" />
+              카카오 로그인
+            </Large_Button>
           </ButtonWrapper2>
         </Form>
       </Wrapper>
