@@ -19,9 +19,9 @@ const Container = styled.div`
     width: 80vw;
     height: 60vh;
     display: flex;
-    flexdirection: column;
+    flex-direction: column;
     justify-content: center;
-    alignitems: center;
+    align-items: center;
     color: white;
     font-size: 3rem;
     margin-bottom: 5vh;

@@ -11,7 +11,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Roomlist from "pages/Roomlist";
 import Nav from "./components/Nav";
 import Findinfo from "pages/Findinfo";
-import { logIn } from "./action/index";
+import { logIn, logout } from "./action/index";
 import { useDispatch } from "react-redux";
 
 const SERVER = process.env.REACT_APP_SERVER || "http://localhost:4000";
@@ -28,8 +28,6 @@ function App() {
   // --------------------------- OAUTH 로그인---------------------
 
   const sendAuthCode = (authCode: any) => {
-    console.log("1234");
-    console.log(SERVER);
     axios
       .post(`${SERVER}/Oauth`, { authorizationCode: authCode })
       .then((res: AxiosResponse) => {
@@ -50,6 +48,10 @@ function App() {
     sendAuthCode(authCode);
   }, []);
 
+  window.addEventListener("unload", () => {
+    dispatch(logout(""));
+  });
+  // -----------------
   return (
     //------------------------------------------------------------------------------------------------
     <BrowserRouter>

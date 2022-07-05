@@ -32,12 +32,13 @@ export const TextButton = styled.button`
   align-self: center;
 
   width: 100%;
-  height: 50%;
-  line-height: 50%;
+  height: 100%;
+  line-height: 100%;
   text-align: center;
   font-size: 2vh;
   font-weight: bold;
   color: white;
+
   cursor: pointer;
 
   /* outline: 0;

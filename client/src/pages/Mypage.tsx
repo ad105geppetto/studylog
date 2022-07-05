@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Modal from "components/Modal";
 import axios, { AxiosError, AxiosResponse } from "axios";
-import { useSelector } from "react-redux";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, NavLink } from "react-router-dom";
 import { dropout } from "../action/index";
 import { logIn } from "../action/index";
@@ -58,12 +57,7 @@ const Mypage = () => {
     email: false,
   });
 
-  useEffect(() => {
-    console.log(userInfo);
-  }, []);
-
   // ------------------------- 이미지 업로드 ----------------------
-
   const onUploadImage = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file: any = e.target.files;
     if (file.length === 0) {
@@ -82,10 +76,10 @@ const Mypage = () => {
         // 파일 리드를 통해 프리뷰에 미리보기 구현
       };
     }
-  };
+  }; // ---------------------------------------------------------------
 
   // ----------------------------- 유저 정보 수정 -----------------------
-  const onModifyUserInfo = (key: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
+  const setModifyUserInfo = (key: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
     setModifiedUserInfo({ ...modifiedUserInfo, [key]: e.target.value });
     const value = e.target.value;
 
@@ -126,8 +120,9 @@ const Mypage = () => {
         break;
     }
   };
+  //-----------------------------------------------------------------------
 
-  //  ------------------------------ 인증메일 전송 ----------------------------
+  //  ------------------------------ 메일 인증 요청  ----------------------------
   const onVerifyEmail = () => {
     if (userInfo.email === modifiedUserInfo.email) {
       setValidCheck({ ...validCheck, email: true });
@@ -137,9 +132,7 @@ const Mypage = () => {
     } else {
       axios
         .post(`${SERVER}/signup/mail`, { email: modifiedUserInfo.email })
-        .then((res: AxiosResponse) => {
-          console.log(res);
-        })
+        .then((res: AxiosResponse) => {})
         .catch((err: AxiosError) => {
           console.log("에러메세지", err);
         });
@@ -147,15 +140,15 @@ const Mypage = () => {
   };
   //  -----------------------------------------------------------------------
 
+  // --------- 모달창 끄기 -------
   const onModalOff = () => {
     setModal((value) => !value);
-  };
+  }; //--------
 
   // ---------------------------------- 정보 수정 요청 전송  --------------------
-  const onModify = () => {
+  const sendModifiedInfo = () => {
     const { email, pwd, profile } = modifiedUserInfo;
-    console.log(profile);
-    console.log(modifiedUserInfo);
+
     let formData = new FormData();
     if (profile) {
       formData.append("email", email);
@@ -174,7 +167,6 @@ const Mypage = () => {
         },
       })
       .then((res: AxiosResponse) => {
-        console.log(res);
         switch (res.status) {
           case 200:
             dispatch(
@@ -192,7 +184,7 @@ const Mypage = () => {
         navigate("/roomlist");
       })
       .catch((err: any) => {
-        console.log(err.response.data.message);
+        console.log("정보수정요청 에러 메시지 : ", err.response.data.message);
         switch (err.response.data.message) {
           case "이메일 인증버튼을 눌러주세요.":
             setErrMsg({ ...errMsg, emailMsg: "이메일 인증이 필요합니다." });
@@ -209,7 +201,7 @@ const Mypage = () => {
   // ---------------------------------------------------------------------------
 
   // -------------------회원탈퇴 버튼 함수-------------------------
-  const onDropOutlBtn = () => {
+  const onDropOutBtn = () => {
     axios
       .delete(`${SERVER}/dropout`, {
         headers: { authorization: `Bearer ${userInfo.accessToken}` },
@@ -224,9 +216,10 @@ const Mypage = () => {
   };
   // ----------------------------------------------
 
+  // ------------- 기본 이미지 -----------------
   const onErrorImg = (event: React.SyntheticEvent<HTMLImageElement, Event>) => {
     event.currentTarget.src = userInfo.profile || "asset/dark_logo.png";
-  };
+  }; // ----------------------------------
 
   return (
     <div>
@@ -236,10 +229,8 @@ const Mypage = () => {
       <Wrapper>
         <Title>회원정보</Title>
         <Form onSubmit={(e: React.FormEvent<HTMLFormElement>) => e.preventDefault()}>
-          {/* <Section> */}
-          {/* <SubTitle>아이디</SubTitle> */}
           <Input type="text" value={userInfo.userId} disabled />
-          {/* </Section> */}
+
           <ImageSection>
             <ImageBoard src={preview} onError={onErrorImg} />
             <input
@@ -254,38 +245,33 @@ const Mypage = () => {
               프로필 이미지 변경
             </InnerButton>
           </ImageSection>
-          {/* <Section> */}
-          {/* <SubTitle>비밀번호</SubTitle> */}
+
           <Input
             type="password"
             placeholder="비밀번호를 입력해주세요"
-            onChange={onModifyUserInfo("pwd")}
+            onChange={setModifyUserInfo("pwd")}
           />
-          {/* </Section> */}
+
           <ErrorMsg> {errMsg.pwdMsg} </ErrorMsg>
-          {/* <Section> */}
-          {/* <SubTitle> 비밀번호 확인</SubTitle> */}
+
           <Input
             type="password"
             placeholder="비밀번호를 확인 해주세요"
-            onChange={onModifyUserInfo("pwdCheck")}
+            onChange={setModifyUserInfo("pwdCheck")}
           />
-          {/* </Section> */}
+
           <ErrorMsg> {errMsg.pwdCheckMsg} </ErrorMsg>
 
-          {/* <Section> */}
-          {/* <SubTitle>이메일</SubTitle> */}
           <Separation>
             <Input
               type="eamil"
-              onChange={onModifyUserInfo("email")}
+              onChange={setModifyUserInfo("email")}
               defaultValue={userInfo.email}
             />
             <InnerButton id="verify_mail" type="button" onClick={onVerifyEmail}>
               <MdOutlineMarkEmailRead size="2rem" /> 이메일 인증
             </InnerButton>
           </Separation>
-          {/* </Section> */}
 
           <ErrorMsg>{errMsg.emailMsg}</ErrorMsg>
           <SuccessMsg> {sucessMsg.emailMsg}</SuccessMsg>
@@ -294,7 +280,7 @@ const Mypage = () => {
             <div>
               <Small_Button
                 type="submit"
-                onClick={onModify}
+                onClick={sendModifiedInfo}
                 disabled={validCheck.pwd === true && validCheck.pwdCheck === true ? false : true}
               >
                 회원정보 수정
@@ -323,7 +309,7 @@ const Mypage = () => {
                   {/* 회원탈퇴를 하시겠습니까? */}
                   <br />
                   <Buttonbox>
-                    <Button type="button" onClick={onDropOutlBtn}>
+                    <Button type="button" onClick={onDropOutBtn}>
                       확인
                     </Button>
                     <Button type="button" onClick={onModalOff}>

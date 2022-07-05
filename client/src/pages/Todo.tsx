@@ -1,11 +1,11 @@
 import Chart from "components/Chart";
 import Boards from "components/Boards";
 import { useSelector } from "react-redux";
+import Prelogin from "components/Prelogin";
 import Nav from "components/Nav";
 import { Wrapper, Menubar, Content, TextButton, Line } from "styles/Todo_style";
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-// 로그인시 저장 된 userInfo 가지고 오기
 
 const Page = styled.div`
   width: 100vw;
@@ -17,23 +17,27 @@ const Todo = () => {
   const [isLogin, setIsLogin] = useState(false);
   const [rendering, setRendering] = useState("Board");
 
+  // ---- Todo 페이지 렌더링을 위한 상태값 변경 함수 ----
   const onRenderTodo = (e: React.MouseEvent<HTMLButtonElement>) => {
     setRendering((rendering) => "Board");
-  };
+  }; // -------------------------------------------
 
+  // ---- Chart 페이지 렌더링을 위한 상태값 변경 함수 ----
   const onRenderChart = (e: React.MouseEvent<HTMLButtonElement>) => {
     setRendering((rendering) => "Chart");
   };
+  // -------------------------------------------
 
-  const onLoginState = () => {
+  // 로그인 여부 체크
+  const checkLoginState = () => {
     if (userInfo.accessToken) {
       setIsLogin(() => true);
     }
   };
+  // ------------------------
 
   useEffect(() => {
-    console.log(userInfo);
-    onLoginState();
+    checkLoginState();
   }, []);
 
   return (
@@ -57,7 +61,7 @@ const Todo = () => {
               <Chart userInfo={userInfo} />
             )
           ) : (
-            <div style={{ fontSize: "2rem" }}> 로그인 후 이용 가능 한 서비스 입니다. </div>
+            <Prelogin color="black" />
           )}
         </Content>
       </Wrapper>
