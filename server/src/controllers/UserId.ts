@@ -1,7 +1,8 @@
+import { Request, Response } from "express";
 import models from "../models/UserId"
 
 export default {
-  post: (req, res) => {
+  post: (req: Request, res: Response) => {
     const { email } = req.body
     models.post(email, (error, result) => {
       if (error) {

@@ -37,7 +37,8 @@ export default {
     );
     db.query(`SET foreign_key_checks =1`);
   },
-  //회원가입인증메일
+
+  // 회원가입인증메일
   save: (email: string, certNum: string, callback: Function) => {
     const queryString = `INSERT INTO auth (email, certNum) VALUES ("${email}","${certNum}")`;
     db.query(queryString, (error, result) => {
@@ -45,6 +46,7 @@ export default {
     });
   },
 
+  // 회원가입시 이메일인증 여부
   auth: (email: string, certNum: string, callback: Function) => {
     const queryString = `UPDATE auth SET verification = 1 WHERE email = "${email}" ORDER BY createdAt DESC LIMIT 1`;
     db.query(queryString, (error, result) => {
