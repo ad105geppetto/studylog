@@ -6,7 +6,6 @@ interface Props {
   height: string;
   element: JSX.Element;
   modal: boolean;
-  // post: any;
   setModal: Dispatch<SetStateAction<boolean>>;
 }
 

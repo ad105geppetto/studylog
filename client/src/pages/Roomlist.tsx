@@ -1,13 +1,13 @@
 import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
-import { Pagenation } from "../components/Pagenation";
+import Pagenation from "../components/Pagenation";
 import axios, { AxiosError, AxiosResponse } from "axios";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import Nav from "components/Nav";
+import Modal from "components/Modal";
 import { roomlist } from "action";
 import { useDispatch } from "react-redux";
-import Modal from "components/Modal";
 
 const Container = styled.div`
   width: 80%;
@@ -98,7 +98,6 @@ const EnterRoomBtn = styled.button`
   font-size: 1rem;
   text-align: center;
   font-weight: 500;
-
   min-width: 6vw;
   min-height: 5vh;
   border-radius: 1rem;
@@ -131,12 +130,11 @@ const SERVER = process.env.REACT_APP_SERVER || "http://localhost:4000";
 const Roomlist = ({ annoy, roomId, setRoomId }: socketInterface) => {
   const [isLoading, setIsLoading] = useState(true);
 
-  const selectedRoom = useRef(null);
+  const [newRoom, setNewRoom] = useState({});
 
   const navigate = useNavigate();
-  // const dispatch = useDispatch();
-  const [modal, setModal] = useState(false);
-
+  // 모달창을 보여줄지 말지를 정하는 상태
+  const [viewModal, setViewModal] = useState(false);
   // 실제로 서버에서 받아오는 데이터
   const [posts, setPosts] = useState<IPosts[]>([]);
   // 페이지네이션에서 보여지는 페이지
@@ -145,8 +143,10 @@ const Roomlist = ({ annoy, roomId, setRoomId }: socketInterface) => {
   const [limit, setLimit] = useState(6);
   // 서버에서 받아오는 데이터의 총 갯수
   const [totalPage, setTotalPage] = useState(0);
-
+  // input창에 검색하게 되는 검색어를 상태로 저장.
   const [search, setSearch] = useState("");
+
+  const selectedRoom = useRef(null);
 
   const userInfo = useSelector((state: any) => state.userInfoReducer.userInfo);
   // const pageInfo = useSelector((state: any) => state.pageInfoReducer.pageInfo);
@@ -166,7 +166,9 @@ const Roomlist = ({ annoy, roomId, setRoomId }: socketInterface) => {
       })
       .then((res: AxiosResponse) => {
         setPosts(res.data.data);
+        // console.log(res.data.data);
         setTotalPage(res.data.total);
+        // setNewRoom(res.data.data[0]);
         setIsLoading(false);
       })
       .catch((err: AxiosError) => {
@@ -182,22 +184,20 @@ const Roomlist = ({ annoy, roomId, setRoomId }: socketInterface) => {
       return;
     }
     setRoomId(room.id);
-    console.log(roomId);
+    // console.log(roomId);
     axios
       .patch(`${SERVER}/room`, {
         roomId: room.id,
         userId: userInfo.id,
         type: "plus",
       })
-
       .then((res) => {
         navigate(`/room/${room.id}`);
       });
   };
   // -----------------------------------------------------------------------
 
-  // 검색어를 띄워주는 함수-------------------------------------------------
-  // 검색후에 변수가 초기화가 되는 문제 확인해주세요
+  // 검색어를 검색해주는 함수-------------------------------------------------
   const onSearch = () => {
     axios
       .get(`${SERVER}/search?title=${search}&limit=${limit}&page=${page}`)
@@ -207,15 +207,12 @@ const Roomlist = ({ annoy, roomId, setRoomId }: socketInterface) => {
         // const posts = setPosts(res.data.data);
         // dispatch(roomlist(posts));
         setTotalPage(res.data.total);
-        console.log(res);
       })
       .catch((err: AxiosError) => {
         console.log(err);
       });
   };
   // -----------------------------------------------------------------------
-
-  // rooms가 의미하는 바를 정확하게 모르겠다
 
   const onChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value);
@@ -224,7 +221,8 @@ const Roomlist = ({ annoy, roomId, setRoomId }: socketInterface) => {
   return (
     <div style={{ width: "100vw", height: "100vh" }}>
       <Nav />
-      {/* <Input
+      {/* 검색부분은 에러를 수정하기 전까지 주석처리 */}
+      <Input
         type="text"
         onChange={onChangeHandler}
         placeholder="검색어를 입력해주세요"
@@ -232,9 +230,10 @@ const Roomlist = ({ annoy, roomId, setRoomId }: socketInterface) => {
       />
       <Button type="button" onClick={onSearch}>
         검색
-      </Button> */}
+      </Button>
 
       {isLoading ? (
+        // 로딩중일때에는 강아지 보여주기
         <Root>
           <img
             style={{ marginTop: "15vh", height: "35vh", width: "50vh" }}
@@ -244,9 +243,10 @@ const Roomlist = ({ annoy, roomId, setRoomId }: socketInterface) => {
           <div style={{ color: "white", fontSize: "10vh" }}>Loading...</div>
         </Root>
       ) : (
+        // 로딩이 끝나면 공부방 목록 보여주기
         <div>
           <Root>
-            <Container className="container" style={{}}>
+            <Container className="container">
               {posts.length === 0 ? (
                 <div
                   className="noroom"
@@ -260,11 +260,9 @@ const Roomlist = ({ annoy, roomId, setRoomId }: socketInterface) => {
                     <Post
                       key={index}
                       onClick={() => {
-                        setModal(true);
+                        setViewModal(true);
                         selectedRoom.current = post;
                       }}
-                      // style={{ backgroundColor: "" }}
-                      // onClick={() => enterRoomHandler(post)}
                     >
                       <div>
                         제목 :{" "}
@@ -285,10 +283,10 @@ const Roomlist = ({ annoy, roomId, setRoomId }: socketInterface) => {
                 })
               )}
             </Container>
-            {modal && (
+            {viewModal && (
               <Modal
-                modal={modal}
-                setModal={setModal}
+                modal={viewModal}
+                setModal={setViewModal}
                 width="300"
                 height="250"
                 element={
@@ -300,14 +298,13 @@ const Roomlist = ({ annoy, roomId, setRoomId }: socketInterface) => {
                         style={{ color: "white" }}
                         type="button"
                         onClick={() => enterRoomHandler(selectedRoom.current)}
-                        // onClick={() => enterRoomHandler(post)}
                       >
                         확인
                       </EnterRoomBtn>
                       <EnterRoomBtn
                         style={{ color: "white" }}
                         type="button"
-                        onClick={() => setModal(false)}
+                        onClick={() => setViewModal(false)}
                       >
                         취소
                       </EnterRoomBtn>
@@ -320,7 +317,7 @@ const Roomlist = ({ annoy, roomId, setRoomId }: socketInterface) => {
           <Pagenation totalPage={totalPage} page={page} setPage={setPage} />
         </div>
       )}
-
+      {/* 한 페이지에 몇개의 방을 보여줄지 정하기*/}
       {/* <select
         onChange={(e) => {
           setLimit(Number(e.target.value));
@@ -330,123 +327,8 @@ const Roomlist = ({ annoy, roomId, setRoomId }: socketInterface) => {
         <option value={3}>3</option>
         <option value={9}>9</option>
       </select> */}
-
-      {/* <Pagenation totalPage={totalPage} page={page} setPage={setPage} /> */}
     </div>
   );
 };
 
-{
-  /* 스프린트 모달--------------------------------------------------------------- */
-}
-{
-  /* <ModalContainer>
-          <ModalBtn onClick={openModalHandler}>
-              {isOpen === false ? "Open Modal" : "Opened!"}
-            </ModalBtn>
-          {isOpen === true ? (
-            <ModalBackdrop>
-              <ModalView onClick={(e) => e.stopPropagation()}>
-                <div className="desc">공부방에 입장 하시겠습니까?</div>
-                <button onClick={() => enterRoomHandler(post)}>확인</button>
-                <button
-                  onClick={() => {
-                    setIsOpen(false);
-                  }}
-                >
-                  취소
-                </button>
-              </ModalView>
-            </ModalBackdrop>
-          ) : null}
-        </ModalContainer> */
-}
-
-// 스프린트 모달 css---------------------------------------------------------------
-// export const ModalBackdrop = styled.div`
-//   position: fixed;
-//   z-index: 999;
-//   top: 0;
-//   left: 0;
-//   bottom: 0;
-//   right: 0;
-//   background-color: rgba(0, 0, 0, 0.7);
-//   display: grid;
-//   place-items: center;
-// `;
-
-// export const ModalContainer = styled.div`
-//   height: 15rem;
-//   text-align: center;
-//   margin: 120px auto;
-// `;
-
-// export const ModalBtn = styled.button`
-//   background-color: black;
-//   /* #4000c7; */
-//   text-decoration: none;
-//   border: none;
-//   padding: 20px;
-//   color: white;
-//   border-radius: 30px;
-//   cursor: grab;
-// `;
-
-// export const ModalView = styled.div.attrs((post) => ({
-//   // attrs 메소드를 이용해서 아래와 같이 div 엘리먼트에 속성을 추가할 수 있다.
-//   role: "dialog",
-// }))`
-//   border-radius: 10px;
-//   background-color: #ffffff;
-//   width: 300px;
-//   height: 100px;
-
-//   > span.close-btn {
-//     margin-top: 5px;
-//     cursor: pointer;
-//   }
-//   /* 모달 눌렀을 때 보여지는 창의 글씨 */
-//   > div.desc {
-//     margin-top: 25px;
-//     color: black;
-//   }
-// `;
-// ---------------------------------------------------------------------------------------
-
 export default Roomlist;
-
-// {
-//   modal && (
-//     <Modal
-//       enterRoomHandler={enterRoomHandler}
-//       roomId={roomId}
-//       modal={modal}
-//       setModal={setModal}
-//       width="300"
-//       height="250"
-//       element={
-//         <BtnContainer>
-//           <div>공부방에 입장 하시겠습니까?</div>
-//           <br />
-//           <Buttonbox>
-//             <LogOutBtn
-//               style={{ color: "white" }}
-//               type="button"
-//               onClick={() => enterRoomHandler(roomId)}
-//             >
-//               확인
-//             </LogOutBtn>
-//             <LogOutBtn
-//               style={{ color: "white" }}
-//               type="button"
-//               // onClick={() => onModalOff(modal)}
-//               onClick={() => setModal(false)}
-//             >
-//               취소
-//             </LogOutBtn>
-//           </Buttonbox>
-//         </BtnContainer>
-//       }
-//     />
-//   );
-// }

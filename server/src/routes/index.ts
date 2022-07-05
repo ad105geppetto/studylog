@@ -6,6 +6,7 @@ import checkRouter from "./Check";
 import userIdRouter from "./UserId";
 import userpwdRouter from "./Userpwd";
 import oauthRouter from "./Oauth";
+import kakaoOauthRouter from "./KakaoOauth"
 import roomlistRouter from "./Roomlist";
 import searchRouter from "./Search";
 import logoutRouter from "./Logout";
@@ -27,6 +28,7 @@ router.use("/check", checkRouter);
 router.use("/userid", userIdRouter);
 router.use("/userpwd", userpwdRouter);
 router.use("/Oauth", oauthRouter);
+router.use("/kakaoOauth", kakaoOauthRouter)
 router.use("/roomlist", roomlistRouter);
 router.use("/statics", staticsRouter);
 router.use("/todo", todoRouter);

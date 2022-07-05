@@ -1,7 +1,8 @@
+import { Request, Response } from "express";
 import models from "../models/Userpwd";
 
 export default {
-  post: (req, res) => {
+  post: (req: Request, res: Response) => {
     const { userId, certNum } = req.body;
     models.post(userId, certNum, (error, result) => {
       if (error) {
