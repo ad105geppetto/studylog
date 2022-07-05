@@ -24,11 +24,8 @@ export default {
           } else if (page <= 0) {
             res.status(400).json({ message: "page는 1 이상이어야 합니다." })
           } else {
-            res.status(200).json({ data: roomList[page - 1], total: limit })
+            res.status(200).json({ data: roomList[page - 1], total: totalPage, message: "페이지 게시물들을 가져왔습니다." })
           }
-          res
-            .status(200)
-            .json({ data: rooms, total: rooms.length, message: "페이지 게시물들을 가져왔습니다." });
         } else {
           res.status(400).json({ message: "검색 결과 게시물이 존재하지 않습니다." });
         }
