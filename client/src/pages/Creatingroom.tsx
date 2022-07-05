@@ -13,7 +13,9 @@ const SERVER = process.env.REACT_APP_SERVER || "http://localhost:4000";
 const Creatingroom = ({ setRoomId }: socketInterface) => {
   const navigate = useNavigate();
   const userInfo = useSelector((state: any) => state.userInfoReducer.userInfo);
+  // 공부방 이름을 상태로 둔 것
   const [title, setTitle] = useState("");
+  // 공부방 설명을 상태로 둔 것
   const [content, setContent] = useState("");
 
   const titleHandler = (e: any) => {
@@ -23,7 +25,7 @@ const Creatingroom = ({ setRoomId }: socketInterface) => {
   const contentHandler = (e: any) => {
     setContent(e.target.value);
   };
-
+  // 공부방 생성하는 함수-----------------------------------------------
   const createRoomHandler = () => {
     axios
       .post(
@@ -41,6 +43,7 @@ const Creatingroom = ({ setRoomId }: socketInterface) => {
         console.log(err);
       });
   };
+  //-------------------------------------------------------------------
 
   return (
     <Root>
@@ -88,8 +91,6 @@ const Container = styled.div`
   flex-direction: column;
   column-gap: 24px;
   padding-top: 10vh;
-  /* background-color: white; */
-  /* margin-top: 10vh; */
   margin-bottom: 13vh;
   .title {
     height: 10vh;
@@ -106,12 +107,10 @@ const Container = styled.div`
     height: 7vh;
     margin-top: 4vw;
     display: flex;
-    /* flex-direction: row; */
     justify-content: center;
     align-items: center;
     font-size: 1.5rem;
     margin: auto;
-    /* display:block; */
   }
 `;
 
@@ -138,13 +137,8 @@ const Input = styled.input`
 const Button = styled.button`
   width: 12vw;
   height: 8vh;
-  /* height: 6vh; */
   border: 2px solid black;
   border-radius: 10px;
-  /* cursor: pointer; */
-  /* display: flex;
-  justify-content: center; */
-  /* align-items: center; */
   margin-top: 10px;
   margin-right: 10px;
   background-color: white;
