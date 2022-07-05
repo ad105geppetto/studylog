@@ -6,9 +6,6 @@ const SERVER = process.env.SERVER || "http://localhost:4000";
 export default {
   post: (req: Request, res: Response) => {
     models.post((error, result) => {
-      // if (error) {
-      //   res.status(500).json({ message: "Internal Sever Error" });
-      // } else {
       const { userId, email, password } = req.body;
       models.check(email, (error, result) => {
         if (error) {
@@ -37,23 +34,25 @@ export default {
           }
         }
       });
-      // }
     });
   },
-  mail: (req: Request, res: Response) => {
-    //받아온 이메일
-    let { email } = req.body;
-    console.log(email);
 
+  // 회원가입시 이메일인증요청
+  mail: (req: Request, res: Response) => {
+    // 받아온 이메일
+    let { email } = req.body;
+    // console.log(email);
+
+    // 이메일 유효성검사
     const vaildCheck = email.indexOf("@");
     if (!email || email.length === 0 || vaildCheck === -1) {
       res.status(400).json({ message: "올바른 메일을 입력해주세요." });
     }
 
-    /////////////////
+    // ---------------------------------------------------------------
     // 1. 인증번호 생성(인증코드)
     const certNum = Math.random().toString().substring(2, 6);
-    // 2. ttl설정
+    // 2. ttl설정(time to live)
 
     // 3. 인증 코드 테이블에 데이터 입력
     models.save(email, certNum, (error, result) => {
@@ -65,13 +64,13 @@ export default {
           if (error) {
             console.log(error);
           } else {
-            console.log(info);
+            // console.log(info);
             res.status(200).send({ message: "이메일이 발송되었습니다." });
           }
         });
       }
     });
-    /////////////////
+    // ---------------------------------------------------------------
 
     let transporter = nodemailer.createTransport({
       service: "naver", // 메일 보내는 곳
@@ -88,21 +87,22 @@ export default {
       from: process.env.MAIL_ID, // 보내는 메일의 주소
       to: email, // 수신할 이메일
       subject: "studylog 인증메일입니다.", // 메일 제목
-      //내용: 인증번호
-      html: `<h1>안녕하세요 studylog입니다. 메일인증을 하시려면 밑에 인증하기를 눌러주세요~</h1>
+      // 내용
+      html: `<h1>안녕하세요 studylog입니다. 메일인증을 하시려면 밑에 인증하기를 눌러주세요!</h1>
             <a href=${SERVER}/signup/auth?email=${email}&certNum=${certNum}'>인증하기</a>`,
     };
   },
 
+  // 이메일에서 인증누른 경우
   auth: (req: Request, res: Response) => {
-    console.log(req.query);
-    let { email, certNum } = req.query;
+    // console.log(req.query);
+    const { email, certNum } = req.query;
 
     models.auth(email, certNum, (error, result) => {
       if (error) {
         res.status(500).send({ message: "서버에러!" });
       } else {
-        console.log(result);
+        // console.log(result);
         res.write("<script>alert('success')</script>");
       }
     });

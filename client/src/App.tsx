@@ -57,7 +57,11 @@ function App() {
         if (data.data.message === "이미 구글 계정으로 가입한 유저입니다.") {
           alert(data.data.message);
         }
-        console.log(data);
+        const accessToken = data.data.accessToken;
+        const userInfo = data.data.userInfo;
+        dispatch(
+          logIn(accessToken, userInfo.id, userInfo.userId, userInfo.email, userInfo.profile)
+        );
       })
       .catch((err) => {
         console.log(err);
