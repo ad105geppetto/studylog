@@ -2,8 +2,8 @@ import db from "../db/index";
 
 export default {
   post: (title, content, tokenData, callback) => {
-    if (!tokenData.userId) {
-      const queryString5 = `SELECT id from users WHERE email = "${tokenData.email}" ORDER BY createdAt DESC`
+    if (!tokenData) {
+      const queryString5 = `SELECT id from users WHERE email = "${tokenData.email}" ORDER BY createdAt DESC`;
       db.query(queryString5, (error, newResult) => {
         const queryString = `INSERT INTO rooms (title, content, roomCurrent) VALUES ("${title}", "${content}", 1)`;
         db.query(queryString, (error, result) => {
@@ -14,9 +14,9 @@ export default {
               callback(error, result);
             });
           });
-        })
-      })
-      return
+        });
+      });
+      return;
     } else {
       const queryString = `INSERT INTO rooms (title, content, roomCurrent) VALUES ("${title}", "${content}", 1)`;
       db.query(queryString, (error, result) => {

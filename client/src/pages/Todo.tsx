@@ -42,7 +42,7 @@ const Todo = () => {
       <Wrapper>
         <Menubar>
           <TextButton type="button" onClick={onRenderTodo}>
-            To Do
+            할 일
           </TextButton>
           <Line />
           <TextButton as="button" id="static" type="button" onClick={onRenderChart}>
