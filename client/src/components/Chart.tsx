@@ -58,6 +58,7 @@ const Chart = ({ userInfo }: Chartinterface) => {
     { name: "일", 시간: 0 },
   ]);
 
+  // ------- 데이터 불러오기 -----
   const onLoadingData = () => {
     axios
       .get(`${SERVER}/statics`, { headers: { authorization: `Bearer ${userInfo.accessToken}` } })
@@ -70,7 +71,7 @@ const Chart = ({ userInfo }: Chartinterface) => {
           let hour = (data / 3600).toFixed(2);
           return Number(hour);
         }
-
+        // 불러온 데이터를 상태에 저장해서 각 일자별로 데이터 세팅해주기
         setTimeTable([
           { name: "월", 시간: timeHandler(mon) },
           { name: "화", 시간: timeHandler(tue) },
@@ -81,6 +82,7 @@ const Chart = ({ userInfo }: Chartinterface) => {
           { name: "일", 시간: timeHandler(sun) },
         ]);
 
+        // total 데이터 단위 변경 및 weekSummary 상태에 담아주기
         function totalHandler(total: number) {
           let hour = Math.floor(total / 3600);
           let minute = Math.floor((total % 3600) / 60);
@@ -93,11 +95,6 @@ const Chart = ({ userInfo }: Chartinterface) => {
         }
 
         setWeekSummary(totalHandler(total));
-
-        /*
-        요일별 데이터 불러오기,
-        데이터 불러오고 난 후 각 일자별로 데이터 뿌리기, 
-        */
       })
       .catch((err: AxiosError) => console.log(err));
   };
@@ -105,8 +102,6 @@ const Chart = ({ userInfo }: Chartinterface) => {
   useEffect(() => {
     onLoadingData();
   }, []);
-
-  // const DetailView = ({ payload, label, active }) => {};
 
   return (
     <Wrapper>

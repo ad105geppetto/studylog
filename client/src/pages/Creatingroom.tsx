@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
+import Prelogin from "components/Prelogin";
 import axios from "axios";
 import styled from "styled-components";
 import Nav from "components/Nav";
@@ -17,6 +18,7 @@ const Creatingroom = ({ setRoomId }: socketInterface) => {
   const [title, setTitle] = useState("");
   // 공부방 설명을 상태로 둔 것
   const [content, setContent] = useState("");
+  const [isLogin, setIsLogin] = useState(false);
 
   const titleHandler = (e: any) => {
     setTitle(e.target.value);
@@ -45,30 +47,49 @@ const Creatingroom = ({ setRoomId }: socketInterface) => {
   };
   //-------------------------------------------------------------------
 
+  // 로그인 여부 체크
+  const checkLoginState = () => {
+    if (userInfo.accessToken) {
+      setIsLogin(() => true);
+    }
+  };
+  // ------------------------
+
+  useEffect(() => {
+    checkLoginState();
+  }, []);
+
   return (
     <Root>
       <Nav />
-      <Container>
-        <Label htmlFor="roomName">방제목</Label>
-        <Input
-          className="title"
-          type="text"
-          onChange={titleHandler}
-          id="roomName"
-          placeholder="생성할 방 제목을 입력해주세요"
-        ></Input>
 
-        <Label htmlFor="content">내용</Label>
-        <Input
-          className="content"
-          type="text"
-          onChange={contentHandler}
-          id="content"
-          placeholder="어떤 방인지 간략히 소개해주세요"
-        ></Input>
-        <Button className="create" onClick={createRoomHandler}>
-          확인
-        </Button>
+      <Container>
+        {isLogin ? (
+          <div>
+            <Label htmlFor="roomName">방제목</Label>
+            <Input
+              className="title"
+              type="text"
+              onChange={titleHandler}
+              id="roomName"
+              placeholder="생성할 방 제목을 입력해주세요"
+            ></Input>
+
+            <Label htmlFor="content">내용</Label>
+            <Input
+              className="content"
+              type="text"
+              onChange={contentHandler}
+              id="content"
+              placeholder="어떤 방인지 간략히 소개해주세요"
+            ></Input>
+            <Button className="create" onClick={createRoomHandler}>
+              확인
+            </Button>
+          </div>
+        ) : (
+          <Prelogin color="white" />
+        )}
       </Container>
     </Root>
   );

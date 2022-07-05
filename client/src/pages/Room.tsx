@@ -44,10 +44,13 @@ const VideoArea = styled.div<{ size?: string }>`
   margin-left: 1vw;
   margin-right: 1vw;
   display: grid;
-  width: ${(props) => props.size}vw;
+  /* width: ${(props) => props.size}vw; */
+  width: 100vw;
   height: 85vh;
-  grid-template-columns: repeat(2, 50%);
-  grid-template-rows: repeat(2, 50%);
+  /* grid-template-columns: repeat(2, 50%);
+  grid-template-rows: repeat(2, 50%); */
+  grid-template-rows: repeat(auto-fit, minmax(0%, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(45%, 1fr));
   place-content: center;
   place-items: center;
   grid-gap: 1vh;
@@ -61,9 +64,15 @@ const VideoArea = styled.div<{ size?: string }>`
 export const PersonalScreen = styled.video<{ width: string; height: string }>`
   border: 0.3vh solid lightgrey;
   border-radius: 1rem;
-  width: ${(props) => props.width}%;
-  height: ${(props) => props.height}%;
+  /* width: ${(props) => props.width}%;
+  height: ${(props) => props.height}%; */
+  width: 100%;
+  height: 100%;
   object-fit: fill;
+  transform: scaleY(180deg);
+  -webkit-transform: rotateY(180deg);
+  -moz-transform: rotateY(180deg);
+  overflow: hidden;
 `;
 
 const Button = styled.button`
@@ -215,7 +224,7 @@ const Room = ({ annoy, roomId }: socketInterface) => {
   const [cameraOff, setCameraOff] = useState(false);
   const [mute, setMute] = useState(false);
   const [chat, setChat] = useState(false);
-  const [chatView, setChatView] = useState("none");
+
   //채팅
 
   const messageBoxRef = useRef<any>();
@@ -595,55 +604,7 @@ const Room = ({ annoy, roomId }: socketInterface) => {
               </button>
             </ChatInput>
           </ChatWindow>
-        ) : (
-          <ChatWindow view={chatView} id="Chat">
-            <div
-              style={{
-                marginTop: "1vw",
-                textAlign: "center",
-                fontWeight: "bolder",
-                fontSize: "1.7vh",
-                color: "white",
-              }}
-            >
-              Live Chat
-            </div>
-            <ChatView id="chatwindow">
-              {messageList.map((messageContent: any, idx: any) => {
-                return (
-                  <div
-                    key={idx}
-                    className="message"
-                    id={userInfo.userId === messageContent.author ? "you" : "other"}
-                  >
-                    <ChatInfo>
-                      <UserName>{messageContent.author}</UserName>
-                      <TimeStamp>{messageContent.time}</TimeStamp>
-                    </ChatInfo>
-                    <Message>{messageContent.message}</Message>
-                  </div>
-                );
-              })}
-            </ChatView>
-
-            <ChatInput>
-              <textarea
-                value={currentMessage}
-                placeholder="Message를 입력해주세요."
-                onChange={(event: any) => {
-                  setCurrentMessage(event.target.value);
-                }}
-                onKeyPress={(event: any) => {
-                  event.key === "Enter" && sendMessage();
-                  console.log(event);
-                }}
-              />
-              <button onClick={sendMessage}>
-                <BiMailSend size="2rem" color="#393D46" />
-              </button>
-            </ChatInput>
-          </ChatWindow>
-        )}
+        ) : null}
       </MediaArea>
       <ButtonArea>
         <Button onClick={cameraHandler}>

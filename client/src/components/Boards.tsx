@@ -44,18 +44,27 @@ interface ToDos {
   [key: string]: any;
 }
 
+interface Data {
+  id: string;
+  type: string;
+  content: string;
+}
+
 const Boards = ({ userInfo }: any) => {
   const [text, setText] = useState<string | null>("");
+
+  // input에 작성하는 text값 상태로 저장하기
   const onAddText = (e: React.ChangeEvent<HTMLInputElement>) => {
     setText(e.target.value);
   };
+
   const [toDos, setToDos] = useState<ToDos>({
     Todo: [],
     Progress: [],
     Done: [],
   });
 
-  //!----------------------------- TODO 데이터 불러오기 --------------------------
+  //----------------------------- TODO 데이터 불러오기 --------------------------
   const onLoadToDos = () => {
     axios
       .get(`${SERVER}/todo`, {
@@ -64,11 +73,12 @@ const Boards = ({ userInfo }: any) => {
         },
       })
       .then((res: AxiosResponse) => {
+        // 서버에서 받아 온 data를 toDos 에 담아주기
         const data = res.data.data;
         if (data.length === 0) {
           return;
         }
-        data.forEach((data: any) => {
+        data.forEach((data: Data) => {
           const id = data.id;
           const key = data.type;
           const text = data.content;
@@ -91,9 +101,10 @@ const Boards = ({ userInfo }: any) => {
 
   useEffect(() => {
     onLoadToDos();
+    console.log(toDos);
   }, []);
 
-  //!-----------------------------------------------------------
+  //-----------------------------------------------------------
 
   //------------------ TODO 데이터 추가하기 ---------------------------
   const onAddToDos = (key: string) => (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -121,16 +132,15 @@ const Boards = ({ userInfo }: any) => {
         { content: text, type: key },
         { headers: { authorization: `Bearer ${userInfo.accessToken}` } }
       )
-      .then((res: AxiosResponse) => console.log(res))
+      .then((res: AxiosResponse) => {})
       .catch((err: AxiosError) => console.log(err));
-    window.location.reload();
+
+    // window.location.reload();
   };
 
-  // todos는 객체의 값이 배열이고 그 내부에 객체를 가진 데이터 구조
-  // 삭제를 위해서는 객체의 key를 알아야  할 것
-  // 내부 필터링을 통해 id 가 아닌것을 렌더링 해 줄 것
   // ------------------------ TODOS 삭제 ----------------------------------
-  const onDeleteToDos = (key: string, id: any) => () => {
+
+  const onDeleteToDos = (key: string, id: number) => () => {
     setToDos((toDos) => {
       return {
         ...toDos,
@@ -142,19 +152,9 @@ const Boards = ({ userInfo }: any) => {
       .delete(`${SERVER}/todo/${id}`, {
         headers: { authorization: `Bearer ${userInfo.accessToken}` },
       })
-      .then((res: AxiosResponse) => {
-        console.log("RESPONSE 메시지 : ", res);
-      })
+      .then((res: AxiosResponse) => {})
       .catch((err: AxiosError) => console.log("ERROR 메시지 :", err));
-  };
-
-  /*
-  ! 데이터를 추가 하는 경우 id가 임의의 값으로 생성하게 되고 있음
-  ! 데이터 베이스의 id 값을 모르기 때문에 생성시 설정 을 못하겠음
-  ! 새로고침시 추가한 내용도 나오고 그때 삭제하면 정상적으로 삭제가 됨. 
-  ? 데이터 베이스의 인덱스값인 id를 어떻게 가지고 올 수 있을까? 
-  */
-  // ------------------------------------------------------------------------
+  }; // ------------------------------------------------------------------------
 
   //----------------------------- TODOS 드래그 ----------------------------
   const onDragEnd = (info: DropResult) => {
@@ -167,10 +167,25 @@ const Boards = ({ userInfo }: any) => {
       // 같은 카드보드 내부에서의 이동
       const sourceToDos = [...toDos[source.droppableId]];
       const sourceObj = sourceToDos[source.index];
-      console.log(sourceObj);
+
       sourceToDos.splice(source.index, 1);
       sourceToDos.splice(destination.index, 0, sourceObj);
       setToDos({ ...toDos, [source.droppableId]: sourceToDos });
+      console.log("sourceObj : ", sourceObj);
+      console.log("sourceToDos : ", sourceToDos);
+      console.log("destination : ", destination);
+      console.log("source.droppableId : ", toDos[source.droppableId].indexOf(sourceObj));
+
+      console.log(toDos);
+
+      // -------------------------- ToDos 데이터 수정 ( index 값 변환? ) ----------------
+      /*
+
+        배열 내부의 index 값을 변경이 필요함
+
+
+        */
+      // -----------------------------------
     }
     if (destination.droppableId !== source.droppableId) {
       // 다른 카드 보드간의 이동
@@ -180,7 +195,6 @@ const Boards = ({ userInfo }: any) => {
 
       sourceToDos.splice(source.index, 1);
       targetToDos.splice(destination.index, 0, sourceObj);
-      console.log(destination);
 
       setToDos({
         ...toDos,
@@ -188,6 +202,7 @@ const Boards = ({ userInfo }: any) => {
         [destination.droppableId]: targetToDos,
       });
       // ------------------ToDOS 데이터 수정 (Type 변경)-----------------------------
+
       axios
         .patch(
           `${SERVER}/todo/${draggableId}`,
@@ -203,7 +218,7 @@ const Boards = ({ userInfo }: any) => {
     }
   };
 
-  //------------------------------------- ----------------------------
+  //------------------------------------------------------------------
 
   return (
     <Wrapper>
@@ -275,16 +290,16 @@ draggableId , index 를 요청
     }
   };
 
-
-
-
-
-
-
-
 key => todo
 기본 상태는 기존의 배열
 수정하는 함수까지 부르려면 ? < action 
 
 
  */
+
+/*
+  ! 데이터를 추가 하는 경우 id가 임의의 값으로 생성하게 되고 있음
+  ! 데이터 베이스의 id 값을 모르기 때문에 생성시 설정 을 못하겠음
+  ! 새로고침시 추가한 내용도 나오고 그때 삭제하면 정상적으로 삭제가 됨. 
+  ? 데이터 베이스의 인덱스값인 id를 어떻게 가지고 올 수 있을까? 
+  */

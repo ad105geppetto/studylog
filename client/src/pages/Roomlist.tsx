@@ -19,9 +19,9 @@ const Container = styled.div`
     width: 80vw;
     height: 60vh;
     display: flex;
-    flexdirection: column;
+    flex-direction: column;
     justify-content: center;
-    alignitems: center;
+    align-items: center;
     color: white;
     font-size: 3rem;
     margin-bottom: 5vh;
@@ -152,9 +152,10 @@ const Roomlist = ({ annoy, roomId, setRoomId }: socketInterface) => {
   // const pageInfo = useSelector((state: any) => state.pageInfoReducer.pageInfo);
 
   useEffect(() => {
-    setTimeout(() => {
-      getPageData(page, limit);
-    }, 1000);
+    // setTimeout(() => {
+    //   getPageData(page, limit);
+    // }, 1000);
+    getPageData(page, limit);
   }, [page, limit]);
 
   // 서버에서 공부방 데이터를 받아오는 함수----------------------------------
@@ -290,7 +291,7 @@ const Roomlist = ({ annoy, roomId, setRoomId }: socketInterface) => {
                 height="250"
                 element={
                   <BtnContainer>
-                    <div>공부방에 입장 하시겠습니까?</div>
+                    <div style={{ fontSize: "1.5rem" }}>공부방에 입장 하시겠습니까?</div>
                     <br />
                     <Buttonbox>
                       <EnterRoomBtn
