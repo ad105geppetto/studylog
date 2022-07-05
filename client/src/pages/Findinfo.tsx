@@ -3,7 +3,6 @@ import Idinquiry from "../components/Idinquiry";
 import Pwinquiry from "../components/Pwinquiry";
 import Nav from "components/Nav";
 import axios, { AxiosError, AxiosResponse } from "axios";
-// import Modal from "../components/Modal";
 import { useDispatch, useSelector } from "react-redux";
 import { dropout } from "../action/index";
 import styled from "styled-components";
@@ -12,36 +11,22 @@ axios.defaults.withCredentials = true;
 const SERVER = process.env.REACT_APP_SERVER || "http://localhost:4000";
 
 const Findinfo = () => {
-  const [isLogedIn, setIsLogedIn] = useState(true);
-
   const dispatch = useDispatch();
 
   const userInfo = useSelector((state: any) => state.userInfoReducer.userInfo);
-
+  // 아이디 찾기와 비밀번호 찾기를 상태로 구분해서 렌더링을 달리한다.
   const [renderingTarget, setRenderingTarget] = useState("id");
 
-  const [modal, setModal] = useState(false);
+  // const [errorMessage, setErrorMessage] = useState("");
 
-  const [errorMessage, setErrorMessage] = useState("");
 
-  const onDropOutlBtn = () => {
-    axios
-      .delete(`${SERVER}/dropout`, {
-        headers: { authorization: `Bearer ${userInfo.accessToken}` },
-      })
-      .then((res: AxiosResponse) => {
-        console.log(res.data);
-        const accessToken = res.data.accessToken;
-        dispatch(dropout(accessToken));
-      })
-      .catch((err: AxiosError) => console.log(err));
-  };
-  //// -----------------아이디 찾기, 비밀번호 찾기 나누는 버튼-----------------
+
+  // -----------------아이디 찾기, 비밀번호 찾기 나누는 버튼-----------------
 
   const onChangeRender = (key: string) => (e: React.MouseEvent<HTMLButtonElement>) => {
     setRenderingTarget(key);
   };
-  // ----------------------------------
+  // --------------------------------------------------------------------------
 
   interface StyleInterface {
     findId: any;
@@ -78,7 +63,7 @@ const Findinfo = () => {
           </Btn>
         </Findbox>
       </LinkContainer>
-
+      {/* 아이디 찾기와 비밀번호 찾기 버튼에  상태값을 줘서 렌더링을 달리하는 부분*/}
       {renderingTarget === "id" ? (
         <Idinquiry />
       ) : renderingTarget === "pwd" ? (
@@ -97,13 +82,6 @@ const Root = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  /* background-color: black; */
-  /* button {
-    width: 20vw;
-    color: #4b6587;
-    font-size: 1rem;
-    font-weight: 700;
-  } */
 `;
 
 const LinkContainer = styled.div`
@@ -114,8 +92,6 @@ const LinkContainer = styled.div`
 
 const Findbox = styled.div`
   height: 70vh;
-  /* position: relative; */
-  /* border-right: 1px dotted black; */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -125,13 +101,11 @@ const Findbox = styled.div`
   margin-top: -1vh;
 
   .id {
-    /* background-color: #f7f6f2; */
     border: solid lightgrey;
     border: 1px dashed #f7f6f2;
     color: #f7f6f2;
   }
   .pwd {
-    /* background: #4b6587; */
     border: 1px dashed #f7f6f2;
     color: #f7f6f2;
   }
@@ -144,11 +118,7 @@ const Btn = styled.button`
   display: flex;
   justify-content: center;
   align-items: center;
-  /* margin-right: 10px; */
-  /* background-color: white; */
-  /* padding: 10px 10px; */
   background-color: #4b6587;
-  /* color: #4b6587; */
   font-size: 1rem;
   font-weight: 700;
 `;

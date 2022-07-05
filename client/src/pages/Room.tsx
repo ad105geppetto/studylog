@@ -496,7 +496,7 @@ const Room = ({ annoy, roomId }: socketInterface) => {
       .then((res) => {});
     console.log();
 
-    navigate("/");
+    navigate("/roomlist");
   };
 
   const cameraHandler = () => {

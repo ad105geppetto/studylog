@@ -5,9 +5,9 @@ export default {
   get: (req: Request, res: Response) => {
     models.get((error, result) => {
       if (error) {
-        res.status(500).json({ message: "Internal Sever Error" })
+        return res.status(500).json({ message: "Internal Sever Error" });
       } else {
-        const { title, limit, page } = req.query
+        const { title, limit, page } = req.query;
         const reg = new RegExp(`${title}`);
         const rooms = result.filter((post) => reg.test(post.title));
         if (rooms.length !== 0) {
@@ -20,9 +20,9 @@ export default {
           }
 
           if (page > totalPage) {
-            res.status(400).json({ message: `page는 ${totalPage} 이하여야 합니다.` })
+            res.status(400).json({ message: `page는 ${totalPage} 이하여야 합니다.` });
           } else if (page <= 0) {
-            res.status(400).json({ message: "page는 1 이상이어야 합니다." })
+            res.status(400).json({ message: "page는 1 이상이어야 합니다." });
           } else {
             res.status(200).json({ data: roomList[page - 1], total: totalPage, message: "페이지 게시물들을 가져왔습니다." })
           }
@@ -30,6 +30,6 @@ export default {
           res.status(400).json({ message: "검색 결과 게시물이 존재하지 않습니다." });
         }
       }
-    })
-  }
-}
+    });
+  },
+};
