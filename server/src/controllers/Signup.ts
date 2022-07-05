@@ -6,38 +6,34 @@ const SERVER = process.env.SERVER || "http://localhost:4000";
 export default {
   post: (req: Request, res: Response) => {
     models.post((error, result) => {
-      if (error) {
-        res.status(500).json({ message: "Internal Sever Error" });
-      } else {
-        const { userId, email, password } = req.body;
-        models.check(email, (error, result) => {
-          if (error) {
-            res.status(500).json({ message: "Internal Sever Error" });
+      const { userId, email, password } = req.body;
+      models.check(email, (error, result) => {
+        if (error) {
+          res.status(500).json({ message: "Internal Sever Error" });
+        } else {
+          console.log(result);
+          if (result[0] === null) {
+            res.status(400).json({ message: "이메일 인증을 다시 해주세요." });
           } else {
-            // console.log(result);
-            if (result.length === 0) {
-              res.status(400).json({ message: "이메일 인증을 다시 해주세요." });
+            if (result[0].verification === 0) {
+              res.status(400).json({ message: "보내신 이메일에서 인증 버튼을 클릭 해주세요." });
             } else {
-              if (result[0].verification === 0) {
-                res.status(400).json({ message: "보내신 이메일에서 인증 버튼을 클릭 해주세요." });
+              const created = result.filter((user) => user.userId === userId);
+              if (created.length === 0) {
+                models.create(userId, email, password, (error, result) => {
+                  if (error) {
+                    res.status(500).json({ message: "Internal Sever Error" });
+                  } else {
+                    res.status(201).send({ message: "회원가입이 완료되었습니다." });
+                  }
+                });
               } else {
-                const created = result.filter((user) => user.userId === userId);
-                if (created.length === 0) {
-                  models.create(userId, email, password, (error, result) => {
-                    if (error) {
-                      res.status(500).json({ message: "Internal Sever Error" });
-                    } else {
-                      res.status(201).send({ message: "회원가입이 완료되었습니다." });
-                    }
-                  });
-                } else {
-                  res.status(409).send({ message: "아이디, 비밀번호, 이메일을 확인해주세요." });
-                }
+                res.status(409).send({ message: "아이디, 비밀번호, 이메일을 확인해주세요." });
               }
             }
           }
-        });
-      }
+        }
+      });
     });
   },
 

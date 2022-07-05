@@ -1,7 +1,7 @@
 import db from "../db";
 
 export default {
-  post: (userId, certNum, callback) => {
+  post: (userId: string, certNum: string, callback: Function) => {
     const queryString = `SELECT * FROM auth ORDER BY createdAt DESC`
     db.query(queryString, (error, result) => {
       if (error) {
