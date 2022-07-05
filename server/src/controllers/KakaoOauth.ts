@@ -4,7 +4,7 @@ import { generateAccessToken, generateRefreshToken } from "./tokenFunction/Token
 import axios from "axios"
 
 const REST_API_KEY = process.env.KAKAO_CLIENT_ID;
-const REDIRECT_URI = process.env.SERVER || `http://localhost:3000`
+const REDIRECT_URI = process.env.CLIENT || `http://localhost:3000`
 
 export default {
   get: (req: Request, res: Response) => {
@@ -38,24 +38,28 @@ export default {
               if (error) {
                 res.status(500).json({ message: "Internal Sever Error" });
               } else {
-                const payload = {
-                  id: result[0].id,
-                  userId: result[0].userId,
-                  email: result[0].email,
-                  profile: result[0].profile,
-                };
+                if (result === "No kakao user") {
+                  res.json({ message: "이미 구글 계정으로 가입한 유저입니다." })
+                } else {
+                  const payload = {
+                    id: result[0].id,
+                    userId: result[0].userId,
+                    email: result[0].email,
+                    profile: result[0].profile,
+                  };
 
-                const accessToken = generateAccessToken(payload);
-                const refreshToken = generateRefreshToken(payload);
+                  const accessToken = generateAccessToken(payload);
+                  const refreshToken = generateRefreshToken(payload);
 
-                res
-                  .status(200)
-                  .cookie("refreshToken", refreshToken, {
-                    sameSite: "none",
-                    httpOnly: true,
-                    secure: true,
-                  })
-                  .json({ accessToken: accessToken, userInfo: payload, message: "ok" });
+                  res
+                    .status(200)
+                    .cookie("refreshToken", refreshToken, {
+                      sameSite: "none",
+                      httpOnly: true,
+                      secure: true,
+                    })
+                    .json({ accessToken: accessToken, userInfo: payload, message: "ok" });
+                }
               }
             })
           })

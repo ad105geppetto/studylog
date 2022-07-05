@@ -134,8 +134,12 @@ const Login = () => {
             <Large_Button type="button" onClick={oauthPath}>
               <FcGoogle size="2rem" /> 구글 로그인
             </Large_Button>
-            <Large_Button type="button" onClick={kakaoOauthHandler}>
-              <FcGoogle size="2rem" />
+            <Large_Button
+              type="button"
+              onClick={kakaoOauthHandler}
+              style={{ backgroundColor: "#FEE500" }}
+            >
+              <img src="asset/kakao-simbole.png" width="30" height="25" />
               카카오 로그인
             </Large_Button>
           </ButtonWrapper2>

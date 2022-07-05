@@ -15,7 +15,7 @@ export default {
           );
           db.query(`SET foreign_key_checks = 1`);
 
-          const queryString2 = `INSERT INTO users (userId, email, profile) VALUES ("${email}", "${email}", "${profile}")`;
+          const queryString2 = `INSERT INTO users (userId, email, profile, type) VALUES ("${email}", "${email}", "${profile}", "google")`;
           db.query(queryString2, (error, result) => {
             const queryString3 = `SELECT * FROM users WHERE userId = "${email}" ORDER BY createdAt DESC`;
             db.query(queryString3, (error, result) => {
@@ -27,7 +27,11 @@ export default {
             });
           });
         } else {
-          callback(null, result);
+          if (result[0].type !== "google") {
+            return callback(null, "No google user");
+          } else {
+            callback(null, result);
+          }
         }
       }
     });
