@@ -214,6 +214,10 @@ const Roomlist = ({ annoy, roomId, setRoomId }: socketInterface) => {
   };
   // -----------------------------------------------------------------------
 
+  const refresh = () => {
+    getPageData(page, limit);
+  };
+
   const onChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value);
   };
@@ -230,6 +234,9 @@ const Roomlist = ({ annoy, roomId, setRoomId }: socketInterface) => {
       />
       <Button type="button" onClick={onSearch}>
         검색
+      </Button>
+      <Button type="button" onClick={refresh}>
+        새로고침
       </Button>
 
       {isLoading ? (

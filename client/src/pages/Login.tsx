@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import axios, { AxiosError, AxiosResponse } from "axios";
 import { useNavigate, NavLink } from "react-router-dom";
 import { useDispatch } from "react-redux";
@@ -17,7 +17,7 @@ import {
   Form,
 } from "styles/Userpage_style";
 
-const CLIENT = process.env.REACT_APP_CLIENT || "http://localhost:3000";
+const CLIENT = process.env.REACT_APP_CLIENT || "http://localhost:3000/login";
 const SERVER = process.env.REACT_APP_SERVER || "http://localhost:4000";
 const OAUTH_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID;
 const OAUTH_URL = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${OAUTH_ID}&redirect_uri=${CLIENT}&response_type=code&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile%20openid&access_type=offline&`;
@@ -28,7 +28,6 @@ const OAUTH_URL = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${OAUT
 const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const newWindow = useRef<any>(window);
 
   const [userInfo, setUserInfo] = useState({
     id: "",
@@ -90,6 +89,62 @@ const Login = () => {
       });
   };
   // --------------------------------------------------------------
+
+  // --------------------------- OAUTH 로그인---------------------
+
+  const sendAuthCode = () => {
+    const url = new URL(window.location.href);
+    const authCode = url.searchParams.get("code");
+
+    axios
+      .post(`${SERVER}/Oauth`, { authorizationCode: authCode })
+      .then((res: AxiosResponse) => {
+        console.log("=====Oauth====서버에서 받아옴");
+        console.log(res);
+        if (res.data.message === "이미 카카오 계정으로 가입한 유저입니다.") {
+          alert(res.data.message);
+        }
+        const accessToken = res.data.accessToken;
+        const userInfo = res.data.userInfo;
+        dispatch(
+          logIn(accessToken, userInfo.id, userInfo.userId, userInfo.email, userInfo.profile)
+        );
+      })
+
+      .catch((err: AxiosError) => {
+        console.log("err:", err);
+      })
+      .then(() => navigate("/roomlist"));
+  };
+
+  const sendKakaoAuthCode = () => {
+    const url = new URL(window.location.href);
+    const authCode = url.searchParams.get("code");
+
+    axios
+      .post(`${SERVER}/kakaoOauth/redirect`, { authorizationCode: authCode })
+      .then((data) => {
+        console.log("=====kakaoOauth====서버에서 받아옴");
+        if (data.data.message === "이미 구글 계정으로 가입한 유저입니다.") {
+          alert(data.data.message);
+        }
+        const accessToken = data.data.accessToken;
+        const userInfo = data.data.userInfo;
+        dispatch(
+          logIn(accessToken, userInfo.id, userInfo.userId, userInfo.email, userInfo.profile)
+        );
+      })
+
+      .catch((err: AxiosError) => {
+        console.log(err);
+      })
+      .then(() => navigate("/roomlist"));
+  };
+
+  useEffect(() => {
+    sendAuthCode();
+    sendKakaoAuthCode();
+  }, []);
 
   return (
     <div>

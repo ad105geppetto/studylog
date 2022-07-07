@@ -4,12 +4,11 @@ import { PersonalScreen } from "pages/Room";
 interface Props {
   width: string;
   height: string;
-  email: string;
   stream: MediaStream;
   muted?: boolean;
 }
 
-const Video = ({ width, height, email, stream, muted }: Props) => {
+const Video = ({ width, height, stream, muted }: Props) => {
   const ref = useRef<HTMLVideoElement>(null);
   const [isMuted, setIsMuted] = useState<boolean>(false);
 

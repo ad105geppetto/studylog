@@ -47,9 +47,9 @@ io.on("connection", (socket) => {
         socket.to(socket.id).emit("room_full");
         return;
       }
-      users[data.room].push({ id: socket.id, email: data.email });
+      users[data.room].push({ id: socket.id });
     } else {
-      users[data.room] = [{ id: socket.id, email: data.email }];
+      users[data.room] = [{ id: socket.id }];
     }
     socketToRoom[socket.id] = data.room;
     socketToName[socket.id] = data.username;
@@ -82,7 +82,6 @@ io.on("connection", (socket) => {
     socket.to(data.offerReceiveID).emit("getOffer", {
       sdp: data.sdp,
       offerSendID: data.offerSendID,
-      offerSendEmail: data.offerSendEmail,
     });
   });
 
