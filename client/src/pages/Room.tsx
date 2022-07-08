@@ -172,7 +172,7 @@ const Message = styled.div`
 
 type WebRTCUser = {
   id: string;
-  email: string;
+
   stream: MediaStream;
 };
 
@@ -181,7 +181,7 @@ interface socketInterface {
   roomId: any;
 }
 
-const pc_config = {
+const pcConfig = {
   iceServers: [
     // {3
     //   urls: 'stun:[STUN_IP]:[PORT]',
@@ -248,17 +248,15 @@ const Room = ({ annoy, roomId }: socketInterface) => {
         message: currentMessage,
         time: new Date(Date.now()).getHours() + ":" + new Date(Date.now()).getMinutes(),
       };
-      // console.log("내가 쓴 메세지 보기", messageData);
 
       if (!socketRef.current) return;
       console.log("이게뭔데?", socketRef.current);
-      socketRef.current.emit("send_message", messageData);
+      socketRef.current.emit("sendMessage", messageData);
 
       //자기메시지
       setMessageList((list: any) => [...list, messageData]);
       setCurrentMessage("");
     }
-    // onScrollMove();
   };
   //
 
@@ -266,15 +264,12 @@ const Room = ({ annoy, roomId }: socketInterface) => {
     try {
       const localStream = await navigator.mediaDevices.getUserMedia({
         audio: true,
-        video: {
-          width: 240,
-          height: 240,
-        },
+        video: true,
       });
       localStreamRef.current = localStream;
       if (localVideoRef.current) localVideoRef.current.srcObject = localStream;
       if (!socketRef.current) return;
-      socketRef.current.emit("join_room", {
+      socketRef.current.emit("joinRoom", {
         room: roomId,
         username: userInfo.userId ? userInfo.userId : annoy,
       });
@@ -283,9 +278,9 @@ const Room = ({ annoy, roomId }: socketInterface) => {
     }
   }, []);
 
-  const createPeerConnection = useCallback((socketID: string, email: string) => {
+  const createPeerConnection = useCallback((socketID: string) => {
     try {
-      const pc = new RTCPeerConnection(pc_config);
+      const pc = new RTCPeerConnection(pcConfig);
 
       pc.onicecandidate = (e) => {
         if (!(socketRef.current && e.candidate)) return;
@@ -308,7 +303,6 @@ const Room = ({ annoy, roomId }: socketInterface) => {
             .filter((user) => user.id !== socketID)
             .concat({
               id: socketID,
-              email,
               stream: e.streams[0],
             })
         );
@@ -336,8 +330,6 @@ const Room = ({ annoy, roomId }: socketInterface) => {
       event.preventDefault();
       exitHandler();
       console.log("beforeunload event triggered");
-
-      // return (event.returnValue = "Are you sure you want to exit?");
     };
     window.addEventListener("beforeunload", handleTabClose);
 
@@ -350,10 +342,10 @@ const Room = ({ annoy, roomId }: socketInterface) => {
     socketRef.current = io.connect(SERVER);
     getLocalStream();
 
-    socketRef.current.on("all_users", (allUsers: Array<{ id: string; email: string }>) => {
+    socketRef.current.on("allUsers", (allUsers: Array<{ id: string }>) => {
       allUsers.forEach(async (user) => {
         if (!localStreamRef.current) return;
-        const pc = createPeerConnection(user.id, user.email);
+        const pc = createPeerConnection(user.id);
         if (!(pc && socketRef.current)) return;
         pcsRef.current = { ...pcsRef.current, [user.id]: pc };
         try {
@@ -366,7 +358,6 @@ const Room = ({ annoy, roomId }: socketInterface) => {
           socketRef.current.emit("offer", {
             sdp: localSdp,
             offerSendID: socketRef.current.id,
-            offerSendEmail: "offerSendSample@sample.com",
             offerReceiveID: user.id,
           });
         } catch (e) {
@@ -377,11 +368,11 @@ const Room = ({ annoy, roomId }: socketInterface) => {
 
     socketRef.current.on(
       "getOffer",
-      async (data: { sdp: RTCSessionDescription; offerSendID: string; offerSendEmail: string }) => {
-        const { sdp, offerSendID, offerSendEmail } = data;
+      async (data: { sdp: RTCSessionDescription; offerSendID: string }) => {
+        const { sdp, offerSendID } = data;
         console.log("get offer");
         if (!localStreamRef.current) return;
-        const pc = createPeerConnection(offerSendID, offerSendEmail);
+        const pc = createPeerConnection(offerSendID);
         if (!(pc && socketRef.current)) return;
         pcsRef.current = { ...pcsRef.current, [offerSendID]: pc };
         try {
@@ -425,17 +416,12 @@ const Room = ({ annoy, roomId }: socketInterface) => {
       }
     );
 
-    socketRef.current.on("user_exit", (data: { id: string }) => {
+    socketRef.current.on("userExit", (data: { id: string }) => {
       if (!pcsRef.current[data.id]) return;
       pcsRef.current[data.id].close();
       delete pcsRef.current[data.id];
       setUsers((oldUsers) => oldUsers.filter((user) => user.id !== data.id));
     });
-
-    //채팅
-    // socketRef.current.on("join_room", (data: any) => {
-    //   setMessageList((list: any) => [...list, data]);
-    // });
 
     socketRef.current.on("welcome", (data: any) => {
       if (!data) {
@@ -444,12 +430,12 @@ const Room = ({ annoy, roomId }: socketInterface) => {
       setMessageList((list: any) => [...list, data]);
     });
 
-    socketRef.current.on("receive_message", (data: any) => {
+    socketRef.current.on("receiveMessage", (data: any) => {
       //남의메시지
       console.log("상대가 보낸 메세지 보기", data);
       setMessageList((list: any) => [...list, data]);
     });
-    socketRef.current.on("leave_room", (data: any) => {
+    socketRef.current.on("leaveRoom", (data: any) => {
       setMessageList((list: any) => [...list, data]);
     });
     //
@@ -457,8 +443,8 @@ const Room = ({ annoy, roomId }: socketInterface) => {
       if (socketRef.current) {
         //채팅
         socketRef.current.off("joinRoom");
-        socketRef.current.off("receive_message");
-        socketRef.current.off("leave_room");
+        socketRef.current.off("receiveMessage");
+        socketRef.current.off("leaveRoom");
         //
         socketRef.current.disconnect();
       }
@@ -469,13 +455,11 @@ const Room = ({ annoy, roomId }: socketInterface) => {
         delete pcsRef.current[user.id];
       });
     };
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [createPeerConnection, getLocalStream]);
 
   const exitHandler = () => {
     let end = new Date();
-    //" (2022 , 5 , 16, 09, 50, 20)"
+
     let endObject = {
       year: end.getFullYear(),
       month: end.getMonth(),
@@ -500,7 +484,7 @@ const Room = ({ annoy, roomId }: socketInterface) => {
       .patch(`${SERVER}/room`, {
         userId: userInfo.id,
         roomId,
-        type: "minus",
+        type: "leave",
       })
       .then((res) => {});
     console.log();
@@ -541,14 +525,14 @@ const Room = ({ annoy, roomId }: socketInterface) => {
           <VideoArea size="75" id="VideoArea">
             <PersonalScreen width="100" height="100" muted ref={localVideoRef} autoPlay />
             {users.map((user, index) => (
-              <Video width="100" height="100" key={index} email={user.email} stream={user.stream} />
+              <Video width="100" height="100" key={index} stream={user.stream} />
             ))}
           </VideoArea>
         ) : (
           <VideoArea size="100" id="VideoArea">
             <PersonalScreen width="100" height="100" muted ref={localVideoRef} autoPlay />
             {users.map((user, index) => (
-              <Video width="100" height="100" key={index} email={user.email} stream={user.stream} />
+              <Video width="100" height="100" key={index} stream={user.stream} />
             ))}
           </VideoArea>
         )}

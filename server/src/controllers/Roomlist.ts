@@ -27,7 +27,7 @@ export default {
             for (let i = 0; i < totalPage; i++) {
               roomList.push(totalRoomList.splice(0, limit));
             }
-            console.log(roomList)
+            // console.log(roomList)
             if (page > totalPage) {
               res.status(400).json({ message: `page는 ${totalPage} 이하여야 합니다.` });
             } else if (page <= 0) {
