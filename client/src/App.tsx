@@ -23,9 +23,6 @@ function App() {
   const [annoy, setAnnoy] = useState(geust);
   const [roomId, setRoomId] = useState("");
 
-  const url = new URL(window.location.href);
-  const authCode = url.searchParams.get("code");
-
   window.addEventListener("unload", () => {
     dispatch(logout(""));
   });

@@ -189,7 +189,7 @@ const Roomlist = ({ annoy, roomId, setRoomId }: socketInterface) => {
       .patch(`${SERVER}/room`, {
         roomId: room.id,
         userId: userInfo.id,
-        type: "plus",
+        type: "join",
       })
       .then((res) => {
         navigate(`/room/${room.id}`);
