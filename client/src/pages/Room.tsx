@@ -172,7 +172,6 @@ const Message = styled.div`
 
 type WebRTCUser = {
   id: string;
-  email: string;
   stream: MediaStream;
 };
 
@@ -266,10 +265,7 @@ const Room = ({ annoy, roomId }: socketInterface) => {
     try {
       const localStream = await navigator.mediaDevices.getUserMedia({
         audio: true,
-        video: {
-          width: 240,
-          height: 240,
-        },
+        video: true,
       });
       localStreamRef.current = localStream;
       if (localVideoRef.current) localVideoRef.current.srcObject = localStream;
@@ -283,7 +279,7 @@ const Room = ({ annoy, roomId }: socketInterface) => {
     }
   }, []);
 
-  const createPeerConnection = useCallback((socketID: string, email: string) => {
+  const createPeerConnection = useCallback((socketID: string) => {
     try {
       const pc = new RTCPeerConnection(pc_config);
 
@@ -308,7 +304,6 @@ const Room = ({ annoy, roomId }: socketInterface) => {
             .filter((user) => user.id !== socketID)
             .concat({
               id: socketID,
-              email,
               stream: e.streams[0],
             })
         );
@@ -350,10 +345,10 @@ const Room = ({ annoy, roomId }: socketInterface) => {
     socketRef.current = io.connect(SERVER);
     getLocalStream();
 
-    socketRef.current.on("all_users", (allUsers: Array<{ id: string; email: string }>) => {
+    socketRef.current.on("all_users", (allUsers: Array<{ id: string }>) => {
       allUsers.forEach(async (user) => {
         if (!localStreamRef.current) return;
-        const pc = createPeerConnection(user.id, user.email);
+        const pc = createPeerConnection(user.id);
         if (!(pc && socketRef.current)) return;
         pcsRef.current = { ...pcsRef.current, [user.id]: pc };
         try {
@@ -366,7 +361,6 @@ const Room = ({ annoy, roomId }: socketInterface) => {
           socketRef.current.emit("offer", {
             sdp: localSdp,
             offerSendID: socketRef.current.id,
-            offerSendEmail: "offerSendSample@sample.com",
             offerReceiveID: user.id,
           });
         } catch (e) {
@@ -377,11 +371,11 @@ const Room = ({ annoy, roomId }: socketInterface) => {
 
     socketRef.current.on(
       "getOffer",
-      async (data: { sdp: RTCSessionDescription; offerSendID: string; offerSendEmail: string }) => {
-        const { sdp, offerSendID, offerSendEmail } = data;
+      async (data: { sdp: RTCSessionDescription; offerSendID: string }) => {
+        const { sdp, offerSendID } = data;
         console.log("get offer");
         if (!localStreamRef.current) return;
-        const pc = createPeerConnection(offerSendID, offerSendEmail);
+        const pc = createPeerConnection(offerSendID);
         if (!(pc && socketRef.current)) return;
         pcsRef.current = { ...pcsRef.current, [offerSendID]: pc };
         try {
@@ -541,14 +535,14 @@ const Room = ({ annoy, roomId }: socketInterface) => {
           <VideoArea size="75" id="VideoArea">
             <PersonalScreen width="100" height="100" muted ref={localVideoRef} autoPlay />
             {users.map((user, index) => (
-              <Video width="100" height="100" key={index} email={user.email} stream={user.stream} />
+              <Video width="100" height="100" key={index} stream={user.stream} />
             ))}
           </VideoArea>
         ) : (
           <VideoArea size="100" id="VideoArea">
             <PersonalScreen width="100" height="100" muted ref={localVideoRef} autoPlay />
             {users.map((user, index) => (
-              <Video width="100" height="100" key={index} email={user.email} stream={user.stream} />
+              <Video width="100" height="100" key={index} stream={user.stream} />
             ))}
           </VideoArea>
         )}

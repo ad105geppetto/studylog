@@ -136,7 +136,7 @@ const Container = styled.div`
 `;
 
 const Label = styled.label`
-  width: 10vh;
+  width: 15vh;
   height: 7vh;
   display: flex;
   flex-direction: column;
