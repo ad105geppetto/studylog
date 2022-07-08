@@ -30,6 +30,7 @@ export default {
                 return {
                   id: ele.id,
                   type: ele.type,
+                  index: ele.index,
                   content: ele.content,
                 };
               });
@@ -47,7 +48,7 @@ export default {
 
   // todo 생성
   post: (req: Request, res: Response) => {
-    const { content, type } = req.body;
+    const { content, type, index } = req.body;
 
     // 토큰있는지 확인
     if (!req.headers.authorization) {
@@ -61,7 +62,7 @@ export default {
       if (!tokenData) {
         res.status(400).send({ data: null, message: "회원 정보가 없습니다." });
       } else {
-        models.post(content, type, tokenData, (error, result) => {
+        models.post(content, type, tokenData, index, (error, result) => {
           if (error) {
             res.status(500).send({ message: "서버에러" });
           } else {
@@ -73,6 +74,7 @@ export default {
                 return {
                   id: ele.id,
                   type: ele.type,
+                  index: ele.index,
                   content: ele.content,
                 };
               });
@@ -91,7 +93,7 @@ export default {
   // todo를 다른 탭에 끌어놓거나 또는 내용이 바뀌었을 때
   patch: (req: Request, res: Response) => {
     const { id } = req.params;
-    const { content, type } = req.body;
+    const { content, type, index } = req.body;
 
     if (!req.headers.authorization) {
       res.status(404).send({ data: null, message: "로그인을 하세요." });
@@ -104,7 +106,7 @@ export default {
       if (!tokenData) {
         res.status(400).send({ data: null, message: "회원 정보가 없습니다." });
       } else {
-        models.patch(id, content, type, tokenData, (error, result) => {
+        models.patch(id, content, type, index, tokenData, (error, result) => {
           if (error) {
             res.status(500).send({ message: "서버에러" });
           } else {
@@ -116,6 +118,7 @@ export default {
                 return {
                   id: ele.id,
                   type: ele.type,
+                  index: ele.index,
                   content: ele.content,
                 };
               });
@@ -158,6 +161,7 @@ export default {
                 return {
                   id: ele.id,
                   type: ele.type,
+                  index: ele.index,
                   content: ele.content,
                 };
               });
