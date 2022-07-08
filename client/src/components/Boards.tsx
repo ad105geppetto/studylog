@@ -64,6 +64,10 @@ const Boards = ({ userInfo }: any) => {
     Done: [],
   });
 
+  /*
+    index 를 순서로 할 거다. 
+
+  */
   //----------------------------- TODO 데이터 불러오기 --------------------------
   const onLoadToDos = () => {
     axios
