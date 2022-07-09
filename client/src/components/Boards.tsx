@@ -46,6 +46,7 @@ interface ToDos {
 
 interface Data {
   id: string;
+  index: string;
   type: string;
   content: string;
 }
@@ -83,7 +84,7 @@ const Boards = ({ userInfo }: any) => {
           return;
         }
         data.forEach((data: Data) => {
-          const id = data.id;
+          const id = data.index;
           const key = data.type;
           const text = data.content;
 

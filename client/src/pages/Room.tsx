@@ -172,7 +172,6 @@ const Message = styled.div`
 
 type WebRTCUser = {
   id: string;
-
   stream: MediaStream;
 };
 
