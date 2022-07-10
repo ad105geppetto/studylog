@@ -72,6 +72,7 @@ const Area = styled.div<AreaInterface>`
 
 interface ToDosInterface {
   id: number;
+  index: number;
   text: string;
 }
 
@@ -113,8 +114,8 @@ const Cardboard = ({ toDos, boardId, onAddToDos, onAddText, onDeleteToDos }: Car
             {toDos.map((toDo, index) => (
               <Cards
                 boardId={boardId}
-                key={toDo.id}
-                toDoId={toDo.id}
+                key={toDo.index}
+                toDoId={toDo.index}
                 toDoText={toDo.text}
                 index={index}
                 onDeleteToDos={onDeleteToDos}

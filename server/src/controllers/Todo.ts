@@ -64,6 +64,7 @@ export default {
       } else {
         models.post(content, type, tokenData, index, (error, result) => {
           if (error) {
+            console.log(error);
             res.status(500).send({ message: "서버에러" });
           } else {
             if (result.length === 0) {

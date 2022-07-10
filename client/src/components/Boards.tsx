@@ -79,17 +79,20 @@ const Boards = ({ userInfo }: any) => {
       })
       .then((res: AxiosResponse) => {
         // 서버에서 받아 온 data를 toDos 에 담아주기
+        console.log(res);
         const data = res.data.data;
         if (data.length === 0) {
           return;
         }
         data.forEach((data: Data) => {
-          const id = data.index;
+          const id = data.id;
+          const index = data.index;
           const key = data.type;
           const text = data.content;
 
           const newToDo = {
             id: id,
+            index: index,
             text: text,
           };
 
@@ -106,6 +109,7 @@ const Boards = ({ userInfo }: any) => {
 
   useEffect(() => {
     onLoadToDos();
+    console.log(userInfo);
     console.log(toDos);
   }, []);
 
@@ -117,7 +121,7 @@ const Boards = ({ userInfo }: any) => {
       return;
     } else {
       const newToDo = {
-        id: new Date().getTime(),
+        id: 1 + Object.keys(toDos[key]).length,
         text: text,
       };
 
@@ -131,10 +135,11 @@ const Boards = ({ userInfo }: any) => {
     }
     console.log(toDos);
 
+    const index = 1 + Object.keys(toDos[key]).length.toString();
     axios
       .post(
         `${SERVER}/todo`,
-        { content: text, type: key },
+        { content: text, type: key, index: index },
         { headers: { authorization: `Bearer ${userInfo.accessToken}` } }
       )
       .then((res: AxiosResponse) => {})
