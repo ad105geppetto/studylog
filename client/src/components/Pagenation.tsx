@@ -7,7 +7,8 @@ interface IProps {
   setPage: (page: number) => void;
 }
 
-export const Pagenation = ({ totalPage, page, setPage }: IProps) => {
+const Pagenation = ({ totalPage, page, setPage }: IProps) => {
+  //전체페이지를 서버에서 받아와서 페이지에 push로 넣어준다
   const pages = [];
   for (let i = 1; i <= totalPage; i++) {
     pages.push(i);
@@ -19,6 +20,7 @@ export const Pagenation = ({ totalPage, page, setPage }: IProps) => {
 
   return (
     <Container>
+      {/* 이전페이지로 이동하기 */}
       <PageBtn
         onClick={() => {
           if (page === 1) {
@@ -29,6 +31,7 @@ export const Pagenation = ({ totalPage, page, setPage }: IProps) => {
       >
         {"<"}
       </PageBtn>
+      {/* 현재 보여지는 페이지 */}
       {pages.map((p, index) => {
         return (
           <PageBtn
@@ -40,6 +43,7 @@ export const Pagenation = ({ totalPage, page, setPage }: IProps) => {
           </PageBtn>
         );
       })}
+      {/* 다음 페이지로 이동하기 */}
       <PageBtn
         onClick={() => {
           if (page === totalPage) {
@@ -55,11 +59,13 @@ export const Pagenation = ({ totalPage, page, setPage }: IProps) => {
 };
 
 const Container = styled.div`
+  height: 5vh;
   display: flex;
-  margin: 15px;
+  /* margin: 15px; */
   justify-content: center;
   align-items: center;
   grid-column: span 12;
+  /* margin-bottom: 15vh; */
 `;
 
 const PageBtn = styled.div`
@@ -75,3 +81,4 @@ const PageBtn = styled.div`
   font-size: 0.7rem;
   font-weight: 600;
 `;
+export default Pagenation;

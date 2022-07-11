@@ -1,7 +1,5 @@
-import Nav from "components/Nav";
 import styled, { keyframes } from "styled-components";
 import { NavLink } from "react-router-dom";
-import React, { useState } from "react";
 
 const Wrapper = styled.div`
   overflow-y: auto;
@@ -13,11 +11,7 @@ const Image = styled.img`
   width: 100vw;
   z-index: 1;
 `;
-const InnerImage = styled.img`
-  height: 85vh;
-  width: 100vw;
-  z-index: 1;
-`;
+
 const Logo = styled.img`
   position: absolute;
   top: 26vh;
@@ -53,41 +47,38 @@ const Title = styled.div`
 `;
 
 const Landing = () => {
-  const [page, setPage] = useState(0);
+  //   const [page, setPage] = useState(0);
 
-  const html = document.documentElement;
+  //   const html = document.documentElement;
 
-  const height = html.scrollHeight / 3;
+  //   const height = html.scrollHeight / 3;
 
-  const onWheelHandler = (e: any) => {
-    e.preventDefault();
-    // console.log(e);
-    const { deltaY } = e;
-    // console.log(deltaY);
+  //   const onWheelHandler = (e: any) => {
+  //     e.preventDefault();
+  //     const { deltaY } = e;
+  //     if (deltaY > 0 && page === 0) {
+  //       // 페이지가 내려가는 경우
+  //       window.scrollTo({ top: height, left: 0, behavior: "smooth" });
+  //       setPage(1);
+  //     } else if (deltaY > 0 && page === 1) {
+  //       window.scrollTo({ top: height * 2, left: 0, behavior: "smooth" });
+  //       setPage(2);
+  //     } else if (deltaY < 0 && page === 2) {
+  //       window.scrollTo({ top: height, left: 0, behavior: "smooth" });
+  //       setPage(1);
+  //     } else if (deltaY < 0 && page === 1) {
+  //       window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+  //       setPage(0);
+  //     }
 
-    if (deltaY > 0 && page === 0) {
-      // 페이지가 내려가는 경우
-      window.scrollTo({ top: height, left: 0, behavior: "smooth" });
-      setPage(1);
-    } else if (deltaY > 0 && page === 1) {
-      window.scrollTo({ top: height * 2, left: 0, behavior: "smooth" });
-      setPage(2);
-    } else if (deltaY < 0 && page === 2) {
-      window.scrollTo({ top: height, left: 0, behavior: "smooth" });
-      setPage(1);
-    } else if (deltaY < 0 && page === 1) {
-      window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
-      setPage(0);
-    }
+  //     /*
+  //      왜 한번만 작동하고 멈추는걸까?
+  //      scroll to 는 top 만큼 이동하는게 아니라 top이 저 위치까지 이동하는거였음
 
-    /*
-     왜 한번만 작동하고 멈추는걸까?
-     scroll to 는 top 만큼 이동하는게 아니라 top이 저 위치까지 이동하는거였음
-     
-    */
-  };
+  //     */
+  //   };
 
-  window.addEventListener("wheel", onWheelHandler, { passive: false });
+  //   window.addEventListener("wheel", onWheelHandler, { passive: false });
 
   return (
     <Wrapper>

@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-// import Nav from "../components/Nav";
 import axios, { AxiosError, AxiosResponse } from "axios";
 import styled from "styled-components";
 
@@ -8,23 +7,17 @@ const SERVER = process.env.REACT_APP_SERVER || "http://localhost:4000";
 
 const Idinquiry = () => {
   const [userEmail, setUserEmail] = useState("");
-
+  // 아이디를 찾고 상태로 저장한다.
   const [userId, setUserId] = useState("");
 
   const [findId, setFindId] = useState(true);
-
+  // 아이디 찾는 함수 에러메시지
   const [errorMessage, setErrorMessage] = useState("");
-
-  const [id, setId] = useState(true);
 
   const onUserEmail = (e: any) => {
     setUserEmail(e.target.value);
   };
-
-  // const onId = (e: any) => {
-  //   setId(false);
-  // };
-
+  // 이메일을 입력하고 아이디를 찾는 함수------------------------------
   const onClickFindId = () => {
     axios
       .post(`${SERVER}/userid`, {
@@ -32,7 +25,6 @@ const Idinquiry = () => {
       })
       .then((res: AxiosResponse) => {
         setFindId(false);
-        console.log(res);
         setUserId(res.data.userId);
       })
       .catch((err: AxiosError) => {
@@ -40,121 +32,71 @@ const Idinquiry = () => {
         console.log("이메일을 입력하세요", err);
       });
   };
+  // -----------------------------------------------------------------
 
   return (
     <Container>
       {findId ? (
-        <Idbox
-        // style={{
-        //   height: "35vh",
-        //   display: "flex",
-        //   flexDirection: "column",
-        //   // justifyContent: "center",
-        //   // alignItems: "center",
-        //   // background: "black",
-        // }}
-        >
+        // 아이디를 찾기 전 상태면 이메일 입력하는 창과 찾기 버튼 렌더링
+        <div>
           <div>
             <Input type="email" onChange={onUserEmail} placeholder="이메일를 입력해주세요" />
           </div>
-          <div>{errorMessage ? errorMessage : null}</div>
+          <ErrMsg>{errorMessage ? errorMessage : null}</ErrMsg>
 
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              marginBottom: "-5vh",
-            }}
-          >
-            <Button className="find" type="button" onClick={onClickFindId}>
+          <Find>
+            <FindBtn className="find" type="button" onClick={onClickFindId}>
               찾기
-            </Button>
-          </div>
-        </Idbox>
+            </FindBtn>
+          </Find>
+        </div>
       ) : (
-        <FindId
-          className="showId fadein"
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center",
-            height: "70%",
-            color: "#4b6587",
-            fontSize: "5vh",
-          }}
-        >
-          아이디는 {userId} 입니다
-        </FindId>
+        // 아이디를 찾은 상태면 아이디 렌더링 해주기
+        <FindId className="showId fadein">아이디는 {userId} 입니다</FindId>
       )}
     </Container>
   );
 };
 
 const Container = styled.div`
-  /* display: grid;
-  grid-template-columns: repeat(12, 1fr);
-  column-gap: 24px; */
-  /* margin: auto; */
   width: 60vw;
   height: 44vh;
   display: flex;
   justify-content: center;
   padding-top: 10vh;
   background-color: #f7f6f2;
-  /* margin-bottom: 17vh; */
-  /* background-color: black; */
-  .find {
-    min-width: 7vw;
-    min-height: 5.5vh;
-    /* line-height: 5.5vh; */
-    border-radius: 1rem;
-    display: inline-block;
-    justify-content: center;
-    cursor: pointer;
-    font-size: 1rem;
-    font-weight: 700;
-    outline: 0;
-    /* border: 0; */
-    border: 2px solid grey;
-    text-align: center;
-    background: white;
-    margin-bottom: 5vh;
-  }
 `;
 
-const Button = styled.button`
-  /* min-width: 10vw;
+const ErrMsg = styled.div`
+  /* height: 20vh; */
+  display: flex;
+  justify-content: center;
+  /* margin-bottom: 5vh; */
+`;
+
+const Find = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 5vh;
+  height: 30vh;
+  margin-top: 5vh;
+`;
+
+const FindBtn = styled.button`
+  min-width: 7vw;
   min-height: 5.5vh;
   border-radius: 1rem;
   display: inline-block;
+  justify-content: center;
   cursor: pointer;
   font-size: 1rem;
   font-weight: 700;
   outline: 0;
-  background: white;
   border: 2px solid grey;
-  margin-bottom: 5vh; */
-  /* line-height: 5.5vh; */
-  /* margin-bottom: 20vh; */
-`;
-
-const Idbox = styled.div`
-  /* /* .find { */
-  /* height: 7vh;
-    margin-top: 4vw;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 1rem; 
-
-  font-size: 1rem;
   text-align: center;
-  font-weight: bold; */
-  /* margin-top: 5vh; */
-  /* margin-bottom: 2vh; */
-  /* } */
+  background: white;
+  margin-bottom: 10vh;
 `;
 
 const Input = styled.input`
@@ -165,12 +107,18 @@ const Input = styled.input`
   background-color: white;
   border: 0.2rem solid lightgrey;
   border-radius: 1vh;
-  margin-bottom: 20vh;
+  margin-bottom: 13vh;
 `;
 
 const FindId = styled.div`
-  /* display: flex; */
-  /* alignitems: center; */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 70%;
+  font-size: 5vh;
+  color: #4b6587;
+
   .fadein {
     font-size: medium;
     position: relative;

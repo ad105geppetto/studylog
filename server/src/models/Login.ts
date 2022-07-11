@@ -1,7 +1,7 @@
 import db from "../db";
 
 export default {
-  post: (userId, password, callback) => {
+  post: (userId: string, password: string, callback: Function) => {
     const queryString = `SELECT * FROM users WHERE userId = "${userId}" AND password = "${password}"`
 
     db.query(queryString, (error, result) => {

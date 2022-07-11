@@ -3,10 +3,12 @@ import cookieParser from "cookie-parser";
 import indexRouter from "./routes";
 import cors from "cors";
 import http from "http";
+import dotenv from "dotenv";
+dotenv.config();
 // import { Server } from "socket.io";
 let socketio = require("socket.io");
 
-const port = 4000;
+const port = process.env.SERVER_PORT || 4000;
 const app = express();
 
 app.use(
@@ -39,17 +41,16 @@ let socketToName = {}; // {socket.id : kimcoding}
 const maximum = process.env.MAXIMUM || 4;
 
 io.on("connection", (socket) => {
-  socket.on("join_room", (data) => {
+  socket.on("joinRoom", (data) => {
     //data.username
     if (users[data.room]) {
       const length = users[data.room].length;
       if (length === maximum) {
-        socket.to(socket.id).emit("room_full");
         return;
       }
-      users[data.room].push({ id: socket.id, email: data.email });
+      users[data.room].push({ id: socket.id });
     } else {
-      users[data.room] = [{ id: socket.id, email: data.email }];
+      users[data.room] = [{ id: socket.id }];
     }
     socketToRoom[socket.id] = data.room;
     socketToName[socket.id] = data.username;
@@ -64,7 +65,7 @@ io.on("connection", (socket) => {
 
     console.log("이 방에 있는 유저", usersInThisRoom);
 
-    io.sockets.to(socket.id).emit("all_users", usersInThisRoom);
+    io.sockets.to(socket.id).emit("allUsers", usersInThisRoom);
     //채팅
     socket.to(data.room).emit("welcome", {
       message: `${data.username}님이 들어왔습니다.`,
@@ -72,9 +73,9 @@ io.on("connection", (socket) => {
   });
 
   //채팅
-  socket.on("send_message", (data) => {
+  socket.on("sendMessage", (data) => {
     console.log(data);
-    socket.to(data.room).emit("receive_message", data);
+    socket.to(data.room).emit("receiveMessage", data);
   });
 
   socket.on("offer", (data) => {
@@ -82,7 +83,6 @@ io.on("connection", (socket) => {
     socket.to(data.offerReceiveID).emit("getOffer", {
       sdp: data.sdp,
       offerSendID: data.offerSendID,
-      offerSendEmail: data.offerSendEmail,
     });
   });
 
@@ -115,11 +115,11 @@ io.on("connection", (socket) => {
     }
     // delete usernameToRoom[username]
     // delete socketToUsername[socket.id]
-    socket.to(roomID).emit("leave_room", {
+    socket.to(roomID).emit("leaveRoom", {
       message: `${socketToName[socket.id]}님이 나갔습니다.`,
     });
 
-    socket.to(roomID).emit("user_exit", { id: socket.id });
+    socket.to(roomID).emit("userExit", { id: socket.id });
     console.log(users);
   });
 });

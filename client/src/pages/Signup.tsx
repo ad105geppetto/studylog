@@ -16,13 +16,6 @@ import {
   Separation,
   Form,
 } from "styles/Userpage_style";
-import styled from "styled-components";
-
-const Exam = styled.div`
-  display: flex;
-  justify-content: space-between;
-  width: 25vw;
-`;
 
 const SERVER = process.env.REACT_APP_SERVER || "http://localhost:4000";
 
@@ -50,12 +43,13 @@ export const Signup = () => {
     pwdCheck: false,
     email: false,
   }); // 유효성 체크
+
   useEffect(() => {
     setErrMsg(errMsg);
   }, [errMsg]);
 
   // -------------  userInfo 데이터 세팅 및 유효성 체크---------------------
-  const onUserInfo = (key: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
+  const setUserinfo = (key: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
     setUserInfo({ ...userInfo, [key]: e.target.value });
     const value = e.target.value;
 
@@ -108,7 +102,6 @@ export const Signup = () => {
         }
         break;
     }
-    console.log(userInfo);
   }; //  -----------------------------------------------------------------
 
   // ------------------------- 아이디 중복 체크 검사 -------------------------
@@ -125,13 +118,12 @@ export const Signup = () => {
           setSuccessMsg({ ...successMsg, idMsg: "사용 가능 한 아이디입니다." });
           setValidCheck({ ...validCheck, id: true });
         }
-        console.log(res);
       })
       .catch((err: AxiosError) => {
         if (err.message === "Request failed with status code 409") {
           setErrMsg({ ...errMsg, idMsg: "아이디가 중복입니다 다른 아이디를 사용해주세요" });
         }
-        console.log(err.message);
+        console.log("중복체크 에러메시지 : ", err.message);
       });
   }; //  -----------------------------------------------------------------
 
@@ -151,7 +143,7 @@ export const Signup = () => {
       .catch((err: any) => {
         // if (!err.response) {return
         // } else if(err.response?.data.message === '보내신 이메일에서 인증 버튼을 클릭 해주세요.' )
-        console.log("에러메세지", err);
+        console.log("회원가입 에러메세지", err);
 
         if (err.response.data.message === "보내신 이메일에서 인증 버튼을 클릭 해주세요.") {
           setErrMsg({
@@ -166,7 +158,7 @@ export const Signup = () => {
       });
   }; //  -----------------------------------------------------------------
 
-  //  ------------------------------ 인증메일 전송 ----------------------------
+  //  ------------------------------ 이메일 인증 ----------------------------
   const onVerifyEmail = () => {
     if (!userInfo.email) {
       setErrMsg({ ...errMsg, emailMsg: "이메일을 입력해주세요." });
@@ -189,7 +181,6 @@ export const Signup = () => {
       .catch((err: AxiosError) => {
         console.log("에러메세지", err);
       });
-    console.log(userInfo);
   }; //  -----------------------------------------------------------------
 
   return (
@@ -205,13 +196,11 @@ export const Signup = () => {
               e.preventDefault();
             }}
           >
-            {/* <Section> */}
-            {/* <SubTitle> 아이디 </SubTitle> */}
             <Separation>
               <Input
                 type="text"
                 placeholder="ID를 입력하세요"
-                onChange={onUserInfo("id")}
+                onChange={setUserinfo("id")}
                 maxLength={10}
                 required
               />
@@ -219,47 +208,41 @@ export const Signup = () => {
                 <FiCheckSquare size="2rem" /> 중복체크
               </InnerButton>
             </Separation>
-            {/* </Section> */}
+
             <SuccessMsg>{successMsg.idMsg}</SuccessMsg>
             <ErrorMsg>{errMsg.idMsg} </ErrorMsg>
 
-            {/* <Section> */}
-            {/* <SubTitle> 비밀번호 </SubTitle> */}
             <Input
               type="password"
               placeholder="비밀번호를 입력하세요"
-              onChange={onUserInfo("pwd")}
+              onChange={setUserinfo("pwd")}
               maxLength={15}
               required
             />
-            {/* </Section> */}
+
             <ErrorMsg>{errMsg.pwdMsg} </ErrorMsg>
-            {/* <Section> */}
-            {/* <SubTitle> 비밀번호 확인</SubTitle> */}
+
             <Input
               type="password"
               placeholder="비밀번호를 다시 입력하세요"
-              onChange={onUserInfo("pwdCheck")}
+              onChange={setUserinfo("pwdCheck")}
               maxLength={15}
               required
             />
-            {/* </Section> */}
-            <ErrorMsg>{errMsg.pwdCheckMsg}</ErrorMsg>
 
-            {/* <Section> */}
-            {/* <SubTitle> 이메일 </SubTitle> */}
+            <ErrorMsg>{errMsg.pwdCheckMsg}</ErrorMsg>
             <Separation>
               <Input
                 type="text"
                 placeholder="이메일을 입력하세요"
-                onChange={onUserInfo("email")}
+                onChange={setUserinfo("email")}
                 required
               />
               <InnerButton type="button" onClick={onVerifyEmail}>
                 <MdOutlineMarkEmailRead size="2rem" /> 이메일인증
               </InnerButton>
             </Separation>
-            {/* </Section> */}
+
             <ErrorMsg>{errMsg.emailMsg}</ErrorMsg>
             <SuccessMsg>{successMsg.emailMsg}</SuccessMsg>
 
@@ -284,55 +267,3 @@ export const Signup = () => {
 };
 
 export default Signup;
-
-/* 
- ! 회원 가입 인증메일  요청시,
- 인증 메일이 발송 되었습니다. < 메세지 출력 
- 
-
-
-
-*/
-
-/*
-
- 유저 아이디에 입력값을 넣고,
- 입력값의 제한은 공백, 특수문자 허용 불가
-
-
- 비밀번호도 동일하게 공백,특수문자 허용 불가 
- + 비밀번호는 문자+숫자의 조합으로?
-
- 이메일은 이메일 정규식 
-
-중복체크 버튼 클릭시 
-
-server로 post 요청을 보내며, 바디에는 userId를 담아서 전달
-응답 받는 status 200 > 사용 가능한 아이디 입니다. 
-> validCheck.id => true 
-응답이 409 >  다른 아이디를 사용해주세요 
-validCheck.id => false
-응답이 500 >  네트워크에 문제가 있습니다. 다시 한 번 시도해주세요, 문제가 반복되는 경우 다시 한 번 
-접속하시길 권장드립니다.
-validCheck.id => false
-
-Oauth의 흐름 
-
-1. 클라이언트 -> Google / 구글님 인증 코드 좀 주실래요?
-2. Google -> 클라이언트 / ㅇㅋㅇㅋ 인증 url 드림 
-3. 클라 -> 서버  / 서버님 인증 url 따왔어요
-4. 서버 -> Google / 구글님 이게 인증 url 이라는데 토큰이랑 바꾸져
-5. Google -> 서버 / ㅇㅋㅇㅋ 여기 토큰 드림 
-6. 서버 -> 클라 / 인증 토큰으로 바꿔왔다 받아라! 
-
-7. 클라 => ㅇㅋ 이 토큰으로 이제 로그인 함 ㅋ 
-
-Oath에 담긴 인증토큰과
-자체 회원가입으로 생성되는 인증토큰은 다르지
-그건 서버에서 구별해서 전달해주나? 
-
-일단 내가 만들어 줘야 할 것은
-Google 로 인증 코드를 받아오는것을 해야 해 ! 
-
-
-*/

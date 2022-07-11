@@ -11,7 +11,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Roomlist from "pages/Roomlist";
 import Nav from "./components/Nav";
 import Findinfo from "pages/Findinfo";
-import { logIn } from "./action/index";
+import { logIn, logout } from "./action/index";
 import { useDispatch } from "react-redux";
 
 const SERVER = process.env.REACT_APP_SERVER || "http://localhost:4000";
@@ -22,34 +22,11 @@ function App() {
   const geust = `Annoy${guestNum}`;
   const [annoy, setAnnoy] = useState(geust);
   const [roomId, setRoomId] = useState("");
-  const url = new URL(window.location.href);
-  const authCode = url.searchParams.get("code");
 
-  // --------------------------- OAUTH 로그인---------------------
-
-  const sendAuthCode = (authCode: any) => {
-    console.log("1234");
-    console.log(SERVER);
-    axios
-      .post(`${SERVER}/Oauth`, { authorizationCode: authCode })
-      .then((res: AxiosResponse) => {
-        console.log("=====Oauth====서버에서 받아옴");
-        console.log(res);
-        const accessToken = res.data.accessToken;
-        const userInfo = res.data.userInfo;
-        dispatch(
-          logIn(accessToken, userInfo.id, userInfo.userId, userInfo.email, userInfo.profile)
-        );
-      })
-      .catch((err: AxiosError) => {
-        console.log("err:", err);
-      });
-  };
-
-  useEffect(() => {
-    sendAuthCode(authCode);
-  }, []);
-
+  window.addEventListener("unload", () => {
+    dispatch(logout(""));
+  });
+  // -----------------
   return (
     //------------------------------------------------------------------------------------------------
     <BrowserRouter>
@@ -69,10 +46,6 @@ function App() {
         />
         <Route path="/findinfo" element={<Findinfo />} />
         <Route path="/Nav" element={<Nav />} />
-        <Route
-          path="/Roomlist"
-          element={<Roomlist annoy={annoy} roomId={roomId} setRoomId={setRoomId} />}
-        />
       </Routes>
     </BrowserRouter>
   );

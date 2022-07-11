@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import axios, { AxiosError, AxiosResponse } from "axios";
 import { useNavigate, NavLink } from "react-router-dom";
 import { useDispatch } from "react-redux";
@@ -17,10 +17,13 @@ import {
   Form,
 } from "styles/Userpage_style";
 
-const CLIENT = process.env.REACT_APP_CLIENT || "http://localhost:3000";
+const CLIENT = process.env.REACT_APP_CLIENT || "http://localhost:3000/login";
 const SERVER = process.env.REACT_APP_SERVER || "http://localhost:4000";
 const OAUTH_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID;
 const OAUTH_URL = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${OAUTH_ID}&redirect_uri=${CLIENT}&response_type=code&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile%20openid&access_type=offline&`;
+// const REST_API_KEY = process.env.KAKAO_CLIENT_ID;
+// const REDIRECT_URI = process.env.SERVER || `http://localhost:3000`;
+// const KAKAO_OAUTH_URL = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}`;
 
 const Login = () => {
   const dispatch = useDispatch();
@@ -46,32 +49,102 @@ const Login = () => {
         // { type: "application/json" }
       )
       .then((res: AxiosResponse) => {
-        console.log(res);
         const accessToken = res.data.accessToken;
         const id = res.data.userInfo.id;
         const userId = res.data.userInfo.userId;
         const email = res.data.userInfo.email;
         const profile = res.data.userInfo.profile;
-        console.log(res.data);
+
         dispatch(logIn(accessToken, id, userId, email, profile));
+        // 로그인시 redux로 상태값을 저장해주기
 
         navigate("/roomlist");
       })
       .catch((err: AxiosError) => {
-        console.log(err);
-        setErrMsg(() => "올바르지 못 한 로그인 요청입니다.");
+        console.log("로그인 에러메세지 : ", err);
+        setErrMsg(() => "아이디 또는 비밀번호를 확인해주세요.");
       });
-  };
+  }; //-----------------------------------------------------------------------
+
   // ----------------------------- 구글 OAUTH 요청 -----------------------
   const oauthPath = () => {
     window.location.assign(OAUTH_URL);
-    //  버튼 클릭시 Oauth 정보가 담긴 url로 이동시킴
+    //  버튼 클릭시 Oauth 정보가 담긴 url로 페이지를 이동시킴
   }; // --------------------------------------------------------------
 
   //  ------------------------ 페이지 전환 -----------------------------------
   const onNavigate = (url: string) => (e: React.MouseEvent<HTMLButtonElement>) => {
     navigate(url);
   }; //  ----------------------------------------------------------------------
+
+  // ----------------------------- 카카오 OAUTH 요청 -----------------------
+  const kakaoOauthHandler = () => {
+    axios
+      .get(`http://localhost:4000/kakaoOauth`)
+      .then((res: AxiosResponse) => {
+        window.location.assign(res.data.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+  // --------------------------------------------------------------
+
+  // --------------------------- OAUTH 로그인---------------------
+
+  const sendAuthCode = () => {
+    const url = new URL(window.location.href);
+    const authCode = url.searchParams.get("code");
+
+    axios
+      .post(`${SERVER}/Oauth`, { authorizationCode: authCode })
+      .then((res: AxiosResponse) => {
+        console.log("=====Oauth====서버에서 받아옴");
+        console.log(res);
+        if (res.data.message === "이미 카카오 계정으로 가입한 유저입니다.") {
+          alert(res.data.message);
+        }
+        const accessToken = res.data.accessToken;
+        const userInfo = res.data.userInfo;
+        dispatch(
+          logIn(accessToken, userInfo.id, userInfo.userId, userInfo.email, userInfo.profile)
+        );
+      })
+
+      .catch((err: AxiosError) => {
+        console.log("err:", err);
+      })
+      .then(() => navigate("/roomlist"));
+  };
+
+  const sendKakaoAuthCode = () => {
+    const url = new URL(window.location.href);
+    const authCode = url.searchParams.get("code");
+
+    axios
+      .post(`${SERVER}/kakaoOauth/redirect`, { authorizationCode: authCode })
+      .then((data) => {
+        console.log("=====kakaoOauth====서버에서 받아옴");
+        if (data.data.message === "이미 구글 계정으로 가입한 유저입니다.") {
+          alert(data.data.message);
+        }
+        const accessToken = data.data.accessToken;
+        const userInfo = data.data.userInfo;
+        dispatch(
+          logIn(accessToken, userInfo.id, userInfo.userId, userInfo.email, userInfo.profile)
+        );
+      })
+
+      .catch((err: AxiosError) => {
+        console.log(err);
+      })
+      .then(() => navigate("/roomlist"));
+  };
+
+  useEffect(() => {
+    sendAuthCode();
+    sendKakaoAuthCode();
+  }, []);
 
   return (
     <div>
@@ -85,23 +158,19 @@ const Login = () => {
             e.preventDefault();
           }}
         >
-          {/* <Section> */}
-          {/* <SubTitle> 아이디 </SubTitle> */}
           <Input
             style={{ marginBottom: "2vh" }}
             type="text"
             onChange={onUserInfo("id")}
             placeholder="아이디를 입력해주세요"
           />
-          {/* </Section> */}
-          {/* <Section> */}
-          {/* <SubTitle> 비밀번호 </SubTitle> */}
+
           <Input
             type="password"
             onChange={onUserInfo("pwd")}
             placeholder="비밀번호를 입력해주세요"
           />
-          {/* </Section> */}
+
           <LoginErrorMsg> {errMsg}</LoginErrorMsg>
           <ButtonWrapper>
             <Small_Button onClick={onClickLoginBtn}>로그인</Small_Button>
@@ -114,9 +183,16 @@ const Login = () => {
             <Large_Button type="button" onClick={onNavigate("/findinfo")}>
               아이디/비밀번호 찾기
             </Large_Button>
-
             <Large_Button type="button" onClick={oauthPath}>
               <FcGoogle size="2rem" /> 구글 로그인
+            </Large_Button>
+            <Large_Button
+              type="button"
+              onClick={kakaoOauthHandler}
+              style={{ backgroundColor: "#FEE500" }}
+            >
+              <img src="asset/kakao-simbole.png" width="30" height="25" />
+              카카오 로그인
             </Large_Button>
           </ButtonWrapper2>
         </Form>
@@ -126,30 +202,3 @@ const Login = () => {
 };
 
 export default Login;
-
-//  ---------------------------------GOOGLE ---------------------------
-/*
-  https://accounts.google.com/o/oauth2/v2/auth?client_id=631273485611-t8h8qol18tpug6pupv0tb4nsq4mfl5js.apps.googleusercontent.com&redirect_uri=http://localhost:3000&response_type=code&scope=openid
-
-  h
-axios.get? 
-https://accounts.google.com/o/oauth2/v2/auth?
-client_id=
-response_type = code
-scope=openid
-redirect_uri=
-
-1. 클라이언트 -> Google / 구글님 인증 코드 좀 주실래요?
-2. Google -> 클라이언트 / ㅇㅋㅇㅋ 인증 url 드림 
-3. 클라 -> 서버  / 서버님 인증 url 따왔어요
-4. 서버 -> Google / 구글님 이게 인증 url 이라는데 토큰이랑 바꾸져
-5. Google -> 서버 / ㅇㅋㅇㅋ 여기 토큰 드림 
-6. 서버 -> 클라 / 인증 토큰으로 바꿔왔다 받아라! 
-
-   code=4%2F0AX4XfWjoulphCyjKTQsMFJbhmTFekFnQB5Njeip6m_EYeCi0-MJi2-Q5zeGvp5XHkFWAbQ&scope=openid&authuser=0&prompt=consent
-
-   요청해서 코드도 받아왔다. 근데 이건 그냥 내꺼잖아
-   URL의 일부만 보내 줄 수 있나? 
-   이걸 불특정 다수를 보내줘야 한다는거잖아?
-   그건 어떻게 하지? 
-*/

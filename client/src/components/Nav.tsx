@@ -6,22 +6,14 @@ import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import Modal from "components/Modal";
 
-// const StyleNav = styled.div`
-//   background-color: #f1f196;
-
-//   width: 100vw;
-//   height: 15vh;
-// `;
-
 const SERVER = process.env.REACT_APP_SERVER || "http://localhost:4000";
 
 const Nav = () => {
-  const [modal, setModal] = useState(false);
+  // 모달창을 보여줄지 말지를 정하는 상태
+  const [viewModal, setViewModal] = useState(false);
 
   const userInfo = useSelector((state: any) => state.userInfoReducer.userInfo);
-
-  // console.log(userInfo.accessToken);
-
+  // accessToken의 유무를 상태로 정한다.
   const [token, setToken] = useState(userInfo.accessToken);
 
   const navigate = useNavigate();
@@ -52,10 +44,6 @@ const Nav = () => {
   };
   // -------------------------------------------------------------------
 
-  // const onModalOff = (modal: any) => {
-  //   setModal((modal) => !modal);
-  // };
-
   return (
     <Container>
       <Logobox onClick={() => navigate("/roomlist")}>
@@ -74,6 +62,8 @@ const Nav = () => {
           <button type="button">공부방 만들기</button>
         </LinkBox>
       </LinkContainer>
+      {/* accessToken의 유무로 로그인&회원가입을 렌더링할지 
+      로그아웃&내정보를 렌더링 할지 정해주는 삼항연산자 */}
       {!token ? (
         <Logobox>
           <Btn type="button" onClick={() => navigate("/login")}>
@@ -88,35 +78,34 @@ const Nav = () => {
           <Btn
             type="button"
             onClick={() => {
-              setModal(true);
+              setViewModal(true);
             }}
           >
             로그아웃
           </Btn>
-          {modal && (
+          {viewModal && (
             <Modal
-              modal={modal}
-              setModal={setModal}
+              modal={viewModal}
+              setModal={setViewModal}
               width="300"
               height="250"
               element={
-                <BtnContainer>
+                <ModalContainer>
                   <div>로그아웃을 하시겠습니까?</div>
                   <br />
                   <Buttonbox>
-                    <LogOutBtn style={{ color: "white" }} type="button" onClick={onLogOutBtn}>
+                    <ModalLogOutBtn style={{ color: "white" }} type="button" onClick={onLogOutBtn}>
                       확인
-                    </LogOutBtn>
-                    <LogOutBtn
+                    </ModalLogOutBtn>
+                    <ModalLogOutBtn
                       style={{ color: "white" }}
                       type="button"
-                      // onClick={() => onModalOff(modal)}
-                      onClick={() => setModal(false)}
+                      onClick={() => setViewModal(false)}
                     >
                       취소
-                    </LogOutBtn>
+                    </ModalLogOutBtn>
                   </Buttonbox>
-                </BtnContainer>
+                </ModalContainer>
               }
             />
           )}
@@ -133,7 +122,6 @@ const Nav = () => {
 
 const Container = styled.div`
   position: relative;
-  /* left */
   top: -0.5vw;
   bottom: 0.5vw;
   width: 100vw;
@@ -171,7 +159,6 @@ const LinkContainer = styled.div`
 const Line = styled.div`
   width: 1px;
   height: 5vh;
-  /* color: pink; */
   border-right: 2px dashed #4b6587;
   position: absolute;
   top: 18px;
@@ -180,7 +167,6 @@ const Line = styled.div`
 
 const LinkBox = styled.div`
   position: relative;
-  /* border-right: 1px dotted black; */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -207,17 +193,14 @@ const Btn = styled.button`
   height: 6vh;
   border: 1px solid grey;
   border-radius: 10px;
-  /* cursor: pointer; */
   display: flex;
   justify-content: center;
-
   align-items: center;
   margin-right: 10px;
   background-color: white;
-  /* padding: 10px 10px; */
 `;
 
-const BtnContainer = styled.div`
+const ModalContainer = styled.div`
   background: #f7f6f2;
 `;
 
@@ -226,7 +209,7 @@ const Buttonbox = styled.div`
   justify-content: center;
 `;
 
-const LogOutBtn = styled.button`
+const ModalLogOutBtn = styled.button`
   font-size: 1rem;
   text-align: center;
   font-weight: 500;
@@ -246,56 +229,3 @@ const LogOutBtn = styled.button`
 `;
 
 export default Nav;
-
-// return (
-//   <div>
-//     <nav>
-//       <ul>
-//         <span>The Nav </span>
-//         <span>
-//           <button type="button" onClick={() => navigate("/roomlist")}>
-//             Study List
-//           </button>
-//         </span>
-//         <span>
-//           <button type="button" onClick={onNavigate("/todos")}>
-//             Study Log
-//           </button>
-//         </span>
-//         <span>
-//           <button type="button" onClick={() => navigate("/Creatingroom")}>
-//             방 만들기
-//           </button>
-
-// </span>
-//         {!token ? (
-//           <span>
-//             <span>
-//               <button type="button" onClick={() => navigate("/login")}>
-//                 로그인
-//               </button>
-//             </span>
-//             <span>
-//               <button type="button" onClick={() => navigate("/signup")}>
-//                 회원가입
-//               </button>
-//             </span>
-//           </span>
-//         ) : (
-//           <span>
-//             <span>
-//               <button type="button" onClick={onLogOutBtn}>
-//                 로그아웃
-//               </button>
-//             </span>
-//             <span>
-//               <button type="button" onClick={() => navigate("/mypage")}>
-//                 내정보
-//               </button>
-//             </span>
-//           </span>
-//         )}
-//       </ul>
-//     </nav>
-//   </div>
-// );

@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import axios, { AxiosError, AxiosResponse } from "axios";
-// import Nav from "./Nav";
 import styled from "styled-components";
 
 axios.defaults.withCredentials = true;
@@ -12,12 +11,13 @@ const Pwinquiry = () => {
     email: "",
     certNum: "",
   });
-
+  // 비밀번호 받기 함수로 받은 비밀번호를 상태값으로 저장.
   const [userPwd, setUserPwd] = useState("");
-
+  // 비밀번호를 찾기 전과 후를 상태값으로 비교
   const [findPwd, setFindPwd] = useState(true);
-
+  // 비밀번호 에러 메시지
   const [errorMessage, setErrorMessage] = useState("");
+  // 인증번호 에러 메시지
   const [errorMessageCert, setErrorMessageCert] = useState("");
 
   const onUserInfo = (key: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -31,7 +31,7 @@ const Pwinquiry = () => {
       })
       .then((res: AxiosResponse) => {
         // setFindPwd(false);
-        console.log(res);
+        // console.log(res);
         // setUserInfo(res.data.userInfo.certNum);
       })
       .catch((err: AxiosError) => {
@@ -50,7 +50,7 @@ const Pwinquiry = () => {
       })
       .then((res: AxiosResponse) => {
         setFindPwd(false);
-        console.log(res);
+        // console.log(res);
         setUserPwd(res.data.password);
 
         // userId: result[0].userId,
@@ -65,8 +65,9 @@ const Pwinquiry = () => {
 
   return (
     <Container>
+      {/* findPwd 상태 값이 true면 비밀번로 찾기 화면이 렌더링 */}
       {findPwd ? (
-        <div>
+        <div style={{ marginBottom: "5vh" }}>
           <div>
             <Input type="id" onChange={onUserInfo("userId")} placeholder="아이디를 입력해주세요" />
           </div>
@@ -90,18 +91,28 @@ const Pwinquiry = () => {
           </div>
 
           <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+            <ErrMsg
+              style={
+                {
+                  // textAlign: "center",
+                  // fontSize: "1rem",
+                  // marginBottom: "5vh",
+                }
+              }
+            >
+              {errorMessage}
+            </ErrMsg>
             <Button className="find" type="button" onClick={onClickFindPwd}>
               찾기
             </Button>
-            <div>{errorMessage}</div>
           </div>
         </div>
       ) : (
+        // findPwd 상태 값이 false면 찾은 비밀번호를 렌더링해주기.
         <FindPwd
           className="showPwd fadein"
           style={{
             display: "flex",
-            // flexDirection: "column",
             justifyContent: "center",
             alignItems: "center",
             height: "70%",
@@ -140,7 +151,6 @@ const Container = styled.div`
     font-size: 1rem;
     font-weight: 400;
     outline: 0;
-    /* border: 0; */
     background: white;
     margin-left: 1vw;
   }
@@ -155,7 +165,6 @@ const Container = styled.div`
     font-size: 1rem;
     font-weight: 700;
     outline: 0;
-    /* border: 0; */
     border: 2px solid grey;
     text-align: center;
     background: white;
@@ -166,8 +175,6 @@ const Input = styled.input`
   width: 30vw;
   height: 5vh;
   font-size: 1rem;
-  /* display: flex;
-  justify-content: center; */
   align-items: center;
   background-color: white;
   border: 0.2rem solid lightgrey;
@@ -178,7 +185,7 @@ const Input = styled.input`
 const FindPwd = styled.div``;
 
 const Button = styled.button`
-  /* .find {
+  /*.find {
     min-width: 7vw;
     min-height: 5.5vh;
     line-height: 5.5vh;
@@ -190,12 +197,20 @@ const Button = styled.button`
     outline: 0;
     border: 0;
     background: white;
+*/
+  &:active {
+    position: relative;
+    top: 1px;
+  }
+`;
 
-    &:active {
-      position: relative;
-      top: 1px;
-    }
-  } */
+const ErrMsg = styled.div`
+  /* color: red;
+  font-weight: bolder;
+  text-align: center;
+  font-size: 0.8rem;
+  margin-top: -5vh;
+  margin-bottom: 10vh; */
 `;
 
 export default Pwinquiry;

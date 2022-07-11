@@ -1,7 +1,8 @@
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
-import axios from "axios";
+import Prelogin from "components/Prelogin";
+import axios, { AxiosError, AxiosResponse } from "axios";
 import styled from "styled-components";
 import Nav from "components/Nav";
 
@@ -11,20 +12,32 @@ interface socketInterface {
 const SERVER = process.env.REACT_APP_SERVER || "http://localhost:4000";
 
 const Creatingroom = ({ setRoomId }: socketInterface) => {
+  const [errMessage, setErrMessage] = useState("");
+
   const navigate = useNavigate();
+
   const userInfo = useSelector((state: any) => state.userInfoReducer.userInfo);
+  // 공부방 이름을 상태로 둔 것
   const [title, setTitle] = useState("");
+  // 공부방 설명을 상태로 둔 것
   const [content, setContent] = useState("");
 
-  const titleHandler = (e: any) => {
+  const [isLogin, setIsLogin] = useState(false);
+
+  const titleHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTitle(e.target.value);
   };
 
-  const contentHandler = (e: any) => {
+  const contentHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     setContent(e.target.value);
   };
-
+  // 공부방 생성하는 함수-----------------------------------------------
   const createRoomHandler = () => {
+    if (title.length === 0 || content.length === 0) {
+      setErrMessage(() => "방제목과 내용을 입력해주세요");
+      // alert("방제목과 내용을 입력해주세요");
+      return;
+    }
     axios
       .post(
         `${SERVER}/room`,
@@ -33,39 +46,59 @@ const Creatingroom = ({ setRoomId }: socketInterface) => {
           headers: { authorization: `Bearer ${userInfo.accessToken}` },
         }
       )
-      .then((res) => {
+      .then((res: AxiosResponse) => {
         setRoomId(res.data.id);
         navigate(`/room/${res.data.id}`);
       })
-      .catch((err) => {
-        console.log(err);
+      .catch((err: AxiosError) => {
+        setErrMessage(() => "방제목과 내용을 입력해주세요");
       });
   };
+  //-------------------------------------------------------------------
+
+  // 로그인 여부 체크
+  const checkLoginState = () => {
+    if (userInfo.accessToken) {
+      setIsLogin(() => true);
+    }
+  };
+  // ------------------------
+
+  useEffect(() => {
+    checkLoginState();
+  }, []);
 
   return (
     <Root>
       <Nav />
       <Container>
-        <Label htmlFor="roomName">방제목</Label>
-        <Input
-          className="title"
-          type="text"
-          onChange={titleHandler}
-          id="roomName"
-          placeholder="생성할 방 제목을 입력해주세요"
-        ></Input>
+        {isLogin ? (
+          <div>
+            <Label htmlFor="roomName">방제목</Label>
+            <Input
+              className="title"
+              type="text"
+              onChange={titleHandler}
+              id="roomName"
+              placeholder="생성할 방 제목을 입력해주세요"
+            ></Input>
 
-        <Label htmlFor="content">내용</Label>
-        <Input
-          className="content"
-          type="text"
-          onChange={contentHandler}
-          id="content"
-          placeholder="어떤 방인지 간략히 소개해주세요"
-        ></Input>
-        <Button className="create" onClick={createRoomHandler}>
-          확인
-        </Button>
+            <Label htmlFor="content">내용</Label>
+            <Input
+              className="content"
+              type="text"
+              onChange={contentHandler}
+              id="content"
+              placeholder="어떤 방인지 간단히 소개해주세요"
+            ></Input>
+            <div>{errMessage}</div>
+            <Button className="create" onClick={createRoomHandler}>
+              확인
+            </Button>
+          </div>
+        ) : (
+          <Prelogin color="white" />
+        )}
       </Container>
     </Root>
   );
@@ -88,8 +121,6 @@ const Container = styled.div`
   flex-direction: column;
   column-gap: 24px;
   padding-top: 10vh;
-  /* background-color: white; */
-  /* margin-top: 10vh; */
   margin-bottom: 13vh;
   .title {
     height: 10vh;
@@ -106,17 +137,15 @@ const Container = styled.div`
     height: 7vh;
     margin-top: 4vw;
     display: flex;
-    /* flex-direction: row; */
     justify-content: center;
     align-items: center;
     font-size: 1.5rem;
     margin: auto;
-    /* display:block; */
   }
 `;
 
 const Label = styled.label`
-  width: 10vh;
+  width: 15vh;
   height: 7vh;
   display: flex;
   flex-direction: column;
@@ -138,13 +167,8 @@ const Input = styled.input`
 const Button = styled.button`
   width: 12vw;
   height: 8vh;
-  /* height: 6vh; */
   border: 2px solid black;
   border-radius: 10px;
-  /* cursor: pointer; */
-  /* display: flex;
-  justify-content: center; */
-  /* align-items: center; */
   margin-top: 10px;
   margin-right: 10px;
   background-color: white;

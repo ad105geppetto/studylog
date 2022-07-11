@@ -1,3 +1,4 @@
+import { Request, Response } from "express";
 import nodeMailer from "nodemailer";
 import pwdMailing from "../models/FindPwdMailing";
 import dotenv from "dotenv";
@@ -13,10 +14,11 @@ const mailPoster = nodeMailer.createTransport({
   },
 });
 
-const mailOpt = (user_data, title, contents, html) => {
+const mailOpt = (userEmail: string, title: string, contents, html: string) => {
+  // 메일 Option 값 설정 함수
   const mailOptions = {
     from: process.env.MAIL_ID,
-    to: user_data,
+    to: userEmail,
     subject: title,
     text: contents,
     html: html,
@@ -25,8 +27,8 @@ const mailOpt = (user_data, title, contents, html) => {
   return mailOptions;
 };
 
-// 메일 전송
-const sendMail = (mailOption) => {
+const sendMail = (mailOption: Object) => {
+  // 메일 전송 함수
   mailPoster.sendMail(mailOption, function (error, info) {
     if (error) {
       console.log("에러 " + error);
@@ -37,11 +39,10 @@ const sendMail = (mailOption) => {
 };
 
 export default {
-  post: (req, res) => {
-    const email = req.body.email;
-    const data = [{ dataValues: email }];
-    let title = "[Studylog] 고객님의 인증코드는 다음과 같습니다.";
-    let randomAuth = String(Math.floor(Math.random() * 1000000));
+  post: (req: Request, res: Response) => {
+    const userEmail = req.body.email;
+    const title = "[Studylog] 고객님의 인증코드는 다음과 같습니다.";
+    const randomAuth = String(Math.floor(Math.random() * 1000000));
     const contents = () => {
       return `${randomAuth}`;
     };
@@ -59,7 +60,7 @@ export default {
         </div>
         <br />
         <h2>고객님의 인증코드입니다.</h2>
-        <h3>${email}님 안녕하세요,</h3>
+        <h3>${userEmail}님 안녕하세요,</h3>
         <h3>고객님의 인증코드는 다음과 같습니다.</h3>
         <br />
         <div>
@@ -68,9 +69,9 @@ export default {
         </div>
       </div>`;
 
-    const mailOption = mailOpt(data[0].dataValues, title, contents(), html);
+    const mailOption = mailOpt(userEmail, title, contents(), html);
     sendMail(mailOption);
-    pwdMailing.create(randomAuth, email, 0, (error, result1) => {
+    pwdMailing.create(randomAuth, userEmail, 0, (error, result1) => {
       if (error) {
         res.status(500).json({ message: "Internal Sever Error" });
       } else {
