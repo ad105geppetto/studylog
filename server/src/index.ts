@@ -3,10 +3,12 @@ import cookieParser from "cookie-parser";
 import indexRouter from "./routes";
 import cors from "cors";
 import http from "http";
+import dotenv from "dotenv";
+dotenv.config();
 // import { Server } from "socket.io";
 let socketio = require("socket.io");
 
-const port = 4000;
+const port = process.env.SERVER_PORT || 4000;
 const app = express();
 
 app.use(
