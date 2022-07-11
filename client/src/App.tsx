@@ -46,10 +46,6 @@ function App() {
         />
         <Route path="/findinfo" element={<Findinfo />} />
         <Route path="/Nav" element={<Nav />} />
-        <Route
-          path="/Roomlist"
-          element={<Roomlist annoy={annoy} roomId={roomId} setRoomId={setRoomId} />}
-        />
       </Routes>
     </BrowserRouter>
   );

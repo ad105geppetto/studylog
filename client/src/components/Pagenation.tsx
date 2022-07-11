@@ -59,11 +59,13 @@ const Pagenation = ({ totalPage, page, setPage }: IProps) => {
 };
 
 const Container = styled.div`
+  height: 5vh;
   display: flex;
-  margin: 15px;
+  /* margin: 15px; */
   justify-content: center;
   align-items: center;
   grid-column: span 12;
+  /* margin-bottom: 15vh; */
 `;
 
 const PageBtn = styled.div`

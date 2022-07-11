@@ -97,7 +97,7 @@ const Cardboard = ({ toDos, boardId, onAddToDos, onAddText, onDeleteToDos }: Car
       </Title>
       <Form onSubmit={(e: React.FormEvent<HTMLFormElement>) => e.preventDefault()}>
         <input onChange={onAddText} placeholder={`${boardId} 를 추가하세요`} />
-        <button type="submit" onClick={onAddToDos(boardId)}>
+        <button type="submit" id="inputbutton" onClick={onAddToDos(boardId)}>
           <MdAddCircle size="3.5vh" />
         </button>
       </Form>
