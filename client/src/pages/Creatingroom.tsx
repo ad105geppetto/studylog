@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import Prelogin from "components/Prelogin";
-import axios from "axios";
+import axios, { AxiosError, AxiosResponse } from "axios";
 import styled from "styled-components";
 import Nav from "components/Nav";
 
@@ -12,23 +12,32 @@ interface socketInterface {
 const SERVER = process.env.REACT_APP_SERVER || "http://localhost:4000";
 
 const Creatingroom = ({ setRoomId }: socketInterface) => {
+  const [errMessage, setErrMessage] = useState("");
+
   const navigate = useNavigate();
+
   const userInfo = useSelector((state: any) => state.userInfoReducer.userInfo);
   // 공부방 이름을 상태로 둔 것
   const [title, setTitle] = useState("");
   // 공부방 설명을 상태로 둔 것
   const [content, setContent] = useState("");
+
   const [isLogin, setIsLogin] = useState(false);
 
-  const titleHandler = (e: any) => {
+  const titleHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTitle(e.target.value);
   };
 
-  const contentHandler = (e: any) => {
+  const contentHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     setContent(e.target.value);
   };
   // 공부방 생성하는 함수-----------------------------------------------
   const createRoomHandler = () => {
+    if (title.length === 0 || content.length === 0) {
+      setErrMessage(() => "방제목과 내용을 입력해주세요");
+      // alert("방제목과 내용을 입력해주세요");
+      return;
+    }
     axios
       .post(
         `${SERVER}/room`,
@@ -37,12 +46,12 @@ const Creatingroom = ({ setRoomId }: socketInterface) => {
           headers: { authorization: `Bearer ${userInfo.accessToken}` },
         }
       )
-      .then((res) => {
+      .then((res: AxiosResponse) => {
         setRoomId(res.data.id);
         navigate(`/room/${res.data.id}`);
       })
-      .catch((err) => {
-        console.log(err);
+      .catch((err: AxiosError) => {
+        setErrMessage(() => "방제목과 내용을 입력해주세요");
       });
   };
   //-------------------------------------------------------------------
@@ -62,7 +71,6 @@ const Creatingroom = ({ setRoomId }: socketInterface) => {
   return (
     <Root>
       <Nav />
-
       <Container>
         {isLogin ? (
           <div>
@@ -81,8 +89,9 @@ const Creatingroom = ({ setRoomId }: socketInterface) => {
               type="text"
               onChange={contentHandler}
               id="content"
-              placeholder="어떤 방인지 간략히 소개해주세요"
+              placeholder="어떤 방인지 간단히 소개해주세요"
             ></Input>
+            <div>{errMessage}</div>
             <Button className="create" onClick={createRoomHandler}>
               확인
             </Button>
@@ -136,7 +145,7 @@ const Container = styled.div`
 `;
 
 const Label = styled.label`
-  width: 10vh;
+  width: 15vh;
   height: 7vh;
   display: flex;
   flex-direction: column;

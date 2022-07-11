@@ -90,22 +90,22 @@ const Nav = () => {
               width="300"
               height="250"
               element={
-                <BtnContainer>
+                <ModalContainer>
                   <div>로그아웃을 하시겠습니까?</div>
                   <br />
                   <Buttonbox>
-                    <LogOutBtn style={{ color: "white" }} type="button" onClick={onLogOutBtn}>
+                    <ModalLogOutBtn style={{ color: "white" }} type="button" onClick={onLogOutBtn}>
                       확인
-                    </LogOutBtn>
-                    <LogOutBtn
+                    </ModalLogOutBtn>
+                    <ModalLogOutBtn
                       style={{ color: "white" }}
                       type="button"
                       onClick={() => setViewModal(false)}
                     >
                       취소
-                    </LogOutBtn>
+                    </ModalLogOutBtn>
                   </Buttonbox>
-                </BtnContainer>
+                </ModalContainer>
               }
             />
           )}
@@ -195,13 +195,12 @@ const Btn = styled.button`
   border-radius: 10px;
   display: flex;
   justify-content: center;
-
   align-items: center;
   margin-right: 10px;
   background-color: white;
 `;
 
-const BtnContainer = styled.div`
+const ModalContainer = styled.div`
   background: #f7f6f2;
 `;
 
@@ -210,7 +209,7 @@ const Buttonbox = styled.div`
   justify-content: center;
 `;
 
-const LogOutBtn = styled.button`
+const ModalLogOutBtn = styled.button`
   font-size: 1rem;
   text-align: center;
   font-weight: 500;

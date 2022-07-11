@@ -25,7 +25,6 @@ const Idinquiry = () => {
       })
       .then((res: AxiosResponse) => {
         setFindId(false);
-        // console.log(res);
         setUserId(res.data.userId);
       })
       .catch((err: AxiosError) => {
@@ -43,38 +42,17 @@ const Idinquiry = () => {
           <div>
             <Input type="email" onChange={onUserEmail} placeholder="이메일를 입력해주세요" />
           </div>
-          <div>{errorMessage ? errorMessage : null}</div>
+          <ErrMsg>{errorMessage ? errorMessage : null}</ErrMsg>
 
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              marginBottom: "5vh",
-              height: "30vh",
-            }}
-          >
-            <Button className="find" type="button" onClick={onClickFindId}>
+          <Find>
+            <FindBtn className="find" type="button" onClick={onClickFindId}>
               찾기
-            </Button>
-          </div>
+            </FindBtn>
+          </Find>
         </div>
       ) : (
         // 아이디를 찾은 상태면 아이디 렌더링 해주기
-        <FindId
-          className="showId fadein"
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center",
-            height: "70%",
-            color: "#4b6587",
-            fontSize: "5vh",
-          }}
-        >
-          아이디는 {userId} 입니다
-        </FindId>
+        <FindId className="showId fadein">아이디는 {userId} 입니다</FindId>
       )}
     </Container>
   );
@@ -89,7 +67,23 @@ const Container = styled.div`
   background-color: #f7f6f2;
 `;
 
-const Button = styled.button`
+const ErrMsg = styled.div`
+  /* height: 20vh; */
+  display: flex;
+  justify-content: center;
+  /* margin-bottom: 5vh; */
+`;
+
+const Find = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 5vh;
+  height: 30vh;
+  margin-top: 5vh;
+`;
+
+const FindBtn = styled.button`
   min-width: 7vw;
   min-height: 5.5vh;
   border-radius: 1rem;
@@ -117,6 +111,14 @@ const Input = styled.input`
 `;
 
 const FindId = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 70%;
+  font-size: 5vh;
+  color: #4b6587;
+
   .fadein {
     font-size: medium;
     position: relative;

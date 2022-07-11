@@ -8,7 +8,8 @@ import Nav from "components/Nav";
 import Modal from "components/Modal";
 import { roomlist } from "action";
 import { useDispatch } from "react-redux";
-
+import { FaSearch } from "react-icons/fa";
+import { MdRefresh } from "react-icons/md";
 const Container = styled.div`
   width: 80%;
   height: 100%;
@@ -112,6 +113,65 @@ const EnterRoomBtn = styled.button`
   margin: 1vh;
 `;
 
+const Search = styled.div`
+  height: 4vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 1.5vh;
+  border-radius: 5px;
+
+  /* width: 50vh; */
+  /* height: 4vh; */
+  /* border: solid 1px rgba(0, 0, 0, 0.3); */
+  /* z-index: 1; */
+  /* opacity: 1; */
+  /* background: white; */
+`;
+
+const SearchInput = styled.input`
+  width: 38vw;
+  height: 4vh;
+  border: 3px solid grey;
+  border-radius: 10px;
+  text-align: center;
+  margin-left: 10px;
+  overflow: auto;
+  font-size: 15px;
+`;
+
+const SearchBtn = styled.button`
+  width: 5vw;
+  height: 5vh;
+  color: #4b6587;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: 1vh;
+  border: 2px solid grey;
+  border-radius: 10px;
+  background-color: rgb(255, 255, 255);
+`;
+
+const RefreshBtn = styled.button`
+  width: 5vw;
+  height: 5vh;
+  color: #4b6587;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: 1vh;
+  border: 2px solid grey;
+  border-radius: 10px;
+  background-color: rgb(255, 255, 255);
+`;
+
 interface IPosts {
   id: number;
   title: string;
@@ -128,9 +188,9 @@ interface socketInterface {
 const SERVER = process.env.REACT_APP_SERVER || "http://localhost:4000";
 
 const Roomlist = ({ annoy, roomId, setRoomId }: socketInterface) => {
-  const [isLoading, setIsLoading] = useState(true);
+  const [roomState, setRoomState] = useState("개설된 방이 없습니다.");
 
-  const [newRoom, setNewRoom] = useState({});
+  const [isLoading, setIsLoading] = useState(true);
 
   const navigate = useNavigate();
   // 모달창을 보여줄지 말지를 정하는 상태
@@ -168,7 +228,6 @@ const Roomlist = ({ annoy, roomId, setRoomId }: socketInterface) => {
         setPosts(res.data.data);
         // console.log(res.data.data);
         setTotalPage(res.data.total);
-        // setNewRoom(res.data.data[0]);
         setIsLoading(false);
       })
       .catch((err: AxiosError) => {
@@ -191,7 +250,7 @@ const Roomlist = ({ annoy, roomId, setRoomId }: socketInterface) => {
         userId: userInfo.id,
         type: "join",
       })
-      .then((res) => {
+      .then((res: AxiosResponse) => {
         navigate(`/room/${room.id}`);
       });
   };
@@ -199,45 +258,58 @@ const Roomlist = ({ annoy, roomId, setRoomId }: socketInterface) => {
 
   // 검색어를 검색해주는 함수-------------------------------------------------
   const onSearch = () => {
+    // const input = document.getElementById(search);
     axios
       .get(`${SERVER}/search?title=${search}&limit=${limit}&page=${page}`)
       .then((res: AxiosResponse) => {
+        if (res.data.data.length === 0) {
+          setRoomState("검색된 방이 없습니다.");
+        }
         setPosts(res.data.data);
         // posts를 리덕스에 저장하는 법
         // const posts = setPosts(res.data.data);
         // dispatch(roomlist(posts));
         setTotalPage(res.data.total);
+        reset();
       })
       .catch((err: AxiosError) => {
+        console.log(posts);
         console.log(err);
       });
   };
   // -----------------------------------------------------------------------
 
-  const refresh = () => {
-    getPageData(page, limit);
-  };
-
   const onChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value);
+  };
+  // 공부방 검색 후 검색창 초기화 시켜주기
+  const reset = () => {
+    setSearch("");
+  };
+  // 공부방 목록 새로고침 해주기
+  const onRefresh = () => {
+    getPageData(page, limit);
   };
 
   return (
     <div style={{ width: "100vw", height: "100vh" }}>
       <Nav />
-      {/* 검색부분은 에러를 수정하기 전까지 주석처리 */}
-      <Input
-        type="text"
-        onChange={onChangeHandler}
-        placeholder="검색어를 입력해주세요"
-        autoComplete="off"
-      />
-      <Button type="button" onClick={onSearch}>
-        검색
-      </Button>
-      <Button type="button" onClick={refresh}>
-        새로고침
-      </Button>
+      <Search>
+        <i className="fas fa-search"></i>
+        <SearchInput
+          type="text"
+          value={search}
+          onChange={onChangeHandler}
+          placeholder="검색어를 입력해주세요"
+          autoComplete="off"
+        />
+        <SearchBtn type="button" onClick={onSearch}>
+          <FaSearch />
+        </SearchBtn>
+        <RefreshBtn type="button" onClick={onRefresh}>
+          <MdRefresh size="1.5rem" />
+        </RefreshBtn>
+      </Search>
 
       {isLoading ? (
         // 로딩중일때에는 강아지 보여주기
@@ -259,7 +331,7 @@ const Roomlist = ({ annoy, roomId, setRoomId }: socketInterface) => {
                   className="noroom"
                   style={{ display: "flex", flexDirection: "column", alignItems: "center" }}
                 >
-                  <div>개설된 방이 없습니다</div>
+                  <div>{roomState}</div>
                 </div>
               ) : (
                 posts.map((post: any, index: any): any => {
@@ -284,7 +356,6 @@ const Roomlist = ({ annoy, roomId, setRoomId }: socketInterface) => {
                       </div>
                       <br />
                       <div className="current">참여인원 : {post.roomCurrent} / 4</div>
-                      <div className=""></div>
                     </Post>
                   );
                 })
@@ -321,19 +392,19 @@ const Roomlist = ({ annoy, roomId, setRoomId }: socketInterface) => {
               />
             )}
           </Root>
+          {/* 한 페이지에 몇개의 방을 보여줄지 정하기*/}
+          {/* <select
+            onChange={(e) => {
+              setLimit(Number(e.target.value));
+            }}
+          >
+            <option value={6}>6</option>
+            <option value={3}>3</option>
+            <option value={9}>9</option>
+          </select> */}
           <Pagenation totalPage={totalPage} page={page} setPage={setPage} />
         </div>
       )}
-      {/* 한 페이지에 몇개의 방을 보여줄지 정하기*/}
-      {/* <select
-        onChange={(e) => {
-          setLimit(Number(e.target.value));
-        }}
-      >
-        <option value={6}>6</option>
-        <option value={3}>3</option>
-        <option value={9}>9</option>
-      </select> */}
     </div>
   );
 };
