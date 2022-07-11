@@ -9,6 +9,7 @@ import Modal from "components/Modal";
 import { roomlist } from "action";
 import { useDispatch } from "react-redux";
 import { FaSearch } from "react-icons/fa";
+import { MdRefresh } from "react-icons/md";
 const Container = styled.div`
   width: 80%;
   height: 100%;
@@ -129,7 +130,7 @@ const Search = styled.div`
 `;
 
 const SearchInput = styled.input`
-  width: 40vw;
+  width: 38vw;
   height: 4vh;
   border: 3px solid grey;
   border-radius: 10px;
@@ -156,7 +157,7 @@ const SearchBtn = styled.button`
 `;
 
 const RefreshBtn = styled.button`
-  width: 7vw;
+  width: 5vw;
   height: 5vh;
   color: #4b6587;
   font-size: 1rem;
@@ -247,9 +248,9 @@ const Roomlist = ({ annoy, roomId, setRoomId }: socketInterface) => {
       .patch(`${SERVER}/room`, {
         roomId: room.id,
         userId: userInfo.id,
-        type: "plus",
+        type: "join",
       })
-      .then((res) => {
+      .then((res: AxiosResponse) => {
         navigate(`/room/${room.id}`);
       });
   };
@@ -257,6 +258,7 @@ const Roomlist = ({ annoy, roomId, setRoomId }: socketInterface) => {
 
   // 검색어를 검색해주는 함수-------------------------------------------------
   const onSearch = () => {
+    // const input = document.getElementById(search);
     axios
       .get(`${SERVER}/search?title=${search}&limit=${limit}&page=${page}`)
       .then((res: AxiosResponse) => {
@@ -268,6 +270,7 @@ const Roomlist = ({ annoy, roomId, setRoomId }: socketInterface) => {
         // const posts = setPosts(res.data.data);
         // dispatch(roomlist(posts));
         setTotalPage(res.data.total);
+        reset();
       })
       .catch((err: AxiosError) => {
         console.log(posts);
@@ -279,7 +282,11 @@ const Roomlist = ({ annoy, roomId, setRoomId }: socketInterface) => {
   const onChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value);
   };
-
+  // 공부방 검색 후 검색창 초기화 시켜주기
+  const reset = () => {
+    setSearch("");
+  };
+  // 공부방 목록 새로고침 해주기
   const onRefresh = () => {
     getPageData(page, limit);
   };
@@ -289,21 +296,20 @@ const Roomlist = ({ annoy, roomId, setRoomId }: socketInterface) => {
       <Nav />
       <Search>
         <i className="fas fa-search"></i>
-        <FaSearch />
         <SearchInput
           type="text"
+          value={search}
           onChange={onChangeHandler}
           placeholder="검색어를 입력해주세요"
           autoComplete="off"
         />
         <SearchBtn type="button" onClick={onSearch}>
-          검색
+          <FaSearch />
         </SearchBtn>
         <RefreshBtn type="button" onClick={onRefresh}>
-          새로고침
+          <MdRefresh size="1.5rem" />
         </RefreshBtn>
       </Search>
-      {/* {setSearchNull} */}
 
       {isLoading ? (
         // 로딩중일때에는 강아지 보여주기

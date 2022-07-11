@@ -6,7 +6,7 @@ require("dotenv").config();
 
 const clientID = process.env.GOOGLE_CLIENT_ID;
 const clientSecret = process.env.GOOGLE_CLIENT_SECRET;
-const CLIENT = process.env.CLIENT || "http://localhost:3000";
+const CLIENT = process.env.CLIENT || "http://localhost:3000/login";
 export default {
   post: (req, res) => {
     const code = req.body.authorizationCode;
@@ -29,7 +29,7 @@ export default {
             res.status(500).json({ message: "Internal Sever Error" });
           } else {
             if (result === "No google user") {
-              res.json({ message: "이미 카카오 계정으로 가입한 유저입니다." })
+              res.json({ message: "이미 카카오 계정으로 가입한 유저입니다." });
             } else {
               const payload = {
                 id: result[0].id,
