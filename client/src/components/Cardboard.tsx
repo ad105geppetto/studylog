@@ -72,7 +72,6 @@ const Area = styled.div<AreaInterface>`
 
 interface ToDosInterface {
   id: number;
-  index: number;
   text: string;
 }
 
@@ -98,7 +97,7 @@ const Cardboard = ({ toDos, boardId, onAddToDos, onAddText, onDeleteToDos }: Car
       </Title>
       <Form onSubmit={(e: React.FormEvent<HTMLFormElement>) => e.preventDefault()}>
         <input onChange={onAddText} placeholder={`${boardId} 를 추가하세요`} />
-        <button type="submit" onClick={onAddToDos(boardId)}>
+        <button type="submit" id="inputbutton" onClick={onAddToDos(boardId)}>
           <MdAddCircle size="3.5vh" />
         </button>
       </Form>
@@ -114,8 +113,8 @@ const Cardboard = ({ toDos, boardId, onAddToDos, onAddText, onDeleteToDos }: Car
             {toDos.map((toDo, index) => (
               <Cards
                 boardId={boardId}
-                key={toDo.index}
-                toDoId={toDo.index}
+                key={toDo.id}
+                toDoId={toDo.id}
                 toDoText={toDo.text}
                 index={index}
                 onDeleteToDos={onDeleteToDos}

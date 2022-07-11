@@ -50,7 +50,7 @@ interface CardInterface {
 
 const Cards = ({ boardId, toDoId, toDoText, index, onDeleteToDos }: CardInterface) => {
   return (
-    <Draggable draggableId={index.toString()} index={index}>
+    <Draggable draggableId={toDoId.toString()} index={index}>
       {(provided, snapshot) => (
         <Card
           isDragging={snapshot.isDragging}

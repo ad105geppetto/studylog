@@ -45,7 +45,7 @@ CREATE TABLE `todos` (
   `id` int PRIMARY KEY AUTO_INCREMENT,
   `userId` int NOT NULL,
   `type` varchar(255) NOT NULL,
-  `index` int,
+  `num` int ,
   `content` varchar(255),
   `createdAt` timestamp NOT NULL DEFAULT (now()),
   `updatedAt` timestamp NOT NULL DEFAULT (now())

@@ -8,9 +8,10 @@ export default {
     });
   },
 
-  post: (content: string, type: string, index: string, tokenData: any, callback: Function) => {
-    const queryString = `INSERT INTO todos (userId, content , type, index) VALUES (${tokenData.id}, "${content}", "${type}", "${index}")`;
+  post: (content: string, type: string, num: number, tokenData: any, callback: Function) => {
+    const queryString = `INSERT INTO todos (userId, content, type, num) VALUES (${tokenData.id}, "${content}", "${type}", ${num})`;
     db.query(queryString, (error, result) => {
+      console.log(error);
       const queryString2 = `SELECT * from todos WHERE userId = ${tokenData.id}`;
       db.query(queryString2, (error, result) => {
         callback(error, result);
@@ -22,11 +23,11 @@ export default {
     todoId: number,
     content: string,
     type: string,
-    index: string,
+    num: number,
     tokenData: any,
     callback: Function
   ) => {
-    const queryString = `UPDATE todos SET content = "${content}", type = "${type}" index = "${index} WHERE id = ${todoId}`;
+    const queryString = `UPDATE todos SET content = "${content}", type = "${type}" num = ${num} WHERE id = ${todoId}`;
     db.query(queryString, (error, result) => {
       const queryString2 = `SELECT * from todos WHERE userId = ${tokenData.id}`;
       db.query(queryString2, (error, result) => {

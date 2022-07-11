@@ -30,7 +30,7 @@ export default {
                 return {
                   id: ele.id,
                   type: ele.type,
-                  index: ele.index,
+                  num: ele.num,
                   content: ele.content,
                 };
               });
@@ -48,7 +48,8 @@ export default {
 
   // todo 생성
   post: (req: Request, res: Response) => {
-    const { content, type, index } = req.body;
+    const { content, type, num } = req.body;
+    console.log(content, type, num);
 
     // 토큰있는지 확인
     if (!req.headers.authorization) {
@@ -57,14 +58,12 @@ export default {
       const authorization = req.headers["authorization"];
       const token = authorization.split(" ")[1];
       const tokenData = jwt.verify(token, process.env.ACCESS_SECRET);
-
       //토큰해독했는데 정보가 없는 경우
       if (!tokenData) {
         res.status(400).send({ data: null, message: "회원 정보가 없습니다." });
       } else {
-        models.post(content, type, tokenData, index, (error, result) => {
+        models.post(content, type, Number(num), tokenData, (error, result) => {
           if (error) {
-            console.log(error);
             res.status(500).send({ message: "서버에러" });
           } else {
             if (result.length === 0) {
@@ -75,7 +74,7 @@ export default {
                 return {
                   id: ele.id,
                   type: ele.type,
-                  index: ele.index,
+                  num: ele.num,
                   content: ele.content,
                 };
               });
@@ -94,7 +93,7 @@ export default {
   // todo를 다른 탭에 끌어놓거나 또는 내용이 바뀌었을 때
   patch: (req: Request, res: Response) => {
     const { id } = req.params;
-    const { content, type, index } = req.body;
+    const { content, type, num } = req.body;
 
     if (!req.headers.authorization) {
       res.status(404).send({ data: null, message: "로그인을 하세요." });
@@ -107,7 +106,7 @@ export default {
       if (!tokenData) {
         res.status(400).send({ data: null, message: "회원 정보가 없습니다." });
       } else {
-        models.patch(id, content, type, index, tokenData, (error, result) => {
+        models.patch(id, content, type, Number(num), tokenData, (error, result) => {
           if (error) {
             res.status(500).send({ message: "서버에러" });
           } else {
@@ -119,7 +118,7 @@ export default {
                 return {
                   id: ele.id,
                   type: ele.type,
-                  index: ele.index,
+                  num: ele.num,
                   content: ele.content,
                 };
               });
@@ -162,7 +161,7 @@ export default {
                 return {
                   id: ele.id,
                   type: ele.type,
-                  index: ele.index,
+                  num: ele.num,
                   content: ele.content,
                 };
               });
