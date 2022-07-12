@@ -80,7 +80,7 @@ const Login = () => {
   // ----------------------------- 카카오 OAUTH 요청 -----------------------
   const kakaoOauthHandler = () => {
     axios
-      .get(`http://localhost:4000/kakaoOauth`)
+      .get(`${SERVER}/kakaoOauth`)
       .then((res: AxiosResponse) => {
         window.location.assign(res.data.data);
       })
