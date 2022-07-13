@@ -28,7 +28,7 @@ export default {
     console.log(`kakao OAuth authorizedCode ==========`, authorizedCode);
     axios
       .post(
-        `https://kauth.kakao.com/oauth/token?grant_type=authorization_code&client_id=${process.env.KAKAO_CLIENT_ID}&redirect_uri=${REDIRECT_URI}&code=${authorizedCode}`
+        `https://kauth.kakao.com/oauth/token?grant_type=authorization_code&client_id=${process.env.KAKAO_CLIENT_ID}&redirect_uri=${REDIRECT_URI}&code=${authorizedCode}&client_secret=${process.env.KAKAO_CLIENT_SECRET}`
       )
       .then(async (data: any) => {
         const kakaoAccessToken = data.data.access_token;
