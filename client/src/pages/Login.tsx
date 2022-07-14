@@ -96,6 +96,10 @@ const Login = () => {
     const url = new URL(window.location.href);
     const authCode = url.searchParams.get("code");
 
+    if (authCode === null) {
+      return;
+    }
+
     axios
       .post(`${SERVER}/Oauth`, { authorizationCode: authCode })
       .then((res: AxiosResponse) => {
@@ -120,6 +124,10 @@ const Login = () => {
   const sendKakaoAuthCode = () => {
     const url = new URL(window.location.href);
     const authCode = url.searchParams.get("code");
+
+    if (authCode === null) {
+      return;
+    }
 
     axios
       .post(`${SERVER}/kakaoOauth/redirect`, { authorizationCode: authCode })
