@@ -36,6 +36,7 @@ const Nav = () => {
 
         const accessToken = res.data.accessToken;
         dispatch(logout(accessToken));
+        window.localStorage.removeItem("userType");
         navigate("/roomlist");
         // 새로고침하는 코드
         window.location.reload();

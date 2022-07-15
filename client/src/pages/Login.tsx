@@ -70,6 +70,7 @@ const Login = () => {
   const oauthPath = () => {
     window.location.assign(OAUTH_URL);
     //  버튼 클릭시 Oauth 정보가 담긴 url로 페이지를 이동시킴
+    window.localStorage.setItem("userType", "google");
   }; // --------------------------------------------------------------
 
   //  ------------------------ 페이지 전환 -----------------------------------
@@ -83,6 +84,7 @@ const Login = () => {
       .get(`${SERVER}/kakaoOauth`)
       .then((res: AxiosResponse) => {
         window.location.assign(res.data.data);
+        window.localStorage.setItem("userType", "kakao");
       })
       .catch((err) => {
         console.log(err);
@@ -103,10 +105,9 @@ const Login = () => {
     axios
       .post(`${SERVER}/Oauth`, { authorizationCode: authCode })
       .then((res: AxiosResponse) => {
-        console.log("=====Oauth====서버에서 받아옴");
-        console.log(res);
         if (res.data.message === "이미 카카오 계정으로 가입한 유저입니다.") {
           alert(res.data.message);
+          return res.data.message;
         }
         const accessToken = res.data.accessToken;
         const userInfo = res.data.userInfo;
@@ -114,11 +115,16 @@ const Login = () => {
           logIn(accessToken, userInfo.id, userInfo.userId, userInfo.email, userInfo.profile)
         );
       })
-
+      .then((data) => {
+        if (data === "이미 카카오 계정으로 가입한 유저입니다.") {
+          return;
+        } else {
+          navigate("/roomlist");
+        }
+      })
       .catch((err: AxiosError) => {
         console.log("err:", err);
-      })
-      .then(() => navigate("/roomlist"));
+      });
   };
 
   const sendKakaoAuthCode = () => {
@@ -132,9 +138,9 @@ const Login = () => {
     axios
       .post(`${SERVER}/kakaoOauth/redirect`, { authorizationCode: authCode })
       .then((data) => {
-        console.log("=====kakaoOauth====서버에서 받아옴");
         if (data.data.message === "이미 구글 계정으로 가입한 유저입니다.") {
           alert(data.data.message);
+          return data.data.message;
         }
         const accessToken = data.data.accessToken;
         const userInfo = data.data.userInfo;
@@ -142,16 +148,25 @@ const Login = () => {
           logIn(accessToken, userInfo.id, userInfo.userId, userInfo.email, userInfo.profile)
         );
       })
-
+      .then((data) => {
+        if (data === "이미 구글 계정으로 가입한 유저입니다.") {
+          return;
+        } else {
+          navigate("/roomlist");
+        }
+      })
       .catch((err: AxiosError) => {
         console.log(err);
-      })
-      .then(() => navigate("/roomlist"));
+      });
   };
 
   useEffect(() => {
-    sendAuthCode();
-    sendKakaoAuthCode();
+    const userType = window.localStorage.getItem("userType");
+    if (userType === "google") {
+      sendAuthCode();
+    } else {
+      sendKakaoAuthCode();
+    }
   }, []);
 
   return (
