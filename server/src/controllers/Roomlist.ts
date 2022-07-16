@@ -10,13 +10,13 @@ export default {
       } else {
         if (result.length === 0) {
           // DB에서 결과값이 없는 경우
-          res.status(204).json({
-            data: null,
+          res.status(200).json({
+            data: [],
             message: "공부방이 없습니다.",
           });
         } else {
-          if (limit > result.length) {
-            res.status(400).json({ message: `limit은 ${result.length} 이하여야 합니다.` });
+          if (limit > 6) {
+            res.status(400).json({ message: `limit은 6 이하여야 합니다.` });
           } else if (limit <= 0) {
             res.status(400).json({ message: "limit은 1 이상이어야 합니다." });
           } else {
@@ -27,7 +27,7 @@ export default {
             for (let i = 0; i < totalPage; i++) {
               roomList.push(totalRoomList.splice(0, limit));
             }
-            // console.log(roomList)
+
             if (page > totalPage) {
               res.status(400).json({ message: `page는 ${totalPage} 이하여야 합니다.` });
             } else if (page <= 0) {
@@ -37,16 +37,6 @@ export default {
             }
           }
         }
-      }
-    });
-  },
-  delete: (req: Request, res: Response) => {
-    const { roomId } = req.query;
-    models.delete(Number(roomId), (error, result) => {
-      if (error) {
-        res.status(500).json({ message: "Internal Sever Error" });
-      } else {
-        res.status(200).json({ message: `${roomId} 삭제 완료했습니다.` });
       }
     });
   },

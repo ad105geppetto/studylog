@@ -6,10 +6,9 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import Nav from "components/Nav";
 import Modal from "components/Modal";
-import { roomlist } from "action";
-import { useDispatch } from "react-redux";
 import { FaSearch } from "react-icons/fa";
 import { MdRefresh } from "react-icons/md";
+
 const Container = styled.div`
   width: 80%;
   height: 100%;
@@ -63,27 +62,9 @@ const Post = styled.div`
     font-size: 1.1rem;
   }
 
-  /* 반응형 만들어주는 코드 */
-  /* 핸드폰 */
   @media only screen and (max-width: 500px) {
     grid-column: span 12;
   }
-  /* 태블릿 */
-  /* @media only screen and (max-width: 768px) {
-    grid-column: span 12;
-  } */
-  /* PC */
-  /* @media only screen and (max-width: 1200px) {
-    grid-column: span 12;
-  } */
-`;
-
-const Input = styled.input`
-  z-index: 99;
-`;
-
-const Button = styled.button`
-  z-index: 99;
 `;
 
 const BtnContainer = styled.div`
@@ -120,13 +101,6 @@ const Search = styled.div`
   align-items: center;
   margin-top: 1.5vh;
   border-radius: 5px;
-
-  /* width: 50vh; */
-  /* height: 4vh; */
-  /* border: solid 1px rgba(0, 0, 0, 0.3); */
-  /* z-index: 1; */
-  /* opacity: 1; */
-  /* background: white; */
 `;
 
 const SearchInput = styled.input`
@@ -209,12 +183,8 @@ const Roomlist = ({ annoy, roomId, setRoomId }: socketInterface) => {
   const selectedRoom = useRef(null);
 
   const userInfo = useSelector((state: any) => state.userInfoReducer.userInfo);
-  // const pageInfo = useSelector((state: any) => state.pageInfoReducer.pageInfo);
 
   useEffect(() => {
-    // setTimeout(() => {
-    //   getPageData(page, limit);
-    // }, 1000);
     getPageData(page, limit);
   }, [page, limit]);
 
@@ -226,7 +196,6 @@ const Roomlist = ({ annoy, roomId, setRoomId }: socketInterface) => {
       })
       .then((res: AxiosResponse) => {
         setPosts(res.data.data);
-        // console.log(res.data.data);
         setTotalPage(res.data.total);
         setIsLoading(false);
       })
@@ -242,8 +211,9 @@ const Roomlist = ({ annoy, roomId, setRoomId }: socketInterface) => {
       alert("들어갈 수 있는 인원이 찼습니다.");
       return;
     }
+
     setRoomId(room.id);
-    // console.log(roomId);
+
     axios
       .patch(`${SERVER}/room`, {
         roomId: room.id,
@@ -258,7 +228,6 @@ const Roomlist = ({ annoy, roomId, setRoomId }: socketInterface) => {
 
   // 검색어를 검색해주는 함수-------------------------------------------------
   const onSearch = () => {
-    // const input = document.getElementById(search);
     axios
       .get(`${SERVER}/search?title=${search}&limit=${limit}&page=${page}`)
       .then((res: AxiosResponse) => {
@@ -266,15 +235,11 @@ const Roomlist = ({ annoy, roomId, setRoomId }: socketInterface) => {
           setRoomState("검색된 방이 없습니다.");
         }
         setPosts(res.data.data);
-        // posts를 리덕스에 저장하는 법
-        // const posts = setPosts(res.data.data);
-        // dispatch(roomlist(posts));
         setTotalPage(res.data.total);
         reset();
       })
       .catch((err: AxiosError) => {
-        console.log(posts);
-        console.log(err);
+        console.log("err:", err);
       });
   };
   // -----------------------------------------------------------------------
@@ -392,16 +357,6 @@ const Roomlist = ({ annoy, roomId, setRoomId }: socketInterface) => {
               />
             )}
           </Root>
-          {/* 한 페이지에 몇개의 방을 보여줄지 정하기*/}
-          {/* <select
-            onChange={(e) => {
-              setLimit(Number(e.target.value));
-            }}
-          >
-            <option value={6}>6</option>
-            <option value={3}>3</option>
-            <option value={9}>9</option>
-          </select> */}
           <Pagenation totalPage={totalPage} page={page} setPage={setPage} />
         </div>
       )}
