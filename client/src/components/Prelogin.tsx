@@ -26,7 +26,6 @@ const Prelogin = ({ color }: NotLoginInterface) => {
       <div style={{ fontSize: "2rem", color: `${color}`, marginBottom: "5rem" }}>
         로그인 후 이용 가능 합니다.
       </div>
-
       <div>
         <Large_Button onClick={onNavigate("/login")}> 로그인 </Large_Button>
       </div>

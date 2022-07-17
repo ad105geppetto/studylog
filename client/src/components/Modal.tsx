@@ -30,7 +30,6 @@ const View = styled.div<{ width: string; height: string }>`
   width: ${(props) => props.width}px;
   height: ${(props) => props.height}px;
   padding: 8px;
-  /* 모달창 전체 배경색 */
   background-color: #f7f6f2;
   border-radius: 5vh;
   border: 2vh solid lightgrey;
@@ -53,7 +52,6 @@ const View = styled.div<{ width: string; height: string }>`
   }
 `;
 
-// 모달창 내용물 감싸는 div
 const Wrapper = styled.div`
   display: flex;
   justify-content: center;
@@ -72,6 +70,7 @@ const Canvas = styled.div`
   animation-name: switchModalOn;
   animation-duration: 1s;
 `;
+
 const Modal = ({ width, height, element, modal, setModal }: Props) => {
   const modalOff = () => {
     setModal(false);
@@ -84,13 +83,7 @@ const Modal = ({ width, height, element, modal, setModal }: Props) => {
         <Wrapper>{element}</Wrapper>
       </View>
       <Canvas />
-
-      {/* 모달창 끄는 코드 */}
       <View width={width} height={height}>
-        {/* 모달창에 X마크를 나타내는 태그 */}
-        {/* <div className="exit-wrapper" onClick={modalOff}>
-          &times;
-        </div> */}
         <Wrapper>{element}</Wrapper>
       </View>
       <Canvas onClick={modalOff} />

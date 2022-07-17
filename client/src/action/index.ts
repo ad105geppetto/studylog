@@ -32,17 +32,6 @@ export const OauthlogIn = (accessToken: string) => {
   };
 };
 
-// 드래그 앤 드롭은 자유롭게 움직이지 않습니까....
-// 그러면 내가 바꿔줄 수 있는것은
-
-// state를 불러와서,
-//   const onDragEnd = ({ destination, source }: DropResult) => {
-//     const target = toDos.splice(source.index, 1);
-//     console.log(target);
-//     console.log
-//     setToDos(...toDos, targetdestination.in;
-//     기존의 배열을 불러와서 새로운 객체를 만들어주고
-
 export const dropout = (accessToken: string) => {
   return {
     type: DROP_OUT,

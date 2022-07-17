@@ -1,125 +1,10 @@
 import { useNavigate } from "react-router-dom";
-import React, { useState } from "react";
+import { useState } from "react";
 import axios, { AxiosError, AxiosResponse } from "axios";
 import { logout } from "action";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import Modal from "components/Modal";
-
-const SERVER = process.env.REACT_APP_SERVER || "http://localhost:4000";
-
-const Nav = () => {
-  // 모달창을 보여줄지 말지를 정하는 상태
-  const [viewModal, setViewModal] = useState(false);
-
-  const userInfo = useSelector((state: any) => state.userInfoReducer.userInfo);
-  // accessToken의 유무를 상태로 정한다.
-  const [token, setToken] = useState(userInfo.accessToken);
-
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-
-  const onNavigate = (url: string) => {
-    return (e: React.MouseEvent<HTMLButtonElement>) => {
-      navigate(url);
-    };
-  };
-
-  // 로그아웃 함수--------------------------------------------------------
-  const onLogOutBtn = () => {
-    axios
-      .get(`${SERVER}/logout`, {
-        headers: { authorization: `Bearer ${userInfo.accessToken}` },
-      })
-      .then((res: AxiosResponse) => {
-        console.log(res.data);
-
-        const accessToken = res.data.accessToken;
-        dispatch(logout(accessToken));
-        window.localStorage.removeItem("userType");
-        navigate("/roomlist");
-        // 새로고침하는 코드
-        window.location.reload();
-      })
-      .catch((err: AxiosError) => console.log(err));
-  };
-  // -------------------------------------------------------------------
-
-  return (
-    <Container>
-      <Logobox onClick={() => navigate("/roomlist")}>
-        <Logo alt="LOGO" src="asset/dark_logo.png" object-fit="cover" />
-      </Logobox>
-      <LinkContainer>
-        <LinkBox onClick={() => navigate("/roomlist")}>
-          <button type="button">공부방 목록</button>
-          <Line></Line>
-        </LinkBox>
-        <LinkBox onClick={() => navigate("/todos")}>
-          <button type="button">공부 기록</button>
-          <Line></Line>
-        </LinkBox>
-        <LinkBox onClick={() => navigate("/Creatingroom")}>
-          <button type="button">공부방 만들기</button>
-        </LinkBox>
-      </LinkContainer>
-      {/* accessToken의 유무로 로그인&회원가입을 렌더링할지 
-      로그아웃&내정보를 렌더링 할지 정해주는 삼항연산자 */}
-      {!token ? (
-        <Logobox>
-          <Btn type="button" onClick={() => navigate("/login")}>
-            로그인
-          </Btn>
-          <Btn type="button" onClick={() => navigate("/signup")}>
-            회원가입
-          </Btn>
-        </Logobox>
-      ) : (
-        <Logobox>
-          <Btn
-            type="button"
-            onClick={() => {
-              setViewModal(true);
-            }}
-          >
-            로그아웃
-          </Btn>
-          {viewModal && (
-            <Modal
-              modal={viewModal}
-              setModal={setViewModal}
-              width="300"
-              height="250"
-              element={
-                <ModalContainer>
-                  <div>로그아웃을 하시겠습니까?</div>
-                  <br />
-                  <Buttonbox>
-                    <ModalLogOutBtn style={{ color: "white" }} type="button" onClick={onLogOutBtn}>
-                      확인
-                    </ModalLogOutBtn>
-                    <ModalLogOutBtn
-                      style={{ color: "white" }}
-                      type="button"
-                      onClick={() => setViewModal(false)}
-                    >
-                      취소
-                    </ModalLogOutBtn>
-                  </Buttonbox>
-                </ModalContainer>
-              }
-            />
-          )}
-
-          <Btn type="button" onClick={() => navigate("/mypage")}>
-            내정보
-          </Btn>
-        </Logobox>
-      )}
-      <hr></hr>
-    </Container>
-  );
-};
 
 const Container = styled.div`
   position: relative;
@@ -228,5 +113,108 @@ const ModalLogOutBtn = styled.button`
   border: 1px solid #f7f6f2;
   margin: 1vh;
 `;
+
+const Nav = () => {
+  const SERVER = process.env.REACT_APP_SERVER || "http://localhost:4000";
+
+  const [viewModal, setViewModal] = useState(false);
+  const userInfo = useSelector((state: any) => state.userInfoReducer.userInfo);
+  const [token, setToken] = useState(userInfo.accessToken);
+
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  // 로그아웃 함수--------------------------------------------------------
+  const onLogOutBtn = () => {
+    axios
+      .get(`${SERVER}/logout`, {
+        headers: { authorization: `Bearer ${userInfo.accessToken}` },
+      })
+      .then((res: AxiosResponse) => {
+        console.log(res.data);
+
+        const accessToken = res.data.accessToken;
+        dispatch(logout(accessToken));
+        window.localStorage.removeItem("userType");
+        navigate("/roomlist");
+        // 새로고침하는 코드
+        window.location.reload();
+      })
+      .catch((err: AxiosError) => console.log(err));
+  };
+  // -------------------------------------------------------------------
+
+  return (
+    <Container>
+      <Logobox onClick={() => navigate("/roomlist")}>
+        <Logo alt="LOGO" src="asset/dark_logo.png" object-fit="cover" />
+      </Logobox>
+      <LinkContainer>
+        <LinkBox onClick={() => navigate("/roomlist")}>
+          <button type="button">공부방 목록</button>
+          <Line></Line>
+        </LinkBox>
+        <LinkBox onClick={() => navigate("/todos")}>
+          <button type="button">공부 기록</button>
+          <Line></Line>
+        </LinkBox>
+        <LinkBox onClick={() => navigate("/Creatingroom")}>
+          <button type="button">공부방 만들기</button>
+        </LinkBox>
+      </LinkContainer>
+      {!token ? (
+        <Logobox>
+          <Btn type="button" onClick={() => navigate("/login")}>
+            로그인
+          </Btn>
+          <Btn type="button" onClick={() => navigate("/signup")}>
+            회원가입
+          </Btn>
+        </Logobox>
+      ) : (
+        <Logobox>
+          <Btn
+            type="button"
+            onClick={() => {
+              setViewModal(true);
+            }}
+          >
+            로그아웃
+          </Btn>
+          {viewModal && (
+            <Modal
+              modal={viewModal}
+              setModal={setViewModal}
+              width="300"
+              height="250"
+              element={
+                <ModalContainer>
+                  <div>로그아웃을 하시겠습니까?</div>
+                  <br />
+                  <Buttonbox>
+                    <ModalLogOutBtn style={{ color: "white" }} type="button" onClick={onLogOutBtn}>
+                      확인
+                    </ModalLogOutBtn>
+                    <ModalLogOutBtn
+                      style={{ color: "white" }}
+                      type="button"
+                      onClick={() => setViewModal(false)}
+                    >
+                      취소
+                    </ModalLogOutBtn>
+                  </Buttonbox>
+                </ModalContainer>
+              }
+            />
+          )}
+          <Btn type="button" onClick={() => navigate("/mypage")}>
+            내정보
+          </Btn>
+        </Logobox>
+      )}
+      <hr></hr>
+    </Container>
+  );
+};
 
 export default Nav;

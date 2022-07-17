@@ -2,6 +2,7 @@ import { Droppable } from "react-beautiful-dnd";
 import Cards from "./Card";
 import styled from "styled-components";
 import { MdAddCircle } from "react-icons/md";
+
 const Board = styled.div`
   background-color: #eeeeee;
   overflow-y: auto;

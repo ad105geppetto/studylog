@@ -9,12 +9,9 @@ import {
   Bar,
 } from "recharts";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import axios, { AxiosError, AxiosResponse } from "axios";
 import styled from "styled-components";
-
-axios.defaults.withCredentials = true;
-const SERVER = process.env.REACT_APP_SERVER || "http://localhost:4000";
 
 const Wrapper = styled.div`
   background: #4b6587;
@@ -47,19 +44,22 @@ interface Chartinterface {
 }
 
 const Chart = ({ userInfo }: Chartinterface) => {
+  axios.defaults.withCredentials = true;
+  const SERVER = process.env.REACT_APP_SERVER || "http://localhost:4000";
+
   const [weekSummary, setWeekSummary] = useState<any>("이번 주 공부 시간은 0 시간 입니다.");
   const [timeTable, setTimeTable] = useState([
-    { name: "월", 시간: 0 },
-    { name: "화", 시간: 0 },
-    { name: "수", 시간: 0 },
-    { name: "목", 시간: 0 },
-    { name: "금", 시간: 0 },
-    { name: "토", 시간: 0 },
-    { name: "일", 시간: 0 },
+    { name: "월", hour: 0 },
+    { name: "화", hour: 0 },
+    { name: "수", hour: 0 },
+    { name: "목", hour: 0 },
+    { name: "금", hour: 0 },
+    { name: "토", hour: 0 },
+    { name: "일", hour: 0 },
   ]);
 
   // ------- 데이터 불러오기 -----
-  const onLoadingData = () => {
+  const onLoadingData = useCallback(() => {
     axios
       .get(`${SERVER}/statics`, { headers: { authorization: `Bearer ${userInfo.accessToken}` } })
       .then((res: AxiosResponse) => {
@@ -67,23 +67,23 @@ const Chart = ({ userInfo }: Chartinterface) => {
 
         const { mon, tue, wed, thu, fri, sat, sun, total } = res.data;
 
-        function timeHandler(data: number) {
-          let hour = (data / 3600).toFixed(2);
+        function convertHour(dayTime: number) {
+          let hour = (dayTime / 3600).toFixed(2);
           return Number(hour);
         }
         // 불러온 데이터를 상태에 저장해서 각 일자별로 데이터 세팅해주기
         setTimeTable([
-          { name: "월", 시간: timeHandler(mon) },
-          { name: "화", 시간: timeHandler(tue) },
-          { name: "수", 시간: timeHandler(wed) },
-          { name: "목", 시간: timeHandler(thu) },
-          { name: "금", 시간: timeHandler(fri) },
-          { name: "토", 시간: timeHandler(sat) },
-          { name: "일", 시간: timeHandler(sun) },
+          { name: "월", hour: convertHour(mon) },
+          { name: "화", hour: convertHour(tue) },
+          { name: "수", hour: convertHour(wed) },
+          { name: "목", hour: convertHour(thu) },
+          { name: "금", hour: convertHour(fri) },
+          { name: "토", hour: convertHour(sat) },
+          { name: "일", hour: convertHour(sun) },
         ]);
 
         // total 데이터 단위 변경 및 weekSummary 상태에 담아주기
-        function totalHandler(total: number) {
+        function returnTotalTime(total: number) {
           let hour = Math.floor(total / 3600);
           let minute = Math.floor((total % 3600) / 60);
 
@@ -94,14 +94,14 @@ const Chart = ({ userInfo }: Chartinterface) => {
           }
         }
 
-        setWeekSummary(totalHandler(total));
+        setWeekSummary(returnTotalTime(total));
       })
       .catch((err: AxiosError) => console.log(err));
-  };
+  }, [SERVER, userInfo.accessToken]);
 
   useEffect(() => {
     onLoadingData();
-  }, []);
+  }, [onLoadingData]);
 
   return (
     <Wrapper>
@@ -127,7 +127,7 @@ const Chart = ({ userInfo }: Chartinterface) => {
               animationEasing={"ease-in-out"}
               legendType="none"
               maxBarSize={75}
-              dataKey="시간"
+              dataKey="hour"
               fillOpacity={1}
               fill="url(#colorPv)"
             />

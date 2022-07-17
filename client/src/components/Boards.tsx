@@ -1,10 +1,8 @@
 import { DragDropContext, DropResult } from "react-beautiful-dnd";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import Cardboard from "./Cardboard";
 import styled from "styled-components";
 import axios, { AxiosError, AxiosResponse } from "axios";
-
-const SERVER = process.env.REACT_APP_SERVER || "http://localhost:4000";
 
 const Wrapper = styled.div`
   background: #4b6587;
@@ -42,6 +40,8 @@ interface ToDos {
 }
 
 const Boards = ({ userInfo }: any) => {
+  const SERVER = process.env.REACT_APP_SERVER || "http://localhost:4000";
+
   const [text, setText] = useState<string | null>("");
   const onAddText = (e: React.ChangeEvent<HTMLInputElement>) => {
     setText(e.target.value);
@@ -53,7 +53,7 @@ const Boards = ({ userInfo }: any) => {
   });
 
   //----------------------------- TODO 데이터 불러오기 --------------------------
-  const onLoadToDos = () => {
+  const onLoadToDos = useCallback(() => {
     axios
       .get(`${SERVER}/todo`, {
         headers: {
@@ -84,13 +84,13 @@ const Boards = ({ userInfo }: any) => {
         });
       })
       .catch((err: AxiosError) => console.log("TODOS ERROR :", err));
-  };
+  }, [SERVER, userInfo.accessToken]);
+
+  //-----------------------------------------------------------
 
   useEffect(() => {
     onLoadToDos();
-  }, []);
-
-  //-----------------------------------------------------------
+  }, [onLoadToDos]);
 
   //------------------ TODO 데이터 추가하기 ---------------------------
   const onAddToDos = (key: string) => (e: React.MouseEvent<HTMLButtonElement>) => {

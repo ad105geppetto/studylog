@@ -69,6 +69,3 @@ const Cards = ({ boardId, toDoId, toDoText, index, onDeleteToDos }: CardInterfac
 };
 
 export default React.memo(Cards);
-
-// React.memo 는 props가 변경되는 경우 리렌더링을 하나, 그 외의 컴포넌트들은 리렌더링을 하지 않음
-// 불필요한 리렌더링이 많이 발생 되는 경우 최적화를 위해 사용 가능

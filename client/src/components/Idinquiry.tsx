@@ -1,62 +1,6 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import axios, { AxiosError, AxiosResponse } from "axios";
 import styled from "styled-components";
-
-axios.defaults.withCredentials = true;
-const SERVER = process.env.REACT_APP_SERVER || "http://localhost:4000";
-
-const Idinquiry = () => {
-  const [userEmail, setUserEmail] = useState("");
-  // 아이디를 찾고 상태로 저장한다.
-  const [userId, setUserId] = useState("");
-
-  const [findId, setFindId] = useState(true);
-  // 아이디 찾는 함수 에러메시지
-  const [errorMessage, setErrorMessage] = useState("");
-
-  const onUserEmail = (e: any) => {
-    setUserEmail(e.target.value);
-  };
-  // 이메일을 입력하고 아이디를 찾는 함수------------------------------
-  const onClickFindId = () => {
-    axios
-      .post(`${SERVER}/userid`, {
-        email: userEmail,
-      })
-      .then((res: AxiosResponse) => {
-        setFindId(false);
-        setUserId(res.data.userId);
-      })
-      .catch((err: AxiosError) => {
-        setErrorMessage("이메일을 입력하세요");
-        console.log("이메일을 입력하세요", err);
-      });
-  };
-  // -----------------------------------------------------------------
-
-  return (
-    <Container>
-      {findId ? (
-        // 아이디를 찾기 전 상태면 이메일 입력하는 창과 찾기 버튼 렌더링
-        <div>
-          <div>
-            <Input type="email" onChange={onUserEmail} placeholder="이메일를 입력해주세요" />
-          </div>
-          <ErrMsg>{errorMessage ? errorMessage : null}</ErrMsg>
-
-          <Find>
-            <FindBtn className="find" type="button" onClick={onClickFindId}>
-              찾기
-            </FindBtn>
-          </Find>
-        </div>
-      ) : (
-        // 아이디를 찾은 상태면 아이디 렌더링 해주기
-        <FindId className="showId fadein">아이디는 {userId} 입니다</FindId>
-      )}
-    </Container>
-  );
-};
 
 const Container = styled.div`
   width: 60vw;
@@ -68,10 +12,8 @@ const Container = styled.div`
 `;
 
 const ErrMsg = styled.div`
-  /* height: 20vh; */
   display: flex;
   justify-content: center;
-  /* margin-bottom: 5vh; */
 `;
 
 const Find = styled.div`
@@ -126,5 +68,58 @@ const FindId = styled.div`
     animation: fadein 2s ease-in-out;
   }
 `;
+
+const Idinquiry = () => {
+  axios.defaults.withCredentials = true;
+  const SERVER = process.env.REACT_APP_SERVER || "http://localhost:4000";
+
+  const [userEmail, setUserEmail] = useState("");
+  const [userId, setUserId] = useState("");
+  const [findId, setFindId] = useState(true);
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const onUserEmail = (e: any) => {
+    setUserEmail(e.target.value);
+  };
+  // 이메일을 입력하고 아이디를 찾는 함수------------------------------
+  const onClickFindId = () => {
+    axios
+      .post(`${SERVER}/userid`, {
+        email: userEmail,
+      })
+      .then((res: AxiosResponse) => {
+        setFindId(false);
+        setUserId(res.data.userId);
+      })
+      .catch((err: AxiosError) => {
+        setErrorMessage("이메일을 입력하세요");
+        console.log("이메일을 입력하세요", err);
+      });
+  };
+  // -----------------------------------------------------------------
+
+  return (
+    <Container>
+      {findId ? (
+        // 아이디를 찾기 전 상태면 이메일 입력하는 창과 찾기 버튼 렌더링
+        <div>
+          <div>
+            <Input type="email" onChange={onUserEmail} placeholder="이메일를 입력해주세요" />
+          </div>
+          <ErrMsg>{errorMessage ? errorMessage : null}</ErrMsg>
+
+          <Find>
+            <FindBtn className="find" type="button" onClick={onClickFindId}>
+              찾기
+            </FindBtn>
+          </Find>
+        </div>
+      ) : (
+        // 아이디를 찾은 상태면 아이디 렌더링 해주기
+        <FindId className="showId fadein">아이디는 {userId} 입니다</FindId>
+      )}
+    </Container>
+  );
+};
 
 export default Idinquiry;
