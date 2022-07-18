@@ -1,4 +1,4 @@
-import styled, { keyframes } from "styled-components";
+import styled from "styled-components";
 
 export const Logo = styled.img`
   height: 20vh;
@@ -73,18 +73,6 @@ export const Form = styled.form`
   }
 `;
 
-// export const Section = styled.div`
-//   display: flex;
-//   width: 27vw;
-//   justify-content: space-between;
-
-//   @media only screen and (max-width: 800px) {
-//     width: 100%;
-//     flex-direction: column;
-//     justify-content: center;
-//   }
-// `;
-
 export const ImageSection = styled.div`
   width: 100%;
   display: flex;
@@ -154,7 +142,6 @@ export const ImageBoard = styled(Logo)`
   align-self: flex-end;
 `;
 
-//! 버튼
 export const Button = styled.button`
   min-width: 12vw;
   height: 5.5vh;
@@ -173,7 +160,7 @@ export const Button = styled.button`
   }
 `;
 
-export const Large_Button = styled(Button)`
+export const LargeButton = styled(Button)`
   display: flex;
   height: 5vh;
   width: 100%;
@@ -184,7 +171,7 @@ export const Large_Button = styled(Button)`
   margin-bottom: 2vh;
 `;
 
-export const Small_Button = styled(Button)`
+export const SmallButton = styled(Button)`
   font-size: 1.7vh;
   text-align: center;
   font-weight: bold;
@@ -196,8 +183,6 @@ export const Small_Button = styled(Button)`
     margin-top: 2vh;
   }
 `;
-
-//! 버튼
 
 export const InnerButton = styled(Button)`
   display: flex;

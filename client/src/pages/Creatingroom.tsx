@@ -1,108 +1,10 @@
 import { useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useSelector } from "react-redux";
 import Prelogin from "components/Prelogin";
 import axios, { AxiosError, AxiosResponse } from "axios";
 import styled from "styled-components";
 import Nav from "components/Nav";
-
-interface socketInterface {
-  setRoomId: any;
-}
-const SERVER = process.env.REACT_APP_SERVER || "http://localhost:4000";
-
-const Creatingroom = ({ setRoomId }: socketInterface) => {
-  const [errMessage, setErrMessage] = useState("");
-
-  const navigate = useNavigate();
-
-  const userInfo = useSelector((state: any) => state.userInfoReducer.userInfo);
-  // 공부방 이름을 상태로 둔 것
-  const [title, setTitle] = useState("");
-  // 공부방 설명을 상태로 둔 것
-  const [content, setContent] = useState("");
-
-  const [isLogin, setIsLogin] = useState(false);
-
-  const titleHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setTitle(e.target.value);
-  };
-
-  const contentHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setContent(e.target.value);
-  };
-  // 공부방 생성하는 함수-----------------------------------------------
-  const createRoomHandler = () => {
-    if (title.length === 0 || content.length === 0) {
-      setErrMessage(() => "방제목과 내용을 입력해주세요");
-      // alert("방제목과 내용을 입력해주세요");
-      return;
-    }
-    axios
-      .post(
-        `${SERVER}/room`,
-        { title: title, content: content },
-        {
-          headers: { authorization: `Bearer ${userInfo.accessToken}` },
-        }
-      )
-      .then((res: AxiosResponse) => {
-        setRoomId(res.data.id);
-        navigate(`/room/${res.data.id}`);
-      })
-      .catch((err: AxiosError) => {
-        setErrMessage(() => "방제목과 내용을 입력해주세요");
-      });
-  };
-  //-------------------------------------------------------------------
-
-  // 로그인 여부 체크
-  const checkLoginState = () => {
-    if (userInfo.accessToken) {
-      setIsLogin(() => true);
-    }
-  };
-  // ------------------------
-
-  useEffect(() => {
-    checkLoginState();
-  }, []);
-
-  return (
-    <Root>
-      <Nav />
-      <Container>
-        {isLogin ? (
-          <div>
-            <Label htmlFor="roomName">방제목</Label>
-            <Input
-              className="title"
-              type="text"
-              onChange={titleHandler}
-              id="roomName"
-              placeholder="생성할 방 제목을 입력해주세요"
-            ></Input>
-
-            <Label htmlFor="content">내용</Label>
-            <Input
-              className="content"
-              type="text"
-              onChange={contentHandler}
-              id="content"
-              placeholder="어떤 방인지 간단히 소개해주세요"
-            ></Input>
-            <div>{errMessage}</div>
-            <Button className="create" onClick={createRoomHandler}>
-              확인
-            </Button>
-          </div>
-        ) : (
-          <Prelogin color="white" />
-        )}
-      </Container>
-    </Root>
-  );
-};
 
 const Root = styled.div`
   width: 100vw;
@@ -115,8 +17,6 @@ const Root = styled.div`
 
 const Container = styled.div`
   width: 50vw;
-  /* display: grid; */
-  /* grid-template-columns: repeat(12, 1fr); */
   display: flex;
   flex-direction: column;
   column-gap: 24px;
@@ -174,5 +74,97 @@ const Button = styled.button`
   background-color: white;
   padding: 5px;
 `;
+
+interface socketInterface {
+  setRoomId: any;
+}
+
+const Creatingroom = ({ setRoomId }: socketInterface) => {
+  const SERVER = process.env.REACT_APP_SERVER || "http://localhost:4000";
+  const [roomtTitle, setRoomTitle] = useState("");
+  const [roomContent, setRoomContent] = useState("");
+  const [isLogin, setIsLogin] = useState(false);
+  const [errMessage, setErrMessage] = useState("");
+
+  const navigate = useNavigate();
+
+  const userInfo = useSelector((state: any) => state.userInfoReducer.userInfo);
+
+  const titleHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setRoomTitle(e.target.value);
+  };
+
+  const contentHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setRoomContent(e.target.value);
+  };
+
+  const createRoomHandler = () => {
+    if (roomtTitle.length === 0 || roomContent.length === 0) {
+      setErrMessage(() => "방제목과 내용을 입력해주세요");
+      return;
+    }
+
+    axios
+      .post(
+        `${SERVER}/room`,
+        { title: roomtTitle, content: roomContent },
+        {
+          headers: { authorization: `Bearer ${userInfo.accessToken}` },
+        }
+      )
+      .then((res: AxiosResponse) => {
+        setRoomId(res.data.id);
+        navigate(`/room/${res.data.id}`);
+      })
+      .catch((err: AxiosError) => {
+        setErrMessage(() => "방제목과 내용을 입력해주세요");
+      });
+  };
+
+  const checkLoginState = useCallback(() => {
+    if (userInfo.accessToken) {
+      setIsLogin(() => true);
+    }
+  }, [userInfo.accessToken]);
+
+  useEffect(() => {
+    checkLoginState();
+  }, [checkLoginState]);
+
+  return (
+    <Root>
+      <Nav />
+      <Container>
+        {isLogin ? (
+          <div>
+            <Label htmlFor="roomName">방제목</Label>
+            <Input
+              className="title"
+              type="text"
+              onChange={titleHandler}
+              id="roomName"
+              placeholder="생성할 방 제목을 입력해주세요"
+            ></Input>
+
+            <Label htmlFor="content">내용</Label>
+            <Input
+              className="content"
+              type="text"
+              onChange={contentHandler}
+              id="content"
+              placeholder="어떤 방인지 간단히 소개해주세요"
+            ></Input>
+            <div>{errMessage}</div>
+            <Button className="create" onClick={createRoomHandler}>
+              확인
+            </Button>
+          </div>
+        ) : (
+          <Prelogin color="white" />
+        )}
+      </Container>
+    </Root>
+  );
+};
 
 export default Creatingroom;

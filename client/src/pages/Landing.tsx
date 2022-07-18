@@ -47,39 +47,6 @@ const Title = styled.div`
 `;
 
 const Landing = () => {
-  //   const [page, setPage] = useState(0);
-
-  //   const html = document.documentElement;
-
-  //   const height = html.scrollHeight / 3;
-
-  //   const onWheelHandler = (e: any) => {
-  //     e.preventDefault();
-  //     const { deltaY } = e;
-  //     if (deltaY > 0 && page === 0) {
-  //       // 페이지가 내려가는 경우
-  //       window.scrollTo({ top: height, left: 0, behavior: "smooth" });
-  //       setPage(1);
-  //     } else if (deltaY > 0 && page === 1) {
-  //       window.scrollTo({ top: height * 2, left: 0, behavior: "smooth" });
-  //       setPage(2);
-  //     } else if (deltaY < 0 && page === 2) {
-  //       window.scrollTo({ top: height, left: 0, behavior: "smooth" });
-  //       setPage(1);
-  //     } else if (deltaY < 0 && page === 1) {
-  //       window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
-  //       setPage(0);
-  //     }
-
-  //     /*
-  //      왜 한번만 작동하고 멈추는걸까?
-  //      scroll to 는 top 만큼 이동하는게 아니라 top이 저 위치까지 이동하는거였음
-
-  //     */
-  //   };
-
-  //   window.addEventListener("wheel", onWheelHandler, { passive: false });
-
   return (
     <Wrapper>
       <Section>
@@ -92,25 +59,8 @@ const Landing = () => {
         <Logo alt="studylog" src="asset/white_logo.png" />
       </NavLink>
       <Image alt="LandingPage_1" src="asset/pencils1920.jpg" />
-
-      {/* <div>
-        <Nav />
-        <InnerImage alt="Landing_page2" src="asset/space.jpg" />
-      </div>
-      <div>
-        <Nav />
-        <InnerImage alt="Landing_page3" src="asset/universe.jpg" />
-      </div> */}
     </Wrapper>
   );
 };
 
 export default Landing;
-
-/*
- 
-휠 이벤트가 초기 로딩과정에서 버벅거림이 있음
-- heigth 값을 구하는데 있어서 버벅거림이 있는것 같은데
-- 처음에 LOGO에 애니메이션 효과를 주면서 시간 벌이를 해봄이 어떨까 
-
-*/

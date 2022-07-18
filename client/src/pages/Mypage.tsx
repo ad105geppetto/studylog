@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Modal from "components/Modal";
 import axios, { AxiosError, AxiosResponse } from "axios";
 import { useDispatch, useSelector } from "react-redux";
@@ -11,7 +11,7 @@ import {
   Wrapper,
   ImageSection,
   Title,
-  Small_Button,
+  SmallButton,
   Logo,
   Input,
   ButtonWrapper,
@@ -22,19 +22,45 @@ import {
   SuccessMsg,
   Form,
 } from "styles/Userpage_style";
-
 import styled from "styled-components";
 
-axios.defaults.withCredentials = true;
-const SERVER = process.env.REACT_APP_SERVER || "http://localhost:4000";
+const Container = styled.div`
+  background: #f7f6f2;
+`;
+
+const Buttonbox = styled.div`
+  display: flex;
+  justify-content: center;
+`;
+
+const Button = styled.button`
+  font-size: 1rem;
+  text-align: center;
+  font-weight: 500;
+
+  min-width: 6vw;
+  min-height: 5vh;
+  border-radius: 1rem;
+  display: inline-block;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 700;
+  outline: 0;
+  background: #4b6587;
+  color: white;
+  border: 1px solid #f7f6f2;
+  margin: 1vh;
+`;
 
 const Mypage = () => {
+  axios.defaults.withCredentials = true;
+  const SERVER = process.env.REACT_APP_SERVER || "http://localhost:4000";
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const userInfo = useSelector((state: any) => state.userInfoReducer.userInfo);
   const [modal, setModal] = useState(false);
   const [preview, setPreview] = useState("");
-  const [imageFile, setImageFile] = useState();
   const [errMsg, setErrMsg] = useState({
     pwdMsg: "",
     pwdCheckMsg: "",
@@ -58,16 +84,15 @@ const Mypage = () => {
   });
 
   // ------------------------- 이미지 업로드 ----------------------
-  const onUploadImage = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const uploadImageHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file: any = e.target.files;
     if (file.length === 0) {
       return;
       //  input 이벤트는 실행 됐으나, 실제 파일이 업로드가 되지 않은 경우  그대로 종료
     } else {
-      // 그 외의 경우에는 필요한 기능들이 작동하도록 작성
+      // 그 외의 경우에는 필요한 기능들이 작동
 
-      setModifiedUserInfo({ ...modifiedUserInfo, ["profile"]: file });
-      setImageFile(file);
+      setModifiedUserInfo({ ...modifiedUserInfo, profile: file });
 
       const reader = new FileReader();
       reader.readAsDataURL(file[0]);
@@ -123,7 +148,7 @@ const Mypage = () => {
   //-----------------------------------------------------------------------
 
   //  ------------------------------ 메일 인증 요청  ----------------------------
-  const onVerifyEmail = () => {
+  const verifyEmailHandler = () => {
     if (userInfo.email === modifiedUserInfo.email) {
       setValidCheck({ ...validCheck, email: true });
       setSucessMsg({ ...errMsg, emailMsg: "이미 인증 된 이메일입니다." });
@@ -141,7 +166,7 @@ const Mypage = () => {
   //  -----------------------------------------------------------------------
 
   // --------- 모달창 끄기 -------
-  const onModalOff = () => {
+  const modalOffHandler = () => {
     setModal((value) => !value);
   }; //--------
 
@@ -201,7 +226,7 @@ const Mypage = () => {
   // ---------------------------------------------------------------------------
 
   // -------------------회원탈퇴 버튼 함수-------------------------
-  const onDropOutBtn = () => {
+  const dropoutUserHandler = () => {
     axios
       .delete(`${SERVER}/dropout`, {
         headers: { authorization: `Bearer ${userInfo.accessToken}` },
@@ -212,7 +237,7 @@ const Mypage = () => {
         navigate("/");
       })
       .catch((err: AxiosError) => console.log(err));
-    onModalOff();
+    modalOffHandler();
   };
   // ----------------------------------------------
 
@@ -230,7 +255,6 @@ const Mypage = () => {
         <Title>회원정보</Title>
         <Form onSubmit={(e: React.FormEvent<HTMLFormElement>) => e.preventDefault()}>
           <Input type="text" value={userInfo.userId} disabled />
-
           <ImageSection>
             <ImageBoard src={preview} onError={onErrorImg} />
             <input
@@ -238,62 +262,55 @@ const Mypage = () => {
               id="fileupload"
               type="file"
               accept=".jpg, .png"
-              onChange={onUploadImage}
+              onChange={uploadImageHandler}
             />
             <InnerButton style={{ marginBottom: "1vh" }} as="label" htmlFor="fileupload">
               <BiImageAdd size="2rem" />
               프로필 이미지 변경
             </InnerButton>
           </ImageSection>
-
           <Input
             type="password"
             placeholder="비밀번호를 입력해주세요"
             onChange={setModifyUserInfo("pwd")}
           />
-
           <ErrorMsg> {errMsg.pwdMsg} </ErrorMsg>
-
           <Input
             type="password"
             placeholder="비밀번호를 확인 해주세요"
             onChange={setModifyUserInfo("pwdCheck")}
           />
-
           <ErrorMsg> {errMsg.pwdCheckMsg} </ErrorMsg>
-
           <Separation>
             <Input
               type="eamil"
               onChange={setModifyUserInfo("email")}
               defaultValue={userInfo.email}
             />
-            <InnerButton id="verify_mail" type="button" onClick={onVerifyEmail}>
+            <InnerButton id="verify_mail" type="button" onClick={verifyEmailHandler}>
               <MdOutlineMarkEmailRead size="2rem" /> 이메일 인증
             </InnerButton>
           </Separation>
-
           <ErrorMsg>{errMsg.emailMsg}</ErrorMsg>
           <SuccessMsg> {sucessMsg.emailMsg}</SuccessMsg>
-
           <ButtonWrapper>
             <div>
-              <Small_Button
+              <SmallButton
                 type="submit"
                 onClick={sendModifiedInfo}
                 disabled={validCheck.pwd === true && validCheck.pwdCheck === true ? false : true}
               >
                 회원정보 수정
-              </Small_Button>
+              </SmallButton>
             </div>
             <div>
-              <Small_Button
+              <SmallButton
                 onClick={() => {
                   setModal(true);
                 }}
               >
                 회원탈퇴
-              </Small_Button>
+              </SmallButton>
             </div>
           </ButtonWrapper>
           {modal && (
@@ -302,17 +319,15 @@ const Mypage = () => {
               setModal={setModal}
               width="300"
               height="250"
-              // element={<div>회원탈퇴 하시겠습니까?</div>}
               element={
                 <Container>
                   <div>회원탈퇴를 하시겠습니까?</div>
-                  {/* 회원탈퇴를 하시겠습니까? */}
                   <br />
                   <Buttonbox>
-                    <Button type="button" onClick={onDropOutBtn}>
+                    <Button type="button" onClick={dropoutUserHandler}>
                       확인
                     </Button>
-                    <Button type="button" onClick={onModalOff}>
+                    <Button type="button" onClick={modalOffHandler}>
                       취소
                     </Button>
                   </Buttonbox>
@@ -325,33 +340,5 @@ const Mypage = () => {
     </div>
   );
 };
-
-const Container = styled.div`
-  background: #f7f6f2;
-`;
-
-const Buttonbox = styled.div`
-  display: flex;
-  justify-content: center;
-`;
-
-const Button = styled.button`
-  font-size: 1rem;
-  text-align: center;
-  font-weight: 500;
-
-  min-width: 6vw;
-  min-height: 5vh;
-  border-radius: 1rem;
-  display: inline-block;
-  cursor: pointer;
-  font-size: 1rem;
-  font-weight: 700;
-  outline: 0;
-  background: #4b6587;
-  color: white;
-  border: 1px solid #f7f6f2;
-  margin: 1vh;
-`;
 
 export default Mypage;

@@ -63,8 +63,6 @@ const Chart = ({ userInfo }: Chartinterface) => {
     axios
       .get(`${SERVER}/statics`, { headers: { authorization: `Bearer ${userInfo.accessToken}` } })
       .then((res: AxiosResponse) => {
-        console.log(res);
-
         const { mon, tue, wed, thu, fri, sat, sun, total } = res.data;
 
         function convertHour(dayTime: number) {

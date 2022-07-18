@@ -9,7 +9,7 @@ import {
   ErrorMsg,
   Title,
   Logo,
-  Large_Button,
+  LargeButton,
   InnerButton,
   SuccessMsg,
   ButtonWrapper,
@@ -17,9 +17,9 @@ import {
   Form,
 } from "styles/Userpage_style";
 
-const SERVER = process.env.REACT_APP_SERVER || "http://localhost:4000";
-
 export const Signup = () => {
+  const SERVER = process.env.REACT_APP_SERVER || "http://localhost:4000";
+
   const navigate = useNavigate();
   const [successMsg, setSuccessMsg] = useState({
     idMsg: "",
@@ -128,7 +128,7 @@ export const Signup = () => {
   }; //  -----------------------------------------------------------------
 
   //  ------------------------------ 회원가입 요청  전송 ----------------------------
-  const onSingup = () => {
+  const singupHandler = () => {
     axios
       .post(`${SERVER}/signup`, {
         userId: userInfo.id,
@@ -159,7 +159,7 @@ export const Signup = () => {
   }; //  -----------------------------------------------------------------
 
   //  ------------------------------ 이메일 인증 ----------------------------
-  const onVerifyEmail = () => {
+  const verifyEmailHandler = () => {
     if (!userInfo.email) {
       setErrMsg({ ...errMsg, emailMsg: "이메일을 입력해주세요." });
       return;
@@ -208,10 +208,8 @@ export const Signup = () => {
                 <FiCheckSquare size="2rem" /> 중복체크
               </InnerButton>
             </Separation>
-
             <SuccessMsg>{successMsg.idMsg}</SuccessMsg>
             <ErrorMsg>{errMsg.idMsg} </ErrorMsg>
-
             <Input
               type="password"
               placeholder="비밀번호를 입력하세요"
@@ -219,9 +217,7 @@ export const Signup = () => {
               maxLength={15}
               required
             />
-
             <ErrorMsg>{errMsg.pwdMsg} </ErrorMsg>
-
             <Input
               type="password"
               placeholder="비밀번호를 다시 입력하세요"
@@ -229,7 +225,6 @@ export const Signup = () => {
               maxLength={15}
               required
             />
-
             <ErrorMsg>{errMsg.pwdCheckMsg}</ErrorMsg>
             <Separation>
               <Input
@@ -238,26 +233,24 @@ export const Signup = () => {
                 onChange={setUserinfo("email")}
                 required
               />
-              <InnerButton type="button" onClick={onVerifyEmail}>
+              <InnerButton type="button" onClick={verifyEmailHandler}>
                 <MdOutlineMarkEmailRead size="2rem" /> 이메일인증
               </InnerButton>
             </Separation>
-
             <ErrorMsg>{errMsg.emailMsg}</ErrorMsg>
             <SuccessMsg>{successMsg.emailMsg}</SuccessMsg>
-
             <ButtonWrapper>
-              <Large_Button
+              <LargeButton
                 style={{ margin: "1vh 0 5vh 0" }}
                 disabled={
                   validCheck.email && validCheck.id && validCheck.pwd && validCheck.pwdCheck
                     ? false
                     : true
                 }
-                onClick={onSingup}
+                onClick={singupHandler}
               >
                 회 원 가 입
-              </Large_Button>
+              </LargeButton>
             </ButtonWrapper>
           </Form>
         </div>

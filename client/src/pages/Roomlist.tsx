@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import Pagenation from "../components/Pagenation";
 import axios, { AxiosError, AxiosResponse } from "axios";
@@ -154,16 +154,13 @@ interface IPosts {
 }
 
 interface socketInterface {
-  annoy: any;
-  roomId: any;
   setRoomId: any;
 }
 
-const SERVER = process.env.REACT_APP_SERVER || "http://localhost:4000";
+const Roomlist = ({ setRoomId }: socketInterface) => {
+  const SERVER = process.env.REACT_APP_SERVER || "http://localhost:4000";
 
-const Roomlist = ({ annoy, roomId, setRoomId }: socketInterface) => {
   const [roomState, setRoomState] = useState("개설된 방이 없습니다.");
-
   const [isLoading, setIsLoading] = useState(true);
 
   const navigate = useNavigate();
@@ -184,26 +181,29 @@ const Roomlist = ({ annoy, roomId, setRoomId }: socketInterface) => {
 
   const userInfo = useSelector((state: any) => state.userInfoReducer.userInfo);
 
+  // 서버에서 공부방 데이터를 받아오는 함수----------------------------------
+  const getPageData = useCallback(
+    (page: number, limit: number) => {
+      axios
+        .get(`${SERVER}/roomlist?page=${page}&limit=${limit}`, {
+          headers: { authorization: `Bearer ${userInfo.accessToken}`, userId: userInfo.userId },
+        })
+        .then((res: AxiosResponse) => {
+          setPosts(res.data.data);
+          setTotalPage(res.data.total);
+          setIsLoading(false);
+        })
+        .catch((err: AxiosError) => {
+          console.log("err:", err);
+        });
+    },
+    [userInfo.accessToken, userInfo.userId, SERVER]
+  );
+  // -----------------------------------------------------------------------
+
   useEffect(() => {
     getPageData(page, limit);
-  }, [page, limit]);
-
-  // 서버에서 공부방 데이터를 받아오는 함수----------------------------------
-  const getPageData = (page: number, limit: number) => {
-    axios
-      .get(`${SERVER}/roomlist?page=${page}&limit=${limit}`, {
-        headers: { authorization: `Bearer ${userInfo.accessToken}`, userId: userInfo.userId },
-      })
-      .then((res: AxiosResponse) => {
-        setPosts(res.data.data);
-        setTotalPage(res.data.total);
-        setIsLoading(false);
-      })
-      .catch((err: AxiosError) => {
-        console.log("err:", err);
-      });
-  };
-  // -----------------------------------------------------------------------
+  }, [page, limit, getPageData]);
 
   // 화상대화방 들어가는 함수-----------------------------------------------
   const enterRoomHandler = (room: any) => {
@@ -275,7 +275,6 @@ const Roomlist = ({ annoy, roomId, setRoomId }: socketInterface) => {
           <MdRefresh size="1.5rem" />
         </RefreshBtn>
       </Search>
-
       {isLoading ? (
         // 로딩중일때에는 강아지 보여주기
         <Root>

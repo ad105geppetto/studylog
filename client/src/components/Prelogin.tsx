@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import { Large_Button } from "styles/Userpage_style";
+import { LargeButton } from "styles/Userpage_style";
 
 interface NotLoginInterface {
   color: string;
@@ -27,10 +27,10 @@ const Prelogin = ({ color }: NotLoginInterface) => {
         로그인 후 이용 가능 합니다.
       </div>
       <div>
-        <Large_Button onClick={onNavigate("/login")}> 로그인 </Large_Button>
+        <LargeButton onClick={onNavigate("/login")}> 로그인 </LargeButton>
       </div>
       <div>
-        <Large_Button onClick={onNavigate("/signup")}> 회원가입</Large_Button>
+        <LargeButton onClick={onNavigate("/signup")}> 회원가입</LargeButton>
       </div>
     </Wrapper>
   );

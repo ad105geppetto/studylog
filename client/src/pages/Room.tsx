@@ -1,7 +1,7 @@
-import React, { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import io from "socket.io-client";
-import axios, { AxiosError, AxiosResponse } from "axios";
-import { useNavigate, NavLink } from "react-router-dom";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import Video from "../components/Video";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
@@ -44,11 +44,8 @@ const VideoArea = styled.div<{ size?: string }>`
   margin-left: 1vw;
   margin-right: 1vw;
   display: grid;
-  /* width: ${(props) => props.size}vw; */
   width: 100vw;
   height: 85vh;
-  /* grid-template-columns: repeat(2, 50%);
-  grid-template-rows: repeat(2, 50%); */
   grid-template-rows: repeat(auto-fit, minmax(0%, 1fr));
   grid-template-columns: repeat(auto-fit, minmax(45%, 1fr));
   place-content: center;
@@ -64,8 +61,6 @@ const VideoArea = styled.div<{ size?: string }>`
 export const PersonalScreen = styled.video<{ width: string; height: string }>`
   border: 0.3vh solid lightgrey;
   border-radius: 1rem;
-  /* width: ${(props) => props.width}%;
-  height: ${(props) => props.height}%; */
   width: 100%;
   height: 100%;
   object-fit: fill;
@@ -182,11 +177,6 @@ interface socketInterface {
 
 const pcConfig = {
   iceServers: [
-    // {3
-    //   urls: 'stun:[STUN_IP]:[PORT]',
-    //   'credentials': '[YOR CREDENTIALS]',
-    //   'username': '[USERNAME]'
-    // },
     {
       urls: [
         "stun:stun.l.google.com:19302",
@@ -201,16 +191,6 @@ const pcConfig = {
 const SERVER = process.env.REACT_APP_SERVER || "http://localhost:4000";
 
 const Room = ({ annoy, roomId }: socketInterface) => {
-  let start = new Date();
-  let startObject = {
-    year: start.getFullYear(),
-    month: start.getMonth(),
-    date: start.getDate(),
-    hour: start.getHours(),
-    minute: start.getMinutes(),
-    second: start.getSeconds(),
-  };
-
   const userInfo = useSelector((state: any) => state.userInfoReducer.userInfo);
   const [currentMessage, setCurrentMessage] = useState("");
   const [messageList, setMessageList] = useState<any>([]);
@@ -223,8 +203,6 @@ const Room = ({ annoy, roomId }: socketInterface) => {
   const [cameraOff, setCameraOff] = useState(false);
   const [mute, setMute] = useState(false);
   const [chat, setChat] = useState(false);
-
-  //채팅
 
   const messageBoxRef = useRef<any>();
 
@@ -249,7 +227,6 @@ const Room = ({ annoy, roomId }: socketInterface) => {
       };
 
       if (!socketRef.current) return;
-      console.log("이게뭔데?", socketRef.current);
       socketRef.current.emit("sendMessage", messageData);
 
       //자기메시지
@@ -275,7 +252,7 @@ const Room = ({ annoy, roomId }: socketInterface) => {
     } catch (e) {
       console.log(`getUserMedia error: ${e}`);
     }
-  }, []);
+  }, [annoy, roomId, userInfo.userId]);
 
   const createPeerConnection = useCallback((socketID: string) => {
     try {
@@ -283,7 +260,6 @@ const Room = ({ annoy, roomId }: socketInterface) => {
 
       pc.onicecandidate = (e) => {
         if (!(socketRef.current && e.candidate)) return;
-        console.log("onicecandidate");
         socketRef.current.emit("candidate", {
           candidate: e.candidate,
           candidateSendID: socketRef.current.id,
@@ -291,12 +267,7 @@ const Room = ({ annoy, roomId }: socketInterface) => {
         });
       };
 
-      pc.oniceconnectionstatechange = (e) => {
-        console.log(e);
-      };
-
       pc.ontrack = (e) => {
-        console.log("ontrack success");
         setUsers((oldUsers) =>
           oldUsers
             .filter((user) => user.id !== socketID)
@@ -308,7 +279,6 @@ const Room = ({ annoy, roomId }: socketInterface) => {
       };
 
       if (localStreamRef.current) {
-        console.log("localstream add");
         localStreamRef.current.getTracks().forEach((track) => {
           if (!localStreamRef.current) return;
           pc.addTrack(track, localStreamRef.current);
@@ -324,18 +294,60 @@ const Room = ({ annoy, roomId }: socketInterface) => {
     }
   }, []);
 
+  const exitHandler = useCallback(() => {
+    let start = new Date();
+    let end = new Date();
+
+    let startObject = {
+      year: start.getFullYear(),
+      month: start.getMonth(),
+      date: start.getDate(),
+      hour: start.getHours(),
+      minute: start.getMinutes(),
+      second: start.getSeconds(),
+    };
+
+    let endObject = {
+      year: end.getFullYear(),
+      month: end.getMonth(),
+      date: end.getDate(),
+      hour: end.getHours(),
+      minute: end.getMinutes(),
+      second: end.getSeconds(),
+    };
+
+    if (userInfo.userId) {
+      axios.post(
+        `${SERVER}/statics`,
+        {
+          userId: userInfo.id,
+          startObject: startObject,
+          endObject: endObject,
+        },
+        { headers: { authorization: `Bearer ${userInfo.accessToken}` } }
+      );
+    }
+
+    axios.patch(`${SERVER}/room`, {
+      userId: userInfo.id,
+      roomId,
+      type: "leave",
+    });
+
+    navigate("/roomlist");
+  }, [navigate, roomId, userInfo.accessToken, userInfo.id, userInfo.userId]);
+
   useEffect(() => {
     const handleTabClose = (event: any) => {
       event.preventDefault();
       exitHandler();
-      console.log("beforeunload event triggered");
     };
     window.addEventListener("beforeunload", handleTabClose);
 
     return () => {
       window.removeEventListener("beforeunload", handleTabClose);
     };
-  }, []);
+  }, [exitHandler]);
 
   useEffect(() => {
     socketRef.current = io.connect(SERVER);
@@ -352,7 +364,6 @@ const Room = ({ annoy, roomId }: socketInterface) => {
             offerToReceiveAudio: true,
             offerToReceiveVideo: true,
           });
-          console.log("create offer success");
           await pc.setLocalDescription(new RTCSessionDescription(localSdp));
           socketRef.current.emit("offer", {
             sdp: localSdp,
@@ -369,14 +380,12 @@ const Room = ({ annoy, roomId }: socketInterface) => {
       "getOffer",
       async (data: { sdp: RTCSessionDescription; offerSendID: string }) => {
         const { sdp, offerSendID } = data;
-        console.log("get offer");
         if (!localStreamRef.current) return;
         const pc = createPeerConnection(offerSendID);
         if (!(pc && socketRef.current)) return;
         pcsRef.current = { ...pcsRef.current, [offerSendID]: pc };
         try {
           await pc.setRemoteDescription(new RTCSessionDescription(sdp));
-          console.log("answer set remote description success");
           const localSdp = await pc.createAnswer({
             offerToReceiveVideo: true,
             offerToReceiveAudio: true,
@@ -397,7 +406,6 @@ const Room = ({ annoy, roomId }: socketInterface) => {
       "getAnswer",
       (data: { sdp: RTCSessionDescription; answerSendID: string }) => {
         const { sdp, answerSendID } = data;
-        console.log("get answer");
         const pc: RTCPeerConnection = pcsRef.current[answerSendID];
         if (!pc) return;
         pc.setRemoteDescription(new RTCSessionDescription(sdp));
@@ -407,11 +415,9 @@ const Room = ({ annoy, roomId }: socketInterface) => {
     socketRef.current.on(
       "getCandidate",
       async (data: { candidate: RTCIceCandidateInit; candidateSendID: string }) => {
-        console.log("get candidate");
         const pc: RTCPeerConnection = pcsRef.current[data.candidateSendID];
         if (!pc) return;
         await pc.addIceCandidate(new RTCIceCandidate(data.candidate));
-        console.log("candidate add success");
       }
     );
 
@@ -430,8 +436,6 @@ const Room = ({ annoy, roomId }: socketInterface) => {
     });
 
     socketRef.current.on("receiveMessage", (data: any) => {
-      //남의메시지
-      console.log("상대가 보낸 메세지 보기", data);
       setMessageList((list: any) => [...list, data]);
     });
     socketRef.current.on("leaveRoom", (data: any) => {
@@ -455,41 +459,6 @@ const Room = ({ annoy, roomId }: socketInterface) => {
       });
     };
   }, [createPeerConnection, getLocalStream]);
-
-  const exitHandler = () => {
-    let end = new Date();
-
-    let endObject = {
-      year: end.getFullYear(),
-      month: end.getMonth(),
-      date: end.getDate(),
-      hour: end.getHours(),
-      minute: end.getMinutes(),
-      second: end.getSeconds(),
-    };
-    if (userInfo.userId) {
-      axios.post(
-        `${SERVER}/statics`,
-        {
-          userId: userInfo.id,
-          startObject: startObject,
-          endObject: endObject,
-        },
-        { headers: { authorization: `Bearer ${userInfo.accessToken}` } }
-      );
-    }
-
-    axios
-      .patch(`${SERVER}/room`, {
-        userId: userInfo.id,
-        roomId,
-        type: "leave",
-      })
-      .then((res) => {});
-    console.log();
-
-    navigate("/roomlist");
-  };
 
   const cameraHandler = () => {
     localVideoRef.current.srcObject
@@ -579,7 +548,6 @@ const Room = ({ annoy, roomId }: socketInterface) => {
                 }}
                 onKeyPress={(event: any) => {
                   event.key === "Enter" && sendMessage();
-                  console.log(event);
                 }}
               />
               <button onClick={sendMessage}>
