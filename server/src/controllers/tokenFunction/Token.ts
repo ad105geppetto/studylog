@@ -1,4 +1,4 @@
-const jwt = require("jsonwebtoken");
+import jwt from "jsonwebtoken";
 
 export const generateAccessToken = (payload: Object) => {
   // Access Token 생성 함수

@@ -14,7 +14,7 @@ export default {
 
       models.get(tokenData, (error, result) => {
         if (error) {
-          res.status(500).send({ message: "서버에러!" });
+          res.status(500).send({ message: "서버 에러" });
         } else {
           res.status(200).send({
             total: result[0].totalTime,
@@ -103,7 +103,7 @@ export default {
         // 같은날 공부하고 종료한 경우
         models.post1(day, time, tokenData, (error, result) => {
           if (error) {
-            res.status(500).send({ message: "서버에러!" });
+            res.status(500).send({ message: "서버 에러" });
           } else {
             res.send({ message: "공부시간이 기록되었습니다." });
           }

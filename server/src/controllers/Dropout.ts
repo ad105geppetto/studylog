@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import models from "../models/Dropout.js";
+import { MysqlError } from "mysql";
 import jwt from "jsonwebtoken";
 
 export default {
@@ -14,9 +15,9 @@ export default {
     const token = authorization.split(" ")[1];
     const tokenData = jwt.verify(token, process.env.ACCESS_SECRET);
 
-    models.delete(tokenData, (error, result) => {
+    models.delete(tokenData, (error: MysqlError) => {
       if (error) {
-        res.status(500).send({ message: "서버에러" });
+        res.status(500).send({ message: "서버 에러" });
       } else {
         res.clearCookie("refreshToken");
         res.status(200).send({

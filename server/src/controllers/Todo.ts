@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import { MysqlError } from "mysql";
 import models from "../models/Todo";
 import jwt from "jsonwebtoken";
 
@@ -17,9 +18,9 @@ export default {
       if (!tokenData) {
         res.status(400).send({ data: null, message: "회원 정보가 없습니다." });
       } else {
-        models.get(tokenData, (error, result) => {
+        models.get(tokenData, (error: MysqlError, result) => {
           if (error) {
-            res.status(500).send({ message: "서버에러" });
+            res.status(500).send({ message: "서버 에러" });
           } else {
             console.log(result);
             if (result.length === 0) {
@@ -59,9 +60,9 @@ export default {
       if (!tokenData) {
         res.status(400).send({ data: null, message: "회원 정보가 없습니다." });
       } else {
-        models.post(content, type, tokenData, (error, result) => {
+        models.post(content, type, tokenData, (error: MysqlError, result) => {
           if (error) {
-            res.status(500).send({ message: "서버에러" });
+            res.status(500).send({ message: "서버 에러" });
           } else {
             if (result.length === 0) {
               res.status(404).send({ message: "todo목록이 없습니다." });
@@ -103,9 +104,9 @@ export default {
       if (!tokenData) {
         res.status(400).send({ data: null, message: "회원 정보가 없습니다." });
       } else {
-        models.patch(id, content, type, tokenData, (error, result) => {
+        models.patch(Number(id), content, type, tokenData, (error: MysqlError, result) => {
           if (error) {
-            res.status(500).send({ message: "서버에러" });
+            res.status(500).send({ message: "서버 에러" });
           } else {
             if (result.length === 0) {
               res.status(404).send({ message: "todo목록이 없습니다." });
@@ -142,9 +143,9 @@ export default {
       if (!tokenData) {
         res.status(400).send({ data: null, message: "회원 정보가 없습니다." });
       } else {
-        models.delete(id, tokenData, (error, result) => {
+        models.delete(Number(id), tokenData, (error, result) => {
           if (error) {
-            res.status(500).send({ message: "서버에러" });
+            res.status(500).send({ message: "서버 에러" });
           } else {
             if (result.length === 0) {
               res.status(404).send({ message: "todo목록이 없습니다." });

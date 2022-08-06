@@ -6,7 +6,7 @@ export default {
     const { email } = req.body
     models.post(email, (error, result) => {
       if (error) {
-        res.status(500).json({ message: "Internal Sever Error" });
+        res.status(500).json({ message: "서버 에러" });
       } else {
         if (result.length === 0) {
           res.status(404).json({
@@ -15,7 +15,8 @@ export default {
           })
         } else {
           res.status(200).json({
-            userId: result[0].userId
+            userId: result[0].userId,
+            message: "성공"
           })
         }
       }

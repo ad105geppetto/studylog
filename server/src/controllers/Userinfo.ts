@@ -2,6 +2,17 @@ import { Request, Response } from "express";
 import models from "../models/Userinfo.js";
 import jwt from "jsonwebtoken";
 
+type tokenData = {
+  id: number,
+  userId: string,
+  email: string,
+  profile: string,
+}
+
+interface MulterRequest extends Request {
+  file: any;
+}
+
 export default {
   // 회원정보불러오기
   get: (req: Request, res: Response) => {
@@ -11,7 +22,7 @@ export default {
     } else {
       const authorization = req.headers["authorization"];
       const token = authorization.split(" ")[1];
-      const tokenData = jwt.verify(token, process.env.ACCESS_SECRET);
+      const tokenData = jwt.verify(token, process.env.ACCESS_SECRET) as tokenData;
 
       //토큰해독했는데 정보가 없는 경우
       if (!tokenData) {
@@ -37,8 +48,8 @@ export default {
   // 다시 토큰발급해준다.
   patch: (req: Request, res: Response) => {
     let profilePath;
-    if (req.file) {
-      profilePath = req.file.path;
+    if ((req as MulterRequest).file) {
+      profilePath = (req as MulterRequest).file.path;
     }
 
     const { password, email } = req.body;
@@ -52,14 +63,14 @@ export default {
     } else {
       const authorization = req.headers["authorization"];
       const token = authorization.split(" ")[1];
-      const tokenData = jwt.verify(token, process.env.ACCESS_SECRET);
+      const tokenData = jwt.verify(token, process.env.ACCESS_SECRET) as tokenData;
 
       // 회원정보 수정창에서 email이 token에 들어있는 이메일과 다르다면
       // 이메일 인증 눌렀는지 안 눌렀는지 체크
       if (email !== tokenData.email) {
         models.check(email, (error, result) => {
           if (error) {
-            return res.status(500).send({ message: "서버에러!" });
+            return res.status(500).send({ message: "서버 에러" });
           } else {
             // 이메일 인증 버튼을 안누른 경우
             if (result.length === 0) {

@@ -95,7 +95,7 @@ const Login = () => {
     }
 
     axios
-      .post(`${SERVER}/Oauth`, { authorizationCode: authCode })
+      .post(`${SERVER}/oauth`, { authorizationCode: authCode })
       .then((res: AxiosResponse) => {
         if (res.data.message === "이미 카카오 계정으로 가입한 유저입니다.") {
           alert(res.data.message);

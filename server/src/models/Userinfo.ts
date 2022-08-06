@@ -2,12 +2,9 @@ import db from "../db/index";
 const SERVER = process.env.SERVER || "http://localhost:4000";
 
 export default {
-  get: () => {},
-  post: () => {},
-
   // 회원정보수정
   // password,email,profileImg가 중 하나가 빈 값일 경우에 따라서 나눠줘야 됨
-  patch: (tokenData, password, email, profilePath, callback) => {
+  patch: (tokenData, password: string, email: string, profilePath: string, callback: Function) => {
     if (profilePath) {
       // 패스워드가 없는 경우는 이메일만 업데이트
       if (!password) {
@@ -72,7 +69,7 @@ export default {
   },
 
   //이메일 인증 눌렀는지 안 눌렀는지 체크
-  check: (email, callback) => {
+  check: (email: string, callback: Function) => {
     const queryString = `SELECT verification FROM auth WHERE email = "${email}" ORDER BY createdAt DESC LIMIT 1`;
     db.query(queryString, (error, result) => {
       callback(error, result);

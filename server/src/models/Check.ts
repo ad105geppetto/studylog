@@ -1,9 +1,9 @@
 import db from "../db";
 
 export default {
-  post: (userId, callback) => {
+  post: (userId: string, callback: Function) => {
     const queryString = `SELECT * FROM users WHERE userId = "${userId}"`
-    db.query(queryString, (error, result) => {
+    db.query(queryString, (error, result: []) => {
       if (error) {
         return callback(error, null)
       } else {

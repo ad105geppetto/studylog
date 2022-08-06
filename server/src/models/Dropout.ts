@@ -6,8 +6,8 @@ export default {
     db.query(`SET foreign_key_checks = 0`);
 
     const queryString = `DELETE FROM users WHERE id = ${tokenData.id}`;
-    db.query(queryString, (error, result) => {
-      callback(error, result);
+    db.query(queryString, (error) => {
+      callback(error);
 
       // Foreign Key의 제약조건(Constraint)을 켜기
       db.query(`SET foreign_key_checks = 1`);

@@ -28,7 +28,7 @@ export default {
           });
         } else {
           if (result[0].type !== "kakao") {
-            return callback(null, "No kakao user");
+            return callback(null, null);
           } else {
             callback(null, result);
           }

@@ -27,7 +27,7 @@ router.use("/userpwd/auth", findPwdMailingRouter);
 router.use("/check", checkRouter);
 router.use("/userid", userIdRouter);
 router.use("/userpwd", userpwdRouter);
-router.use("/Oauth", oauthRouter);
+router.use("/oauth", oauthRouter);
 router.use("/kakaoOauth", kakaoOauthRouter)
 router.use("/roomlist", roomlistRouter);
 router.use("/statics", staticsRouter);

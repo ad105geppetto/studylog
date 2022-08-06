@@ -20,7 +20,7 @@ export default {
       } else {
         models.post(title, content, tokenData, (error, result) => {
           if (error) {
-            res.send({ message: "서버에러!" });
+            res.send({ message: "서버 에러" });
           } else {
             res.send({ id: result[0].id, message: "입장했습니다." });
           }
@@ -34,7 +34,7 @@ export default {
     models.patch(Number(userId), Number(roomId), type, (error, result) => {
       if (error) {
         console.log(error);
-        res.send({ message: "서버에러!" });
+        res.send({ message: "서버 에러" });
       } else {
         res.send({ message: "입장했습니다." });
       }

@@ -1,39 +1,47 @@
 import { Request, Response } from "express";
+import { MysqlError } from "mysql";
 import models from "../models/Signup";
 import nodemailer from "nodemailer";
 const SERVER = process.env.SERVER || "http://localhost:4000";
 
+type auth = {
+  verification: 0 | 1,
+  userId: string
+}
+
+type OAuth = {
+  email: string,
+  certNum: string
+}
+
 export default {
   post: (req: Request, res: Response) => {
-    models.post((error, result) => {
-      const { userId, email, password } = req.body;
-      models.check(email, (error, result) => {
-        if (error) {
-          res.status(500).json({ message: "Internal Sever Error" });
+    const { userId, email, password } = req.body;
+    models.post(email, (error: MysqlError, result: Array<auth>) => {
+      if (error) {
+        res.status(500).json({ message: "서버 에러" });
+      } else {
+        if (result[0] === null) {
+          res.status(400).json({ message: "이메일 인증을 다시 해주세요." });
         } else {
-          console.log(result);
-          if (result[0] === null) {
-            res.status(400).json({ message: "이메일 인증을 다시 해주세요." });
+          if (result[0].verification === 0) {
+            res.status(400).json({ message: "보내신 이메일에서 인증 버튼을 클릭 해주세요." });
           } else {
-            if (result[0].verification === 0) {
-              res.status(400).json({ message: "보내신 이메일에서 인증 버튼을 클릭 해주세요." });
+            const created = result.filter((user) => user.userId === userId);
+            if (created.length === 0) {
+              models.create(userId, email, password, (error: MysqlError) => {
+                if (error) {
+                  res.status(500).json({ message: "서버 에러" });
+                } else {
+                  res.status(201).send({ message: "회원가입이 완료되었습니다." });
+                }
+              });
             } else {
-              const created = result.filter((user) => user.userId === userId);
-              if (created.length === 0) {
-                models.create(userId, email, password, (error, result) => {
-                  if (error) {
-                    res.status(500).json({ message: "Internal Sever Error" });
-                  } else {
-                    res.status(201).send({ message: "회원가입이 완료되었습니다." });
-                  }
-                });
-              } else {
-                res.status(409).send({ message: "아이디, 비밀번호, 이메일을 확인해주세요." });
-              }
+              res.status(409).send({ message: "아이디, 비밀번호, 이메일을 확인해주세요." });
             }
           }
         }
-      });
+      }
     });
   },
 
@@ -55,12 +63,12 @@ export default {
     // 2. ttl설정(time to live)
 
     // 3. 인증 코드 테이블에 데이터 입력
-    models.save(email, certNum, (error, result) => {
+    models.save(email, certNum, (error: MysqlError) => {
       if (error) {
-        res.status(500).send({ message: "서버에러!" });
+        res.status(500).send({ message: "서버 에러!" });
       } else {
         // 메일 발송
-        transporter.sendMail(mailOptions, function (error, info) {
+        transporter.sendMail(mailOptions, function (error) {
           if (error) {
             console.log(error);
           } else {
@@ -96,13 +104,12 @@ export default {
   // 이메일에서 인증누른 경우
   auth: (req: Request, res: Response) => {
     // console.log(req.query);
-    const { email, certNum } = req.query;
+    const { email, certNum } = req.query as OAuth;
 
-    models.auth(email, certNum, (error, result) => {
+    models.auth(email, certNum, (error: MysqlError) => {
       if (error) {
         res.status(500).send({ message: "서버에러!" });
       } else {
-        // console.log(result);
         res.write("<script>alert('success')</script>");
       }
     });

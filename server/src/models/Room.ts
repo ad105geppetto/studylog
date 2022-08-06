@@ -1,7 +1,7 @@
 import db from "../db/index";
 
 export default {
-  post: (title, content, tokenData, callback) => {
+  post: (title: string, content: string, tokenData, callback: Function) => {
     if (!tokenData) {
       const queryString = `SELECT id from users WHERE email = "${tokenData.email}" ORDER BY createdAt DESC`;
       db.query(queryString, (error, newResult) => {
@@ -30,7 +30,7 @@ export default {
       });
     }
   },
-  patch: (userId, roomId, type, callback) => {
+  patch: (userId: number, roomId: number, type: string, callback: Function) => {
     if (userId) {
       if (type === "join") {
         const queryString = `INSERT INTO user_room (userId, roomId, startTime) VALUES (${userId}, ${roomId}, NOW())`;

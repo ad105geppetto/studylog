@@ -1,11 +1,18 @@
 import models from "../models/Check"
+import { Request, Response } from "express";
+import { MysqlError } from "mysql";
+
+type User = {
+  id: number,
+  userId: string
+}
 
 export default {
-  post: (req, res) => {
+  post: (req: Request, res: Response) => {
     const { userId } = req.body
-    models.post(userId, (error, result) => {
+    models.post(userId, (error: MysqlError, result: Array<User>) => {
       if (error) {
-        res.status(500).json({ message: "Internal Sever Error" });
+        res.status(500).json({ message: "서버 에러" });
       } else {
         if (result.length !== 0) {
           res.status(409).json({

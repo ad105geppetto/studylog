@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import { MysqlError } from "mysql";
 import nodeMailer from "nodemailer";
 import pwdMailing from "../models/FindPwdMailing";
 import dotenv from "dotenv";
@@ -14,7 +15,7 @@ const mailPoster = nodeMailer.createTransport({
   },
 });
 
-const mailOpt = (userEmail: string, title: string, contents, html: string) => {
+const mailOpt = (userEmail: string, title: string, contents: string, html: string) => {
   // 메일 Option 값 설정 함수
   const mailOptions = {
     from: process.env.MAIL_ID,
@@ -40,17 +41,15 @@ const sendMail = (mailOption: Object) => {
 
 export default {
   post: (req: Request, res: Response) => {
-    const userEmail = req.body.email;
+    const userEmail: string = req.body.email;
     const title = "[Studylog] 고객님의 인증코드는 다음과 같습니다.";
     const randomAuth = String(Math.floor(Math.random() * 1000000));
-    const contents = () => {
-      return `${randomAuth}`;
-    };
+    const contents = `${randomAuth}`;
     const html = `
       <div>
         <div>
           <div style="float: left">
-            <img src="https://cdn.pixabay.com/photo/2015/04/15/02/43/waves-723178_960_720.png" width="100" height="100" />
+            <img src="https://studylog.tk/asset/dark_logo.png" width="100" height="100" />
           </div>
           <div>
             <span style="font-size: 1.8rem">함께 공부하고 기록할 땐</span>
@@ -69,13 +68,13 @@ export default {
         </div>
       </div>`;
 
-    const mailOption = mailOpt(userEmail, title, contents(), html);
+    const mailOption = mailOpt(userEmail, title, contents, html);
     sendMail(mailOption);
-    pwdMailing.create(randomAuth, userEmail, 0, (error, result1) => {
+    pwdMailing.create(randomAuth, userEmail, 0, (error: MysqlError) => {
       if (error) {
-        res.status(500).json({ message: "Internal Sever Error" });
+        res.status(500).json({ message: "서버 에러" });
       } else {
-        res.status(200).json({ message: "ok" });
+        res.status(200).json({ message: "성공" });
       }
     });
   },

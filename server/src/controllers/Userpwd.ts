@@ -6,7 +6,7 @@ export default {
     const { userId, certNum } = req.body;
     models.post(userId, certNum, (error, result) => {
       if (error) {
-        res.status(500).json({ message: "Internal Sever Error" });
+        res.status(500).json({ message: "서버 에러" });
       } else {
         if (result.length === 0) {
           res.status(400).json({
