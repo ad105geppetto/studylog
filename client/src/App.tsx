@@ -3,7 +3,7 @@ import Login from "pages/Login";
 import Landing from "pages/Landing";
 import Mypage from "pages/Mypage";
 import Room from "pages/Room";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Todo from "pages/Todo";
 import Creatingroom from "./pages/Creatingroom";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
@@ -18,6 +18,11 @@ function App() {
   const guestNum = (Math.random() * 10000000).toString().slice(0, 4);
   const annoy = `Annoy${guestNum}`;
   const [roomId, setRoomId] = useState("");
+
+  useEffect(() => {
+    const titleElement = document.getElementsByTagName("title")[0];
+    titleElement.innerHTML = `StudyLog`;
+  }, []);
 
   window.addEventListener("unload", () => {
     dispatch(logout(""));
