@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { MysqlError } from "mysql";
+import crypto from "crypto"
 import models from "../models/Signup";
 import nodemailer from "nodemailer";
 const SERVER = process.env.SERVER || "http://localhost:4000";
@@ -29,7 +30,21 @@ export default {
           } else {
             const created = result.filter((user) => user.userId === userId);
             if (created.length === 0) {
-              models.create(userId, email, password, (error: MysqlError) => {
+              const hashPassword = (password: string) => {
+                var salt = crypto.randomBytes(64).toString("base64");
+                var iterations = 10000;
+                var hash = crypto.pbkdf2Sync(password, salt, iterations, 64, "sha256").toString("base64");
+
+                return {
+                  salt: salt,
+                  hash: hash,
+                  iterations: iterations,
+                };
+              }
+
+              const hashInfo = hashPassword(password);
+
+              models.create(userId, email, hashInfo.hash, hashInfo.salt, (error: MysqlError) => {
                 if (error) {
                   res.status(500).json({ message: "서버 에러" });
                 } else {

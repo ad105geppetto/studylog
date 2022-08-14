@@ -2,6 +2,7 @@ CREATE TABLE `users` (
   `id` int PRIMARY KEY AUTO_INCREMENT,
   `userId` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
+  `salt` varchar(255),
   `password` varchar(255),
   `profile` varchar(255),
   `roomId` int,

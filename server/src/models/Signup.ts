@@ -11,9 +11,9 @@ export default {
       }
     });
   },
-  create: (userId: string, email: string, password: string, callback: Function) => {
+  create: (userId: string, email: string, password: string, salt: string, callback: Function) => {
     db.query(
-      `INSERT INTO users (userId, email, password) VALUES ("${userId}", "${email}", "${password}")`,
+      `INSERT INTO users (userId, email, password, salt) VALUES ("${userId}", "${email}", "${password}", "${salt}")`,
       (error, result) => {
         if (error) {
           return callback(error);
