@@ -8,6 +8,8 @@
 
 **프로젝트명: Studylog**
 
+**팀 구성: 프론트 2명, 백앤드 2명 (백앤드 개발자로서 참여)**
+
 **배포 Link: https://studylog.tk/**
 
 ## ✏️ About
@@ -17,6 +19,91 @@
 **스터디카페에 가기는 귀찮고 혼자하자니 집중이 잘 안되시나요?**
 
 **StudyLog에서는 함께 공부도 하고 기록도 할 수 있습니다.**
+
+<div align=left>
+    <h2>📚 STACKS</h2>
+    <div align=left>
+        <h4>CLIENT</h4>
+        <img src="https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=React&logoColor=white">
+        <img src="https://img.shields.io/badge/React Router-CA4245?style=for-the-badge&logo=React Router&logoColor=white">
+        <img src="https://img.shields.io/badge/Redux-764ABC?style=for-the-badge&logo=Redux&logoColor=white">
+        <img src="https://img.shields.io/badge/styled components-DB7093?style=for-the-badge&logo=styled components&logoColor=white">
+        <img src="https://img.shields.io/badge/WebRTC-333333?style=for-the-badge&logo=WebRTC&logoColor=white">
+        <img src="https://img.shields.io/badge/Socket.io-010101?style=for-the-badge&logo=Socket.io&logoColor=white">
+    </div>
+    <div align=left>
+        <h4>SERVER</h4>
+        <img src="https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=Node.js&logoColor=white">
+        <img src="https://img.shields.io/badge/Express-000000?style=for-the-badge&logo=Express&logoColor=white">
+        <img src="https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=TypeScript&logoColor=white">
+        <img src="https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=MySQL&logoColor=white">
+        <img src="https://img.shields.io/badge/JSON Web Tokens-000000?style=for-the-badge&logo=JSON Web Tokens&logoColor=white">
+        <img src="https://img.shields.io/badge/.ENV-ECD53F?style=for-the-badge&logo=.ENV&logoColor=white">
+    </div>
+    <div align=left>
+        <h4>AWS</h4>
+    <img src="https://img.shields.io/badge/AWS-232F3E?style=for-the-badge&logo=Amazon AWS&logoColor=white">
+    <img src="https://img.shields.io/badge/S3-569A31?style=for-the-badge&logo=Amazon S3&logoColor=white">
+    <img src="https://img.shields.io/badge/EC2-FF9900?style=for-the-badge&logo=Amazon EC2&logoColor=white">
+    <img src="https://img.shields.io/badge/RDS-527FFF?style=for-the-badge&logo=Amazon RDS&logoColor=white">
+    </div>
+</div>
+
+## 📌 Install
+
+```bash
+## Client와 Server 각각의 폴더에서 설치
+$ npm install
+```
+
+## 📌 Settings
+
+### Client
+
+```bash
+## Client의 .env.example 파일명을 .env로 변경하여 사용
+## .env 안에 들어갈 내용
+REACT_APP_SERVER=http://localhost:4000
+REACT_APP_GOOGLE_CLIENT_ID= 구글 클라이언트 정보의 Client ID
+REACT_APP_GOOGLE_CLIENT_SECRET= 구글 클라이언트 정보의 Client SECRET
+```
+
+### Server
+
+```bash
+## Server의 .env.example 파일명을 .env로 변경하여 사용
+## .env 안에 들어갈 내용
+DATABASE_HOST= db 호스트
+DATABASE_USER= db 계정
+DATABASE_PORT= db 포트 번호
+DATABASE_NAME= db 이름
+DATABASE_PASSWORD= db 패스워드
+
+SERVER_PORT= 서버 포트 번호(ex: 4000)
+
+ACCESS_SECRET= jwt access 시크릿 키
+REFRESH_SECRET= jwt refresh 시크릿 키
+
+GOOGLE_CLIENT_ID= 구글 클라이언트 정보의 Client ID
+GOOGLE_CLIENT_SECRET= 구글 클라이언트 정보의 Client SECRET
+
+KAKAO_CLIENT_ID= 카카오 클라이언트 정보의 Client ID
+KAKAO_CLIENT_SECRET= 카카오 클라이언트 정보의 Client SECRET
+
+
+MAIL_ID= 보내는 메일의 주소
+MAIL_PASSWORD= 보내는 메일의 비밀번호
+
+SERVER=http://localhost:4000
+CLIENT=http://localhost:3000/login
+```
+
+## 📌 앱 실행
+
+```bash
+## Client와 Server 각각의 폴더에서 실행
+$ npm run start
+```
 
 ## ✨ Feature
 
