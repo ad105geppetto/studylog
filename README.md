@@ -1,10 +1,14 @@
 ![unknown (2)](https://user-images.githubusercontent.com/92367032/183646537-18084af6-d1e4-4d08-b19c-f3d27de3ef79.png)
 
-
 ## 🐋 Welcome
 
 **본 레포지토리는 코드스테이츠(부트캠프) 수료 이후, 개선 및 추가 사항들을 반영하면서 그 기록들을 남긴 곳입니다.**
 
+## ✏️ Intro
+
+**프로젝트명: Studylog**
+
+**배포 Link: https://studylog.tk/**
 
 ## ✏️ About
 
@@ -20,6 +24,224 @@
 - **4인까지 참여할 수 있는 채팅방에서 친구들과 같이 얼굴을 보며 대화와 채팅을 할 수 있습니다.**
 - **todo목록을 할일, 진행중, 완료 3가지 단계로 구별하여 볼 수 있는 칸반보드를 제공합니다.**
 - **일주일 간의 공부시간을 그래프화하여 확인하고 일주일간의 총 공부시간을 확인해볼 수 있습니다.**
+
+<details>
+    <summary><h3>1. 사용 스택 및 스택 아키텍쳐</h3></summary>
+    <img src="https://user-images.githubusercontent.com/92367032/194754456-aac6da93-a940-47c3-a87a-9b33659d3f5e.png"/>
+</details>
+
+<details>
+  <summary><h3>2. Wirframe</h3></summary>
+  <details markdown="1">
+    <summary>Landing Page</summary>
+    <img src="https://user-images.githubusercontent.com/92367032/170005268-4671e16e-59f1-4522-b93a-282c15ffcd6d.png"/>
+  </details>
+  <details markdown="2">
+    <summary>회원 가입</summary>
+    <img src="https://user-images.githubusercontent.com/92367032/170005642-2981f006-e972-464a-a965-9b48944eb6a5.png"/>
+  </details>
+
+  <details markdown="3">
+    <summary>로그인</summary>
+    <img src="https://user-images.githubusercontent.com/92367032/170005773-1f60cfc6-3252-4b4e-9d02-e059bfcbb8ff.png"/>
+  </details>
+
+  <details markdown="4">
+    <summary>내 정보</summary>
+    <img src="https://user-images.githubusercontent.com/92367032/170005895-50f451a1-8b2d-4192-84c1-cab33bf8804c.png"/>
+  </details>
+
+  <details markdown="5">
+    <summary>ID 찾기</summary>
+    <img src="https://user-images.githubusercontent.com/92367032/170006034-41b115f5-48e6-42cf-9ba8-0d4fa9da42af.png"/>
+  </details>
+
+  <details markdown="6">
+    <summary>PWD 찾기</summary>
+    <img src="https://user-images.githubusercontent.com/92367032/170006144-e4f3960b-78ad-490b-abba-45c93cea3315.png"/>
+  </details>
+
+  <details markdown="7">
+    <summary>공부방 목록</summary>
+    <img src="https://user-images.githubusercontent.com/92367032/170006310-9a6c3539-faea-42b6-8d00-9a12ac89c25f.png"/>
+  </details>
+
+  <details markdown="8">
+    <summary>공부방 생성</summary>
+    <img src="https://user-images.githubusercontent.com/92367032/170006421-7224a5f7-70b2-4296-af8c-d4ffbcde70ae.png"/>
+  </details>
+
+  <details markdown="9">
+    <summary>화상 채팅</summary>
+    <img src="https://user-images.githubusercontent.com/92367032/170006564-087aa1e1-1541-4be5-95a8-012fd038f4ab.png"/>
+  </details>
+
+  <details markdown="10">
+    <summary>Study To-Do</summary>
+    <img src="https://user-images.githubusercontent.com/92367032/170006768-6cd2e5a7-f59e-4f06-ae05-fc1b03dbe945.png"/>
+  </details>
+
+  <details markdown="11">
+    <summary>나의 공부</summary>
+    <img src="https://user-images.githubusercontent.com/92367032/170006855-7154170a-da8d-438c-8f7a-66af5e9ebe40.png"/>
+  </details>
+
+  <details markdown="12">
+    <summary>관련 모달</summary>
+    <img src="https://user-images.githubusercontent.com/92367032/170007028-2d263584-1cb2-4f6d-a221-c3d99c5e23c1.png"/>
+  </details>
+</details>
+
+<details>
+  <summary><h3>3. UI 디자인</h3></summary>
+  
+  <details markdown="1">
+  <summary>Landing Page</summary>
+   <img src="https://user-images.githubusercontent.com/48144688/170432352-0783ca21-09ff-4234-b5fb-980f23af820c.png"/>
+   <img src="https://user-images.githubusercontent.com/48144688/170432362-61cde06a-67ff-44e8-9e20-2b9ca57400d2.png"/>
+   <img src="https://user-images.githubusercontent.com/48144688/170432369-d357e16e-8ff9-4d7a-a8ec-42178135bc8e.png"/>
+  </details>
+
+  <details markdown="2">
+  <summary>회원 가입</summary>
+   <img src="https://user-images.githubusercontent.com/48144688/170428295-7b817d2f-86ad-4700-86bd-93a3ce151827.png"/>
+  </details>
+
+  <details markdown="3">
+  <summary>로그인</summary>
+   <img src="https://user-images.githubusercontent.com/48144688/170432044-26e83174-1ced-4d5b-b175-52b0f8e8b05a.png"/>
+  </details>
+
+  <details markdown="4">
+  <summary>내 정보</summary>
+  <img src="https://user-images.githubusercontent.com/48144688/170432105-c8b9837c-95a1-4f1e-973e-aba5b10096ce.png"/>
+  </details>
+
+  <details markdown="5">
+  <summary>ID 찾기</summary>
+   <img src="https://user-images.githubusercontent.com/48144688/170431501-f7160ea0-bb38-4b27-986c-e8f962af5344.png"/>
+  </details>
+
+  <details markdown="6">
+  <summary>PWD 찾기</summary>
+   <img src="https://user-images.githubusercontent.com/48144688/170431520-4b159031-dc85-49a7-8044-42eccfecc52b.png"/>
+  </details>
+
+  <details markdown="7">
+  <summary>공부방 목록</summary>
+   <img src="https://user-images.githubusercontent.com/48144688/170431250-2192c529-3ccd-4adf-a665-f115b1cfc946.png"/>
+  </details>
+
+  <details markdown="8">
+  <summary>공부방 생성</summary>
+   <img src="https://user-images.githubusercontent.com/48144688/170431095-a73f9a6c-5b28-4c26-9c6d-55a77726ddf8.png"/>
+  </details>
+
+  <details markdown="9">
+  <summary>화상 채팅</summary>
+   <img src="https://user-images.githubusercontent.com/92367032/170011592-fcbccef3-ce45-4ca5-80fa-236508d4dff6.png"/>
+   <img src="https://user-images.githubusercontent.com/48144688/170150998-b95aa3a4-f804-442f-9ac1-ba6fc410d68b.png"/>
+  </details>
+
+  <details markdown="10">
+  <summary>Study To-Do</summary>
+  <img src="https://user-images.githubusercontent.com/48144688/170430680-b49a7fc6-247d-47db-83f3-8878b03b7b85.png"/>
+  </details>
+
+  <details markdown="11">
+  <summary>나의 공부</summary>
+  <img src="https://user-images.githubusercontent.com/48144688/170430642-7d132f75-2c26-4547-951c-94d6128ea24f.png"/>
+  </details>
+
+  <details markdown="12">
+  <summary>관련 모달</summary>
+  <img src="https://user-images.githubusercontent.com/48144688/170430483-9afefb1d-f042-4996-8fb3-981ebd038c3e.png"/>
+  </details>
+</details>
+
+<details>
+    <summary><h3>4. DB 스키마</h3></summary>
+    <img src="https://user-images.githubusercontent.com/92367032/194754590-d9db6f3e-b07f-44b8-98d6-46335c0c4ad1.png"/>
+</details>
+
+<details>
+    <summary><h3>5. API 문서</h3></summary>
+    <div markdown="1">
+    https://ad105geppetto.gitbook.io/studylog-api/
+    </div>
+</details>
+
+<details>
+    <summary><h3>6. 주요 기능별 시연 GIF</h3></summary>
+    <details>
+    <summary>랜딩 및 로딩 페이지</summary>
+    <div markdown="1">
+        <img src="https://user-images.githubusercontent.com/92367032/194755208-04b95d30-5784-4365-9442-16576edc6dd7.gif"/>
+    </div>
+    </details>
+    <details>
+    <summary>회원가입</summary>
+    <div markdown="1">
+        <img src="https://user-images.githubusercontent.com/92367032/194755853-5a2f8a0e-4214-478e-a9d4-2be5cbe7c7cf.gif"/>   
+    </div>
+    </details>
+    <details>
+    <summary>로그인</summary>
+    <div markdown="1">
+        <img src="https://user-images.githubusercontent.com/92367032/194755893-20041e93-0c53-416c-86d0-71fa75aab233.gif"/>
+        <img src="https://user-images.githubusercontent.com/92367032/194755920-4910a1b8-d203-4336-9bf0-1ef4aaa187ec.gif"/>
+    </div>
+    </details>
+    <details>
+    <summary>마이페이지</summary>
+    <div markdown="1">
+        <img src="https://user-images.githubusercontent.com/92367032/194756022-638e2b57-5c8f-4ee0-9519-e28dbd2be87f.gif"/>
+    </div>
+    </details>
+    <details>
+    <summary>로그아웃</summary>
+    <div markdown="1">
+        <img src="https://user-images.githubusercontent.com/92367032/194756056-03b589c6-80d5-40c7-ab86-ec5315bb3606.gif"/>
+    </div>
+    </details>
+    <details>
+    <summary>아이디/패스워드 찾기</summary>
+    <div markdown="1">
+        <img src="https://user-images.githubusercontent.com/92367032/194756097-14f1e8fc-7d1e-4a42-899c-0492038bc10e.gif"/>
+        <img src="https://user-images.githubusercontent.com/92367032/194756101-5dc9ff73-fc98-49f1-a719-3a1b7c5caca7.gif"/>
+    </div>
+    </details>
+    <details>
+    <summary>Todo 칸반보드</summary>
+    <div markdown="1">
+        <img src="https://user-images.githubusercontent.com/92367032/194757354-f0041205-ed4c-4485-8353-882ea812fa8e.gif"/>
+    </div>
+    </details>
+    <details>
+    <summary>공부시간 차트</summary>
+    <div markdown="1">
+        <img src="https://user-images.githubusercontent.com/92367032/194757377-2cb75682-2eba-46f4-80a6-9511558c149d.gif"/>
+    </div>
+    </details>
+    <details>
+    <summary>공부방 목록</summary>
+    <div markdown="1">
+        <img src="https://user-images.githubusercontent.com/92367032/194757398-dedb2177-1625-4b6b-a68e-c3e2bef2947e.gif"/>
+    </div>
+    </details>
+    <details>
+    <summary>공부방 생성</summary>
+    <div markdown="1">
+        <img src="https://user-images.githubusercontent.com/92367032/194757439-ff31bd25-ae60-4e40-924a-183a42c07f21.gif"/>
+    </div>
+    </details>
+    <details>
+    <summary>공부방 사용</summary>
+    <div markdown="1">
+        <img src="https://user-images.githubusercontent.com/92367032/194757477-e26e46d0-4c17-4856-882e-03c94e9cc945.gif"/>
+    </div>
+    </details>
+</details>
 
 ## 🔥 Refactoring
 
